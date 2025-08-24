@@ -4,35 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio | Lê Trần Ngọc Hiếu</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- ====================================================== -->
-    <!-- ============== PHẦN CSS BẮT ĐẦU TẠI ĐÂY ============== -->
-    <!-- ====================================================== -->
+
     <style>
         :root {
-            --primary-color-start: #5B86E5;
-            --primary-color-end: #36D1DC;
-            --background-color: #0F1014;
-            --surface-color: #1E1E1E;
-            --text-color: #E0E0E0;
-            --text-secondary-color: #A0A0A0;
+            --primary-color-start: #5B86E5; /* Màu chính bắt đầu */
+            --primary-color-end: #36D1DC; /* Màu chính kết thúc */
+            --background-color: #121212; /* Nền tối hơn, sâu hơn */
+            --surface-color: rgba(30, 30, 30, 0.6); /* Bề mặt kính mờ */
+            --text-color: #F0F0F0; /* Màu chữ sáng hơn */
+            --text-secondary-color: #B0B0B0; /* Màu chữ phụ */
             --font-family: 'Be Vietnam Pro', sans-serif;
+            --container-padding: 3rem 2rem; /* Tăng padding tổng thể */
         }
 
+        /* ------------------ CÀI ĐẶT CHUNG ------------------ */
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
 
         body {
             font-family: var(--font-family);
             background-color: var(--background-color);
             color: var(--text-color);
-            line-height: 1.7; /* Tăng độ dãn dòng cho dễ đọc */
+            line-height: 1.7;
             overflow-x: hidden;
+            transition: background-color 0.5s ease;
         }
 
+        /* Hiệu ứng nền Aurora mượt mà hơn */
         body::before {
             content: ''; position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -40,7 +41,7 @@
             background:
                 radial-gradient(circle at 15% 30%, hsla(200, 80%, 30%, 0.4), transparent 40%),
                 radial-gradient(circle at 85% 70%, hsla(220, 80%, 40%, 0.4), transparent 40%);
-            animation: aurora-flow 20s linear infinite;
+            animation: aurora-flow 40s linear infinite; /* Tốc độ chậm hơn */
         }
 
         @keyframes aurora-flow {
@@ -48,11 +49,13 @@
             50% { background-position: 100% 50%; }
         }
 
+        /* ------------------ THANH ĐIỀU HƯỚNG ------------------ */
         header {
             position: fixed; width: 100%; top: 0; left: 0; z-index: 100;
             background: rgba(18, 18, 18, 0.7);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px); /* Độ mờ sâu hơn */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Viền tinh tế hơn */
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ tạo độ nổi */
         }
 
         nav {
@@ -67,11 +70,11 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        nav ul { list-style: none; display: flex; gap: 2.5rem; } /* Tăng khoảng cách */
+        nav ul { list-style: none; display: flex; gap: 3rem; } /* Tăng khoảng cách */
         nav ul li a { text-decoration: none; color: var(--text-color); font-weight: 500; position: relative; transition: color 0.3s ease; }
         nav ul li a::after {
             content: ''; position: absolute;
-            width: 0; height: 2px; bottom: -5px; left: 50%;
+            width: 0; height: 2px; bottom: -8px; left: 50%; /* Dịch xuống dưới một chút */
             transform: translateX(-50%);
             background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
             transition: width 0.3s ease;
@@ -79,10 +82,21 @@
         nav ul li a:hover { color: var(--primary-color-end); }
         nav ul li a:hover::after { width: 100%; }
 
+        /* ------------------ CÁC PHẦN CHÍNH ------------------ */
+        main { padding-top: 80px; }
+        .container { max-width: 1100px; margin: 6rem auto; padding: var(--container-padding); } /* Tăng khoảng cách giữa các section */
+        h2 {
+            font-size: 2.5rem; text-align: center; margin-bottom: 3.5rem; letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* Phần Hero */
         #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; }
         .hero-content h1 {
-            font-size: 4rem; margin-bottom: 1rem; letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #ffffff, var(--primary-color-start));
+            font-size: clamp(2.5rem, 8vw, 4rem); /* Kích thước chữ linh hoạt hơn */
+            margin-bottom: 1rem; letter-spacing: 1.5px;
+            background: linear-gradient(90deg, #ffffff, var(--primary-color-end));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .hero-content p { font-size: 1.5rem; color: var(--text-secondary-color); margin-bottom: 2rem; }
@@ -90,28 +104,21 @@
         @keyframes blink { 50% { border-color: transparent; } }
 
         .cta-button {
-            display: inline-block; padding: 1rem 2rem;
+            display: inline-block; padding: 1rem 2.5rem; /* Tăng padding */
             background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
             color: #fff; text-decoration: none; border-radius: 8px; font-weight: 700;
-            transition: transform 0.3s ease, box-shadow 0.3s ease; border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            border: none;
         }
-        .cta-button:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(54, 209, 220, 0.2); }
+        .cta-button:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(54, 209, 220, 0.25); }
 
-        main { padding-top: 80px; }
-        .container { max-width: 1100px; margin: 5rem auto; padding: 2rem; }
-        h2 {
-            font-size: 2.5rem; text-align: center; margin-bottom: 3.5rem; letter-spacing: 1px;
-            background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-
-        /* ===== [NÂNG CẤP] Bố cục mới cho Giới thiệu - Apple Inspired ===== */
-        #about .container { max-width: 1200px; } /* Cho phép rộng hơn một chút */
+        /* ------------------ GIỚI THIỆU ------------------ */
+        #about .container { max-width: 1200px; }
         .about-content {
             display: grid;
-            grid-template-columns: 1fr 1.5fr; /* Cột ảnh nhỏ, cột chữ lớn */
+            grid-template-columns: 1fr 1.5fr;
             align-items: center;
-            gap: 4rem; /* Khoảng cách lớn hơn */
+            gap: 5rem; /* Khoảng cách lớn hơn */
         }
         .about-image-container {
             perspective: 1000px;
@@ -120,7 +127,7 @@
             width: 100%;
             max-width: 350px;
             height: auto;
-            border-radius: 24px; /* Bo góc nhẹ, hiện đại */
+            border-radius: 24px;
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
@@ -141,6 +148,7 @@
             color: var(--text-secondary-color);
         }
 
+        /* ------------------ TIMELINE ------------------ */
         .timeline { position: relative; max-width: 800px; margin: 0 auto; }
         .timeline::after {
             content: ''; position: absolute; width: 3px;
@@ -152,54 +160,62 @@
         .timeline-item:nth-child(even) { left: 50%; }
         .timeline-dot {
             content: ''; position: absolute; width: 16px; height: 16px;
-            background-color: var(--background-color); border: 3px solid var(--primary-color-start);
+            background-color: var(--background-color); border: 3px solid var(--primary-color-end); /* Dùng màu cuối gradient */
             border-radius: 50%; top: 24px; z-index: 1;
         }
         .timeline-item:nth-child(odd) .timeline-dot { right: -8px; }
         .timeline-item:nth-child(even) .timeline-dot { left: -8px; }
         .timeline-content {
-            padding: 20px 30px; background: rgba(30, 30, 30, 0.5);
+            padding: 20px 30px; background: rgba(30, 30, 30, 0.6); /* Nền kính mờ */
             border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .timeline-content h3 { color: var(--primary-color-start); }
 
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-        .skill-card {
+        /* ------------------ SKILLS & ACHIEVEMENTS ------------------ */
+        .skills-grid, .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem; /* Tăng khoảng cách */
+        }
+        .skill-card, .achievement-card {
             background: rgba(44, 47, 58, 0.4); backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 2rem; border-radius: 12px;
+            padding: 2.5rem; /* Tăng padding */
+            border-radius: 16px; /* Bo góc mềm mại hơn */
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
             text-align: center;
         }
-        .skill-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); border-color: rgba(91, 134, 229, 0.5); }
-        .skill-icon { margin-bottom: 1rem; color: var(--primary-color-start); }
-        .skill-icon svg { width: 48px; height: 48px; }
-        .skill-card h3 { margin-bottom: 0.75rem; color: var(--text-color); font-size: 1.2rem; }
-        .skill-card p { color: var(--text-secondary-color); font-size: 0.9rem; }
-
-        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-        .achievement-card {
-            background: rgba(44, 47, 58, 0.4); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 2rem; text-align: center; border-radius: 12px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        .skill-card:hover, .achievement-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(91, 134, 229, 0.5);
         }
-        .achievement-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); border-color: rgba(91, 134, 229, 0.5); }
-        .achievement-card .icon-container { margin-bottom: 1rem; color: var(--primary-color-start); }
-        .achievement-card .icon-container svg { width: 48px; height: 48px; }
-        .achievement-card h3 { margin-bottom: 0.5rem; color: var(--text-color); }
-
+        .skill-icon, .icon-container { margin-bottom: 1rem; color: var(--primary-color-end); }
+        .skill-icon svg, .icon-container svg { width: 48px; height: 48px; }
+        .skill-card h3, .achievement-card h3 {
+            margin-bottom: 0.75rem; color: var(--text-color); font-size: 1.2rem;
+        }
+        .skill-card p, .achievement-card p {
+            color: var(--text-secondary-color); font-size: 0.95rem;
+        }
+        
+        /* ------------------ CERTIFICATES ------------------ */
         .certificates { margin-top: 4rem; text-align: center; }
         .certificates h3 { font-size: 1.8rem; margin-bottom: 2rem; }
-        .certificate-gallery { display: flex; justify-content: center; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
-        .certificate-gallery img { object-fit: cover; border-radius: 8px; border: 2px solid var(--surface-color); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .certificate-gallery { display: flex; justify-content: center; align-items: center; gap: 2rem; flex-wrap: wrap; }
+        .certificate-gallery img { object-fit: cover; border-radius: 12px; border: 2px solid var(--surface-color); transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .certificate-gallery img:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); }
-        .cert-portrait { width: 200px; height: 280px; }
-        .cert-landscape { width: 280px; height: 200px; }
+        .cert-portrait { width: 220px; height: 300px; }
+        .cert-landscape { width: 320px; height: 220px; }
 
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        /* ------------------ PROJECTS ------------------ */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem; /* Tăng khoảng cách */
+        }
         .project-card {
-            border-radius: 12px; overflow: hidden; position: relative; height: 250px;
+            border-radius: 16px; overflow: hidden; position: relative; height: 280px; /* Tăng chiều cao */
             background-size: cover; background-position: center; background-repeat: no-repeat;
             border: 1px solid rgba(255, 255, 255, 0.15);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -207,7 +223,7 @@
         .project-card:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(0,0,0,0.3); }
         .project-info {
             position: absolute; bottom: 0; left: 0; width: 100%; padding: 1.5rem;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); /* Tăng độ mờ */
             transform: translateY(100%); transition: transform 0.4s ease-out;
         }
         .project-card:hover .project-info { transform: translateY(0); }
@@ -218,50 +234,37 @@
             border-bottom: 2px solid var(--primary-color-start);
         }
 
+        /* ------------------ LIÊN HỆ ------------------ */
         #contact { text-align: center; }
-        .social-links { margin-top: 1.5rem; display: flex; justify-content: center; gap: 1.5rem; }
+        .social-links { margin-top: 1.5rem; display: flex; justify-content: center; gap: 2rem; }
         .social-links a { color: var(--text-color); transition: color 0.3s ease, transform 0.3s ease; }
         .social-links a:hover { color: var(--primary-color-start); transform: scale(1.2); }
 
-        footer { text-align: center; padding: 2rem; margin-top: 2rem; background: transparent; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-        
-        /* ===== [NÂNG CẤP] Hoạt ảnh Reveal mượt mà hơn ===== */
+        /* ------------------ FOOTER ------------------ */
+        footer { text-align: center; padding: 2rem; margin-top: 3rem; background: transparent; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+
+        /* ------------------ HIỆU ỨNG REVEAL MƯỢT HƠN ------------------ */
         .reveal {
             opacity: 0;
-            transform: translateY(100px);
-            transition: opacity 1s cubic-bezier(0.5, 0, 0, 1), transform 1s cubic-bezier(0.5, 0, 0, 1);
-        }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        
-        /* Hiệu ứng xuất hiện nối tiếp cho mục Giới thiệu */
-        .reveal.active .about-image-container, .reveal.active .about-text {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .about-image-container, .about-text {
-            opacity: 0;
-            transform: translateY(50px);
+            transform: translateY(30px); /* Giảm độ dịch chuyển */
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
-        .reveal.active .about-text {
-            transition-delay: 0.2s; /* Text xuất hiện sau ảnh một chút */
-        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-
+        /* ------------------ RESPONSIVE DESIGN ------------------ */
         @media (max-width: 768px) {
             nav ul { display: none; }
-            .hero-content h1 { font-size: 2.5rem; }
-            .hero-content p { font-size: 1.2rem; }
-            /* Bố cục giới thiệu trên mobile */
+            .hero-content h1 { font-size: clamp(2rem, 10vw, 3rem); }
+            .hero-content p { font-size: 1rem; }
             .about-content { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
-            .avatar { margin: 0 auto; } /* Căn giữa ảnh */
-            
+            .avatar { margin: 0 auto; }
             .timeline::after { left: 31px; }
             .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
             .timeline-item:nth-child(odd), .timeline-item:nth-child(even) { left: 0; text-align: left; }
             .timeline-dot, .timeline-item:nth-child(odd) .timeline-dot, .timeline-item:nth-child(even) .timeline-dot { left: 23px; }
         }
 
+        /* Hình nền dự án */
         #project-1 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-giam-sat.jpg'); }
         #project-2 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-quan-ly-thuoc.png'); }
         #project-3 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-zentap.jpg'); }
@@ -298,12 +301,11 @@
             </div>
         </section>
 
-        <!-- ===== [NÂNG CẤP] HTML cho bố cục Giới thiệu mới ===== -->
         <section id="about" class="container reveal">
             <h2>Về Bản thân</h2>
             <div class="about-content">
                 <div class="about-image-container">
-                    <img src="images/avatar.jpg" alt="Ảnh đại diện Lê Trần Ngọc Hiếu" class="avatar">
+                    <img src="images/avatar1.jpg" alt="Ảnh đại diện Lê Trần Ngọc Hiếu" class="avatar">
                 </div>
                 <div class="about-text">
                     <h3>Xin chào, mình là Lê Trần Ngọc Hiếu.</h3>
@@ -324,11 +326,11 @@
             <h2>Quá trình Học tập</h2>
             <div class="timeline">
                 <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h3>THPT Chuyên Quốc Học Huế</h3><p>Lớp 10 Lý 1</p></div></div>
-                <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h3>THCS Nguyễn Tri Phương - Huế</h3><p>Nền tảng vững chắc</p></div></div>
-                <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h3>Tiểu học An Cựu</h3><p>Khởi đầu đam mê</p></div></div>
+                <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h3>THCS Nguyễn Tri Phương - Huế</h3><p>2021-2025</p></div></div>
+                <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h3>Tiểu học An Cựu</h3><p>2016-2021</p></div></div>
             </div>
         </section>
-        
+
         <section id="skills" class="container reveal">
             <h2>Kỹ năng & Chuyên môn</h2>
             <div class="skills-grid">
@@ -375,10 +377,9 @@
                     <h3>Top 3 đầu vào</h3><p>Điểm chuyên Vật Lý kỳ thi tuyển sinh lớp 10.</p>
                 </div>
             </div>
-             <div class="certificates reveal">
+            <div class="certificates reveal">
                 <h3>Giấy khen & Chứng nhận</h3>
                 <div class="certificate-gallery">
-                    <!-- ===== [SỬA LỖI] Đổi thành .PNG ===== -->
                     <img src="images/giay-khen-1.PNG" alt="Giấy khen Giải Nhất Sáng tạo" class="cert-portrait">
                     <img src="images/giay-khen-2.png" alt="Giấy khen Học sinh giỏi" class="cert-landscape">
                     <img src="images/giay-khen-3.png" alt="Giấy khen khác" class="cert-landscape">
