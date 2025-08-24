@@ -10,15 +10,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
+        /* ------------------ BẢNG MÀU VÀ BIẾN ------------------ */
         :root {
-            --primary-color-start: #5B86E5; /* Màu chính bắt đầu */
-            --primary-color-end: #36D1DC; /* Màu chính kết thúc */
-            --background-color: #121212; /* Nền tối hơn, sâu hơn */
-            --surface-color: rgba(30, 30, 30, 0.6); /* Bề mặt kính mờ */
-            --text-color: #F0F0F0; /* Màu chữ sáng hơn */
-            --text-secondary-color: #B0B0B0; /* Màu chữ phụ */
+            --bg-color: #08080A; /* Nền cực tối */
+            --primary-start: #4A00E0; /* Tím đậm */
+            --primary-end: #8E2DE2; /* Tím điện tử */
+            --accent-glow: #00FFFF; /* Xanh Cyan phát sáng */
+            --text-main: #EFEFEF;
+            --text-secondary: #A0A0A0;
+            --surface-bg: rgba(30, 30, 30, 0.7);
+            --border-glow: rgba(142, 45, 226, 0.3);
             --font-family: 'Be Vietnam Pro', sans-serif;
-            --container-padding: 3rem 2rem; /* Tăng padding tổng thể */
         }
 
         /* ------------------ CÀI ĐẶT CHUNG ------------------ */
@@ -26,236 +28,235 @@
 
         body {
             font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.7;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.8;
             overflow-x: hidden;
-            transition: background-color 0.5s ease;
+            position: relative;
         }
 
-        /* Hiệu ứng nền Aurora mượt mà hơn */
+        /* Nền động dạng "digital dust" */
+        body::before, body::after {
+            content: ''; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; z-index: -2;
+            pointer-events: none;
+            opacity: 0.2;
+        }
         body::before {
-            content: ''; position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background:
-                radial-gradient(circle at 15% 30%, hsla(200, 80%, 30%, 0.4), transparent 40%),
-                radial-gradient(circle at 85% 70%, hsla(220, 80%, 40%, 0.4), transparent 40%);
-            animation: aurora-flow 40s linear infinite; /* Tốc độ chậm hơn */
+            background: radial-gradient(circle at 15% 30%, hsla(270, 80%, 30%, 0.4), transparent 40%),
+                        radial-gradient(circle at 85% 70%, hsla(240, 80%, 40%, 0.4), transparent 40%);
+            animation: bg-flow 40s linear infinite;
         }
-
-        @keyframes aurora-flow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        body::after {
+            background: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="%23FFFFFF" fill-opacity="0.05" fill-rule="evenodd"><path d="M0 0h20v20H0V0zm20 20h20v20H20V20z" /></g></svg>');
+            animation: noise-pan 60s linear infinite;
+            filter: blur(1px);
         }
-
+        @keyframes bg-flow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        @keyframes noise-pan { 0% { background-position: 0 0; } 100% { background-position: 100% 100%; } }
+        
         /* ------------------ THANH ĐIỀU HƯỚNG ------------------ */
         header {
             position: fixed; width: 100%; top: 0; left: 0; z-index: 100;
-            background: rgba(18, 18, 18, 0.7);
-            backdrop-filter: blur(20px); /* Độ mờ sâu hơn */
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Viền tinh tế hơn */
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ tạo độ nổi */
+            background: rgba(8, 8, 10, 0.8);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: all 0.5s ease;
         }
-
-        nav {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 2rem;
-        }
-
+        nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2rem; }
         nav .logo {
-            font-size: 1.5rem; font-weight: 700;
-            background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
+            font-size: 1.8rem; font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-glow), var(--primary-end));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-
-        nav ul { list-style: none; display: flex; gap: 3rem; } /* Tăng khoảng cách */
-        nav ul li a { text-decoration: none; color: var(--text-color); font-weight: 500; position: relative; transition: color 0.3s ease; }
+        nav ul { list-style: none; display: flex; gap: 3rem; }
+        nav ul li a { text-decoration: none; color: var(--text-secondary); font-weight: 500; position: relative; transition: all 0.3s ease; }
         nav ul li a::after {
             content: ''; position: absolute;
-            width: 0; height: 2px; bottom: -8px; left: 50%; /* Dịch xuống dưới một chút */
-            transform: translateX(-50%);
-            background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
-            transition: width 0.3s ease;
+            width: 0; height: 2px; bottom: -8px; left: 0;
+            background: var(--accent-glow);
+            transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        nav ul li a:hover { color: var(--primary-color-end); }
+        nav ul li a:hover { color: var(--text-main); }
         nav ul li a:hover::after { width: 100%; }
 
         /* ------------------ CÁC PHẦN CHÍNH ------------------ */
-        main { padding-top: 80px; }
-        .container { max-width: 1100px; margin: 6rem auto; padding: var(--container-padding); } /* Tăng khoảng cách giữa các section */
+        main { padding-top: 100px; }
+        .container { max-width: 1100px; margin: 8rem auto; padding: 2rem; }
         h2 {
-            font-size: 2.5rem; text-align: center; margin-bottom: 3.5rem; letter-spacing: 1px;
-            background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
+            font-size: 3rem; text-align: center; margin-bottom: 4rem; letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(142, 45, 226, 0.5);
         }
 
-        /* Phần Hero */
+        /* Hero */
         #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; }
         .hero-content h1 {
-            font-size: clamp(2.5rem, 8vw, 4rem); /* Kích thước chữ linh hoạt hơn */
-            margin-bottom: 1rem; letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #ffffff, var(--primary-color-end));
+            font-size: clamp(3rem, 10vw, 5rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--text-main), var(--accent-glow));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
         }
-        .hero-content p { font-size: 1.5rem; color: var(--text-secondary-color); margin-bottom: 2rem; }
-        .typewriter { border-right: 2px solid var(--primary-color-start); animation: blink 0.7s steps(1) infinite; }
-        @keyframes blink { 50% { border-color: transparent; } }
-
+        .hero-content p { font-size: 1.7rem; color: var(--text-secondary); margin-bottom: 3rem; }
+        .typewriter { border-right: 2px solid var(--accent-glow); animation: blink 0.7s steps(1) infinite; }
         .cta-button {
-            display: inline-block; padding: 1rem 2.5rem; /* Tăng padding */
-            background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
-            color: #fff; text-decoration: none; border-radius: 8px; font-weight: 700;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-            border: none;
+            display: inline-block; padding: 1.25rem 3rem;
+            background: var(--surface-bg);
+            color: var(--text-main); text-decoration: none; border-radius: 50px;
+            font-weight: 700; position: relative;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            overflow: hidden;
+            border: 2px solid var(--border-glow);
+            box-shadow: 0 0 15px var(--border-glow);
         }
-        .cta-button:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(54, 209, 220, 0.25); }
+        .cta-button:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 0 25px var(--accent-glow);
+            border-color: var(--accent-glow);
+        }
+        .cta-button::after {
+            content: ''; position: absolute;
+            top: 50%; left: 50%; width: 0; height: 0;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 80%);
+            transform: translate(-50%, -50%);
+            opacity: 0; transition: all 0.5s ease-out;
+        }
+        .cta-button:hover::after { width: 300px; height: 300px; opacity: 0.3; }
 
-        /* ------------------ GIỚI THIỆU ------------------ */
-        #about .container { max-width: 1200px; }
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            align-items: center;
-            gap: 5rem; /* Khoảng cách lớn hơn */
-        }
-        .about-image-container {
-            perspective: 1000px;
-        }
+        /* Giới thiệu */
+        .about-content { display: grid; grid-template-columns: 1fr 1.5fr; align-items: center; gap: 5rem; }
+        .about-image-container { perspective: 1000px; }
         .avatar {
-            width: 100%;
-            max-width: 350px;
-            height: auto;
+            width: 100%; max-width: 350px; height: auto;
             border-radius: 24px;
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
+            transform-style: preserve-3d;
         }
-        .avatar:hover {
-            transform: rotateY(10deg) rotateX(5deg) scale(1.05);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-        }
-        .about-text h3 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(90deg, var(--primary-color-start), #ffffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .about-text p {
-            margin-bottom: 1.5rem;
-            color: var(--text-secondary-color);
-        }
+        .avatar:hover { transform: rotateY(10deg) rotateX(5deg) scale(1.05); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); }
+        .about-text h3 { font-size: 2.5rem; margin-bottom: 1.5rem; background: linear-gradient(90deg, var(--primary-start), var(--text-main)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .about-text p { color: var(--text-secondary); }
 
-        /* ------------------ TIMELINE ------------------ */
+        /* Timeline */
         .timeline { position: relative; max-width: 800px; margin: 0 auto; }
         .timeline::after {
             content: ''; position: absolute; width: 3px;
-            background: linear-gradient(to bottom, var(--primary-color-start), var(--primary-color-end));
+            background: linear-gradient(to bottom, var(--primary-start), var(--primary-end));
             top: 0; bottom: 0; left: 50%; margin-left: -1.5px;
+            box-shadow: 0 0 10px var(--primary-end);
         }
         .timeline-item { padding: 10px 40px; position: relative; width: 50%; }
         .timeline-item:nth-child(odd) { left: 0; text-align: right; }
         .timeline-item:nth-child(even) { left: 50%; }
         .timeline-dot {
-            content: ''; position: absolute; width: 16px; height: 16px;
-            background-color: var(--background-color); border: 3px solid var(--primary-color-end); /* Dùng màu cuối gradient */
+            content: ''; position: absolute; width: 20px; height: 20px;
+            background-color: var(--bg-color); border: 3px solid var(--accent-glow);
             border-radius: 50%; top: 24px; z-index: 1;
+            animation: pulse-glow 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
         }
-        .timeline-item:nth-child(odd) .timeline-dot { right: -8px; }
-        .timeline-item:nth-child(even) .timeline-dot { left: -8px; }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px var(--accent-glow); }
+            50% { box-shadow: 0 0 20px var(--accent-glow), 0 0 30px var(--accent-glow); }
+        }
+        .timeline-item:nth-child(odd) .timeline-dot { right: -10px; }
+        .timeline-item:nth-child(even) .timeline-dot { left: -10px; }
         .timeline-content {
-            padding: 20px 30px; background: rgba(30, 30, 30, 0.6); /* Nền kính mờ */
+            padding: 20px 30px; background: var(--surface-bg);
             border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
         }
-        .timeline-content h3 { color: var(--primary-color-start); }
+        .timeline-content:hover { border-color: var(--primary-end); box-shadow: 0 0 20px rgba(142, 45, 226, 0.2); }
+        .timeline-content h3 { color: var(--primary-start); }
 
-        /* ------------------ SKILLS & ACHIEVEMENTS ------------------ */
-        .skills-grid, .achievements-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem; /* Tăng khoảng cách */
-        }
+        /* Cards (Skills, Achievements) */
+        .skills-grid, .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem; }
         .skill-card, .achievement-card {
-            background: rgba(44, 47, 58, 0.4); backdrop-filter: blur(10px);
+            background: var(--surface-bg); backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 2.5rem; /* Tăng padding */
-            border-radius: 16px; /* Bo góc mềm mại hơn */
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            padding: 2.5rem; border-radius: 16px;
+            position: relative; overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
             text-align: center;
         }
+        .skill-card::before, .achievement-card::before {
+            content: ''; position: absolute;
+            top: -2px; left: -2px; width: calc(100% + 4px); height: calc(100% + 4px);
+            background: linear-gradient(45deg, var(--primary-start), var(--primary-end), var(--accent-glow));
+            z-index: -1;
+            filter: blur(25px);
+            transition: opacity 0.5s ease; opacity: 0;
+        }
         .skill-card:hover, .achievement-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            border-color: rgba(91, 134, 229, 0.5);
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary-end);
         }
-        .skill-icon, .icon-container { margin-bottom: 1rem; color: var(--primary-color-end); }
+        .skill-card:hover::before, .achievement-card:hover::before { opacity: 1; }
+        .skill-icon, .icon-container { margin-bottom: 1.5rem; color: var(--accent-glow); transition: color 0.3s ease; }
         .skill-icon svg, .icon-container svg { width: 48px; height: 48px; }
-        .skill-card h3, .achievement-card h3 {
-            margin-bottom: 0.75rem; color: var(--text-color); font-size: 1.2rem;
-        }
-        .skill-card p, .achievement-card p {
-            color: var(--text-secondary-color); font-size: 0.95rem;
-        }
-        
-        /* ------------------ CERTIFICATES ------------------ */
-        .certificates { margin-top: 4rem; text-align: center; }
-        .certificates h3 { font-size: 1.8rem; margin-bottom: 2rem; }
-        .certificate-gallery { display: flex; justify-content: center; align-items: center; gap: 2rem; flex-wrap: wrap; }
-        .certificate-gallery img { object-fit: cover; border-radius: 12px; border: 2px solid var(--surface-color); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .certificate-gallery img:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); }
-        .cert-portrait { width: 220px; height: 300px; }
-        .cert-landscape { width: 320px; height: 220px; }
 
-        /* ------------------ PROJECTS ------------------ */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem; /* Tăng khoảng cách */
-        }
+        /* Projects */
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
         .project-card {
-            border-radius: 16px; overflow: hidden; position: relative; height: 280px; /* Tăng chiều cao */
+            border-radius: 16px; overflow: hidden; position: relative; height: 300px;
             background-size: cover; background-position: center; background-repeat: no-repeat;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
-        .project-card:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(0,0,0,0.3); }
+        .project-card:hover { transform: scale(1.03); box-shadow: 0 0 25px var(--border-glow); }
         .project-info {
-            position: absolute; bottom: 0; left: 0; width: 100%; padding: 1.5rem;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); /* Tăng độ mờ */
-            transform: translateY(100%); transition: transform 0.4s ease-out;
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 2rem;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px);
+            transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .project-card:hover .project-info { transform: translateY(0); }
-        .project-info h3 { color: var(--primary-color-start); margin-bottom: 0.5rem; }
+        .project-info h3 { color: var(--accent-glow); margin-bottom: 0.5rem; }
         .project-info a {
-            color: #fff; text-decoration: none; font-weight: bold;
-            display: inline-block; margin-top: 1rem; padding-bottom: 2px;
-            border-bottom: 2px solid var(--primary-color-start);
+            color: var(--text-main); text-decoration: none; font-weight: bold;
+            display: inline-block; margin-top: 1rem;
+            border-bottom: 2px solid var(--accent-glow);
+            transition: all 0.3s ease;
         }
-
-        /* ------------------ LIÊN HỆ ------------------ */
+        .project-info a:hover { color: var(--accent-glow); border-color: var(--text-main); }
+        
+        /* Liên hệ */
         #contact { text-align: center; }
-        .social-links { margin-top: 1.5rem; display: flex; justify-content: center; gap: 2rem; }
-        .social-links a { color: var(--text-color); transition: color 0.3s ease, transform 0.3s ease; }
-        .social-links a:hover { color: var(--primary-color-start); transform: scale(1.2); }
-
-        /* ------------------ FOOTER ------------------ */
+        .social-links { margin-top: 2rem; display: flex; justify-content: center; gap: 2.5rem; }
+        .social-links a {
+            color: var(--text-secondary); transition: all 0.3s ease;
+            position: relative;
+        }
+        .social-links a::after {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--accent-glow); border-radius: 50%;
+            z-index: -1; opacity: 0;
+            transition: all 0.4s ease;
+            transform: scale(0.5);
+        }
+        .social-links a:hover { color: var(--bg-color); transform: scale(1.2); }
+        .social-links a:hover::after { transform: scale(1.5); opacity: 0.8; filter: blur(15px); }
+        
+        /* Footer */
         footer { text-align: center; padding: 2rem; margin-top: 3rem; background: transparent; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-
-        /* ------------------ HIỆU ỨNG REVEAL MƯỢT HƠN ------------------ */
+        
+        /* Hiệu ứng Reveal */
         .reveal {
             opacity: 0;
-            transform: translateY(30px); /* Giảm độ dịch chuyển */
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transform: translateY(50px);
+            transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* ------------------ RESPONSIVE DESIGN ------------------ */
+        
         @media (max-width: 768px) {
             nav ul { display: none; }
-            .hero-content h1 { font-size: clamp(2rem, 10vw, 3rem); }
-            .hero-content p { font-size: 1rem; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1.2rem; }
             .about-content { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
             .avatar { margin: 0 auto; }
             .timeline::after { left: 31px; }
@@ -264,16 +265,15 @@
             .timeline-dot, .timeline-item:nth-child(odd) .timeline-dot, .timeline-item:nth-child(even) .timeline-dot { left: 23px; }
         }
 
-        /* Hình nền dự án */
-        #project-1 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-giam-sat.jpg'); }
-        #project-2 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-quan-ly-thuoc.png'); }
-        #project-3 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-zentap.jpg'); }
+        #project-1 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/project-giam-sat.jpg'); }
+        #project-2 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/project-quan-ly-thuoc.png'); }
+        #project-3 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/project-zentap.jpg'); }
         #project-4 {
-            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-lisseno.png');
-            background-size: contain; background-color: var(--surface-color);
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/project-lisseno.png');
+            background-size: contain; background-color: var(--bg-color);
         }
-        #project-5 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-vrchannels.jpg'); }
-        #project-6 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-meika.png'); }
+        #project-5 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/project-vrchannels.jpg'); }
+        #project-6 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/project-meika.png'); }
     </style>
 </head>
 <body>
@@ -327,10 +327,10 @@
             <div class="timeline">
                 <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h3>THPT Chuyên Quốc Học Huế</h3><p>Lớp 10 Lý 1</p></div></div>
                 <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h3>THCS Nguyễn Tri Phương - Huế</h3><p>2021-2025</p></div></div>
-                <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h3>Tiểu học An Cựu</h3><p>2016-2021</p></div></div>
+                <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h3>Tiểu học An Cựu</h3><p>2026-2021</p></div></div>
             </div>
         </section>
-
+        
         <section id="skills" class="container reveal">
             <h2>Kỹ năng & Chuyên môn</h2>
             <div class="skills-grid">
