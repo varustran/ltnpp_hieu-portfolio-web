@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio | Lê Trần Ngọc Hiếu</title>
-
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
-
+    
     <style>
-        /* ------------------ BẢNG MÀU & BIẾN CAO CẤP ------------------ */
+        /* ------------------ BẢNG MÀU & BIẾN SANG TRỌNG ------------------ */
         :root {
-            --bg-color: #000000; /* Nền đen tuyệt đối, độ tương phản cao */
-            --primary-start: #7C4DFF; /* Tím sang trọng */
-            --primary-end: #36D1DC; /* Xanh ngọc phát sáng */
-            --accent-glow: #F200A5; /* Hồng neon độc đáo */
+            --bg-color: #030305;
+            --primary-start: #7C4DFF;
+            --primary-end: #36D1DC;
+            --accent-glow: #F200A5;
             --text-main: #FFFFFF;
             --text-secondary: #B0B0B0;
             --surface-bg: rgba(20, 20, 30, 0.8);
@@ -31,34 +31,20 @@
             font-family: var(--font-main);
             background-color: var(--bg-color);
             color: var(--text-main);
-            line-height: 1.85;
+            line-height: 1.7;
             overflow-x: hidden;
             position: relative;
         }
-
-        /* Nền động dạng ma trận holographic */
-        body::before, body::after {
+        
+        body::before {
             content: ''; position: fixed; top: 0; left: 0;
             width: 100%; height: 100%; z-index: -2;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-        body::before {
+            pointer-events: none; opacity: 0.3;
             background: radial-gradient(circle at 15% 30%, hsla(270, 80%, 30%, 0.4), transparent 40%),
                         radial-gradient(circle at 85% 70%, hsla(180, 80%, 40%, 0.4), transparent 40%);
             animation: bg-flow 50s linear infinite;
         }
-        body::after {
-            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 11px),
-                        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 11px);
-            animation: grid-pan 120s linear infinite;
-            filter: blur(0.5px);
-        }
         @keyframes bg-flow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-        @keyframes grid-pan { 0% { background-position: 0 0; } 100% { background-position: 1000px 1000px; } }
-
-        /* Hiệu ứng mờ khi chuyển trang */
-        .fade-out { opacity: 0; transition: opacity 0.7s ease-out; }
 
         /* ------------------ THANH ĐIỀU HƯỚNG ------------------ */
         header {
@@ -67,7 +53,6 @@
             backdrop-filter: blur(40px);
             border-bottom: 1px solid var(--border-color);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-            transition: all 0.5s ease;
         }
         nav { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2.5rem; }
         nav .logo {
@@ -84,8 +69,7 @@
         }
         nav ul li a::after {
             content: ''; position: absolute;
-            width: 0; height: 3px; bottom: -10px; left: 50%;
-            transform: translateX(-50%);
+            width: 0; height: 3px; bottom: -10px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
             box-shadow: 0 0 10px var(--primary-end);
             transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -93,9 +77,9 @@
         nav ul li a:hover { color: var(--text-main); text-shadow: 0 0 5px var(--accent-glow); }
         nav ul li a:hover::after { width: 100%; }
 
-        /* Hero & Tiêu đề */
-        #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; }
-        .hero-content h1 {
+        /* ------------------ CÁC PHẦN CHÍNH ------------------ */
+        .container { max-width: 1100px; margin: 8rem auto; padding: 2rem; }
+        h1 {
             font-family: var(--font-heading);
             font-size: clamp(3rem, 12vw, 6rem);
             font-weight: 900;
@@ -105,37 +89,10 @@
             text-shadow: 0 0 20px var(--primary-end), 0 0 40px var(--accent-glow);
             letter-spacing: 2px;
             animation: flicker-text 3s infinite alternate;
+            text-align: center;
         }
         @keyframes flicker-text { 0% { opacity: 1; } 50% { opacity: 0.9; } 100% { opacity: 1; } }
-        .hero-content p { font-size: 2rem; color: var(--text-secondary); margin-bottom: 3rem; }
-        .typewriter { border-right: 2px solid var(--accent-glow); animation: blink 0.7s steps(1) infinite; }
-        .cta-button {
-            display: inline-block; padding: 1.5rem 4rem;
-            background: transparent;
-            color: var(--text-main); text-decoration: none; border-radius: 50px;
-            font-weight: 700; position: relative; z-index: 1;
-            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            border: 2px solid transparent;
-            text-transform: uppercase;
-        }
-        .cta-button::before {
-            content: ''; position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            background: linear-gradient(45deg, var(--primary-start), var(--primary-end), var(--accent-glow));
-            border-radius: 50px; z-index: -1;
-            filter: blur(10px);
-            transition: opacity 0.5s ease; opacity: 0.7;
-        }
-        .cta-button::after {
-            content: ''; position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--surface-bg);
-            border-radius: 50px; z-index: -1;
-        }
-        .cta-button:hover::before { opacity: 1; filter: blur(20px); }
-        .cta-button:hover { transform: scale(1.05) translateY(-5px); color: var(--accent-glow); }
         
-        /* Các Tiêu đề */
         h2 {
             font-family: var(--font-heading);
             font-size: 3rem; text-align: center; margin-bottom: 4rem; letter-spacing: 2px;
@@ -149,6 +106,32 @@
             font-family: var(--font-heading);
             font-weight: 700;
             margin-bottom: 1.5rem;
+        }
+        
+        .hero-content {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .hero-content p { font-size: 2rem; color: var(--text-secondary); margin-bottom: 3rem; }
+        .typewriter { border-right: 2px solid var(--accent-glow); animation: blink 0.7s steps(1) infinite; }
+        .cta-button {
+            display: inline-block; padding: 1.5rem 4rem;
+            background: transparent;
+            color: var(--text-main); text-decoration: none; border-radius: 50px;
+            font-weight: 700; position: relative; z-index: 1;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border: 2px solid transparent; text-transform: uppercase;
+        }
+        .cta-button:hover { transform: scale(1.05) translateY(-5px); color: var(--accent-glow); }
+        .cta-button::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--surface-bg);
+            border-radius: 50px; z-index: -1;
         }
 
         /* Về Bản thân */
@@ -192,19 +175,25 @@
             transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
             transform-style: preserve-3d;
         }
-        .skill-card::before, .achievement-card::before {
-            content: ''; position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, var(--primary-start), var(--primary-end));
-            opacity: 0.1; transition: opacity 0.5s ease;
-        }
         .skill-card:hover, .achievement-card:hover {
             transform: scale(1.05) translateY(-15px);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(142, 45, 226, 0.5);
             border-color: var(--primary-end);
         }
-        .skill-card:hover::before, .achievement-card:hover::before { opacity: 1; }
-        .skill-icon, .icon-container { color: var(--accent-glow); filter: drop-shadow(0 0 10px var(--accent-glow)); }
+        .skill-card::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, var(--primary-start), var(--primary-end));
+            opacity: 0.1; transition: opacity 0.5s ease;
+        }
+        .skill-card:hover::before { opacity: 1; }
+        .skill-icon svg, .icon-container svg {
+            /* Sửa lỗi icon quá to */
+            width: 36px;
+            height: 36px;
+            color: var(--accent-glow);
+            filter: drop-shadow(0 0 10px var(--accent-glow));
+        }
 
         /* Projects */
         .projects-grid { gap: 2.5rem; }
@@ -213,6 +202,9 @@
             border: 2px solid var(--border-color);
             transition: transform 0.4s ease, box-shadow 0.4s ease;
             position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         .project-card:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow); }
         .project-info {
@@ -247,7 +239,79 @@
         }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Media Queries - Tối ưu cho Điện thoại */
+        /* ======================================================= */
+        /* ============== PHẦN CAMERA VÀ KHUNG PTB MỚI ============== */
+        /* ======================================================= */
+        .camera-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+        .camera-video, .camera-output-canvas {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            border: 2px solid var(--primary-end);
+            box-shadow: 0 0 20px rgba(142, 45, 226, 0.3);
+            background: var(--surface-bg);
+        }
+        .camera-video {
+            display: block; /* Mặc định là block để hiển thị */
+            transform: scaleX(-1); /* Lật ngang để giống camera trước */
+        }
+        .camera-output {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+        .camera-output-canvas {
+            position: relative;
+            z-index: 1;
+        }
+        .ptb-frame-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .ptb-frame-border {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            border: 10px solid transparent;
+            border-image: linear-gradient(45deg, var(--primary-start), var(--accent-glow)) 1;
+            box-shadow: 0 0 20px rgba(142, 45, 226, 0.5);
+            border-radius: 12px;
+        }
+        .ptb-frame-text {
+            position: absolute;
+            bottom: 20px; left: 20px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+        
+        /* Nút chụp ảnh */
+        .capture-button {
+            padding: 1rem 3rem;
+            background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+            color: var(--text-main);
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .capture-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(142, 45, 226, 0.5);
+        }
+
+        /* Tối ưu cho Điện thoại */
         @media (max-width: 768px) {
             nav ul { display: none; }
             nav { padding: 1rem 1.5rem; }
@@ -402,9 +466,28 @@
             </div>
         </section>
 
+        <section id="ptb-camera" class="container reveal">
+            <h2>PTB Snapshot</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Chụp một khoảnh khắc của bạn và ghép vào khung PTB độc đáo.</p>
+            <div class="camera-container">
+                <video class="camera-video" id="camera-feed" autoplay playsinline></video>
+                <button class="capture-button" id="capture-btn">Chụp PTB</button>
+                <div class="camera-output">
+                    <canvas class="camera-output-canvas" id="ptb-canvas" width="600" height="450"></canvas>
+                    <div class="ptb-frame-overlay">
+                        <div class="ptb-frame-border"></div>
+                        <div class="ptb-frame-text">
+                            <h3>PTB Snapshot</h3>
+                            <p style="color: var(--text-secondary);">Khoảnh khắc của Hiếu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="contact" class="container reveal">
             <h2>Liên hệ</h2>
-            <p>Kết nối với tôi qua các nền tảng mạng xã hội:</p>
+            <p style="text-align: center; color: var(--text-secondary);">Kết nối với tôi qua các nền tảng mạng xã hội:</p>
             <div class="social-links">
                 <a href="https://www.instagram.com/ltnpp_hieu" target="_blank" aria-label="Instagram"><svg height="32" width="32" fill="currentColor" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
             </div>
@@ -414,8 +497,104 @@
     <footer><p>&copy; 2025 Lê Trần Ngọc Hiếu. All Rights Reserved.</p></footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded',function(){const e=document.querySelector(".typewriter"),t=["Trường THPT Chuyên Quốc Học Huế.","một người đam mê công nghệ.","nhà phát triển tương lai."];let n=0,c=0,o=!1;function i(){const s=t[n];o?(e.textContent=s.substring(0,c-1),c--):(e.textContent=s.substring(0,c+1),c++),!o&&c===s.length?setTimeout(()=>o=!0,2e3):o&&0===c&&(o=!1,n=(n+1)%t.length);const l=o?50:150;setTimeout(i,l)}i();const s=document.querySelectorAll(".reveal");function l(){const e=window.innerHeight;for(let t=0;t<s.length;t++){s[t].getBoundingClientRect().top<e-150?s[t].classList.add("active"):s[t].classList.remove("active")}}window.addEventListener("scroll",l),l(),document.querySelectorAll('nav a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault(),document.querySelector(this.getAttribute("href")).scrollIntoView({behavior:"smooth"})})})});
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hiệu ứng typewriter
+            const typewriterEl = document.querySelector(".typewriter");
+            const textArray = ["một người đam mê công nghệ.", "nhà phát triển tương lai."];
+            let textArrayIndex = 0;
+            let charIndex = 0;
+            const typingDelay = 150;
+            const erasingDelay = 50;
+            const newTextDelay = 2000;
+
+            function type() {
+                if (charIndex < textArray[textArrayIndex].length) {
+                    typewriterEl.textContent += textArray[textArrayIndex].charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, typingDelay);
+                } else {
+                    setTimeout(erase, newTextDelay);
+                }
+            }
+
+            function erase() {
+                if (charIndex > 0) {
+                    typewriterEl.textContent = textArray[textArrayIndex].substring(0, charIndex - 1);
+                    charIndex--;
+                    setTimeout(erase, erasingDelay);
+                } else {
+                    textArrayIndex++;
+                    if (textArrayIndex >= textArray.length) textArrayIndex = 0;
+                    setTimeout(type, typingDelay + 1100);
+                }
+            }
+            if(textArray.length) setTimeout(type, 1000);
+
+            // Hiệu ứng Reveal
+            const revealElements = document.querySelectorAll(".reveal");
+            function reveal() {
+                const windowHeight = window.innerHeight;
+                for (let i = 0; i < revealElements.length; i++) {
+                    const elementTop = revealElements[i].getBoundingClientRect().top;
+                    if (elementTop < windowHeight - 150) {
+                        revealElements[i].classList.add("active");
+                    } else {
+                        revealElements[i].classList.remove("active");
+                    }
+                }
+            }
+            window.addEventListener("scroll", reveal);
+            reveal();
+            
+            // Cuộn mượt
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // =======================================================
+            // ============== LOGIC CHO TÍNH NĂNG CAMERA ==============
+            // =======================================================
+            const video = document.getElementById('camera-feed');
+            const captureBtn = document.getElementById('capture-btn');
+            const canvas = document.getElementById('ptb-canvas');
+            const context = canvas.getContext('2d');
+            
+            // Ẩn canvas ban đầu
+            canvas.style.display = 'none';
+
+            // Mở camera
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        video.srcObject = stream;
+                        video.style.display = 'block'; // Hiển thị video sau khi có stream
+                    })
+                    .catch(err => {
+                        console.error("Lỗi khi truy cập camera: " + err);
+                        alert("Không thể truy cập camera. Vui lòng cho phép truy cập.");
+                    });
+            } else {
+                alert("Trình duyệt của bạn không hỗ trợ tính năng camera.");
+            }
+
+            // Xử lý sự kiện chụp ảnh
+            captureBtn.addEventListener('click', () => {
+                // Đảm bảo canvas có cùng tỷ lệ với video
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                video.style.display = 'none'; // Ẩn video feed
+                canvas.style.display = 'block'; // Hiển thị ảnh đã chụp
+                captureBtn.textContent = 'Chụp lại'; // Thay đổi text nút
+            });
+        });
     </script>
 </body>
 </html>
-
