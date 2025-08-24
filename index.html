@@ -17,36 +17,27 @@
         :root {
             --primary-color-start: #5B86E5;
             --primary-color-end: #36D1DC;
-            --background-color: #0F1014; /* Nền tối hơn một chút */
+            --background-color: #0F1014;
             --surface-color: #1E1E1E;
             --text-color: #E0E0E0;
             --text-secondary-color: #A0A0A0;
             --font-family: 'Be Vietnam Pro', sans-serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
 
         body {
             font-family: var(--font-family);
             background-color: var(--background-color);
             color: var(--text-color);
             line-height: 1.6;
-            overflow-x: hidden; /* Ngăn cuộn ngang do hiệu ứng aurora */
+            overflow-x: hidden;
         }
 
-        /* ===== [NÂNG CẤP] Hiệu ứng nền Aurora Gradient ===== */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             background:
                 radial-gradient(circle at 15% 30%, hsla(200, 80%, 30%, 0.4), transparent 40%),
@@ -55,56 +46,34 @@
         }
 
         @keyframes aurora-flow {
-            0% { background-position: 0% 50%; }
+            0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
-        /* --- Header & Navigation --- */
         header {
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 100;
+            position: fixed; width: 100%; top: 0; left: 0; z-index: 100;
             background: rgba(18, 18, 18, 0.7);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
             padding: 1rem 2rem;
         }
 
-        /* ===== [NÂNG CẤP] Logo Gradient ===== */
         nav .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.5rem; font-weight: 700;
             background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
         nav ul { list-style: none; display: flex; gap: 2rem; }
-        nav ul li a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-            position: relative;
-            transition: color 0.3s ease;
-        }
+        nav ul li a { text-decoration: none; color: var(--text-color); font-weight: 500; position: relative; transition: color 0.3s ease; }
         nav ul li a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 50%;
+            content: ''; position: absolute;
+            width: 0; height: 2px; bottom: -5px; left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
             transition: width 0.3s ease;
@@ -112,67 +81,39 @@
         nav ul li a:hover { color: var(--primary-color-end); }
         nav ul li a:hover::after { width: 100%; }
 
-        /* --- Hero Section --- */
-        #hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-        }
+        #hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; }
         .hero-content h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            letter-spacing: 1.5px;
+            font-size: 4rem; margin-bottom: 1rem; letter-spacing: 1.5px;
             background: linear-gradient(90deg, #ffffff, var(--primary-color-start));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .hero-content p { font-size: 1.5rem; color: var(--text-secondary-color); margin-bottom: 2rem; }
         .typewriter { border-right: 2px solid var(--primary-color-start); animation: blink 0.7s steps(1) infinite; }
         @keyframes blink { 50% { border-color: transparent; } }
 
         .cta-button {
-            display: inline-block;
-            padding: 1rem 2rem;
+            display: inline-block; padding: 1rem 2rem;
             background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
-            color: #fff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 700;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
+            color: #fff; text-decoration: none; border-radius: 8px; font-weight: 700;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; border: none;
         }
-        .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(54, 209, 220, 0.2);
-        }
+        .cta-button:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(54, 209, 220, 0.2); }
 
-        /* --- General Section Styling --- */
         main { padding-top: 80px; }
         .container { max-width: 1100px; margin: 5rem auto; padding: 2rem; }
         h2 {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 3.5rem;
-            letter-spacing: 1px;
+            font-size: 2.5rem; text-align: center; margin-bottom: 3.5rem; letter-spacing: 1px;
             background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* --- About Section --- */
         .about-content { display: flex; align-items: center; gap: 2rem; }
         .avatar {
-            width: 150px; height: 150px;
-            border-radius: 50%;
-            border: 3px solid var(--primary-color-start);
-            object-fit: cover;
+            width: 150px; height: 150px; border-radius: 50%;
+            border: 3px solid var(--primary-color-start); object-fit: cover;
             box-shadow: 0 0 25px rgba(91, 134, 229, 0.3);
         }
 
-        /* --- Timeline --- */
         .timeline { position: relative; max-width: 800px; margin: 0 auto; }
         .timeline::after {
             content: ''; position: absolute; width: 3px;
@@ -183,85 +124,83 @@
         .timeline-item:nth-child(odd) { left: 0; text-align: right; }
         .timeline-item:nth-child(even) { left: 50%; }
         .timeline-dot {
-            content: ''; position: absolute;
-            width: 16px; height: 16px;
-            background-color: var(--background-color);
-            border: 3px solid var(--primary-color-start);
+            content: ''; position: absolute; width: 16px; height: 16px;
+            background-color: var(--background-color); border: 3px solid var(--primary-color-start);
             border-radius: 50%; top: 24px; z-index: 1;
         }
         .timeline-item:nth-child(odd) .timeline-dot { right: -8px; }
         .timeline-item:nth-child(even) .timeline-dot { left: -8px; }
         .timeline-content {
-            padding: 20px 30px;
-            background: rgba(30, 30, 30, 0.5); /* Glassmorphism nhẹ */
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 30px; background: rgba(30, 30, 30, 0.5);
+            border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .timeline-content h3 { color: var(--primary-color-start); }
 
-        /* --- Achievements --- */
-        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-
-        /* ===== [NÂNG CẤP] Glassmorphism cho thẻ Thành tích ===== */
-        .achievement-card {
+        /* ===== [THÊM MỚI] CSS cho phần Kỹ năng ===== */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .skill-card {
             background: rgba(44, 47, 58, 0.4);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 2rem;
-            text-align: center;
             border-radius: 12px;
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            text-align: center;
         }
-        .achievement-card:hover {
+        .skill-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
             border-color: rgba(91, 134, 229, 0.5);
         }
-
-        /* ===== [NÂNG CẤP] Icon SVG thay cho Emoji ===== */
-        .achievement-card .icon-container {
+        .skill-icon {
             margin-bottom: 1rem;
             color: var(--primary-color-start);
         }
-        .achievement-card .icon-container svg {
-            width: 48px;
-            height: 48px;
+        .skill-icon svg { width: 48px; height: 48px; }
+        .skill-card h3 {
+            margin-bottom: 0.75rem;
+            color: var(--text-color);
+            font-size: 1.2rem;
         }
+        .skill-card p { color: var(--text-secondary-color); font-size: 0.9rem; }
+
+        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .achievement-card {
+            background: rgba(44, 47, 58, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 2rem; text-align: center; border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .achievement-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); border-color: rgba(91, 134, 229, 0.5); }
+        .achievement-card .icon-container { margin-bottom: 1rem; color: var(--primary-color-start); }
+        .achievement-card .icon-container svg { width: 48px; height: 48px; }
         .achievement-card h3 { margin-bottom: 0.5rem; color: var(--text-color); }
 
         .certificates { margin-top: 4rem; text-align: center; }
         .certificates h3 { font-size: 1.8rem; margin-bottom: 2rem; }
         .certificate-gallery { display: flex; justify-content: center; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
-        .certificate-gallery img {
-            object-fit: cover; border-radius: 8px;
-            border: 2px solid var(--surface-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+        .certificate-gallery img { object-fit: cover; border-radius: 8px; border: 2px solid var(--surface-color); transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .certificate-gallery img:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); }
         .cert-portrait { width: 200px; height: 280px; }
         .cert-landscape { width: 280px; height: 200px; }
 
-        /* --- Projects --- */
         .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-
-        /* ===== [NÂNG CẤP] Glassmorphism cho thẻ Dự án ===== */
         .project-card {
-            border-radius: 12px;
-            overflow: hidden; position: relative;
-            height: 250px;
+            border-radius: 12px; overflow: hidden; position: relative; height: 250px;
             background-size: cover; background-position: center; background-repeat: no-repeat;
             border: 1px solid rgba(255, 255, 255, 0.15);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .project-card:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(0,0,0,0.3); }
-
         .project-info {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            padding: 1.5rem;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            transform: translateY(100%);
-            transition: transform 0.4s ease-out;
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
+            transform: translateY(100%); transition: transform 0.4s ease-out;
         }
         .project-card:hover .project-info { transform: translateY(0); }
         .project-info h3 { color: var(--primary-color-start); margin-bottom: 0.5rem; }
@@ -271,22 +210,15 @@
             border-bottom: 2px solid var(--primary-color-start);
         }
 
-        /* --- Contact --- */
         #contact { text-align: center; }
         .social-links { margin-top: 1.5rem; display: flex; justify-content: center; gap: 1.5rem; }
         .social-links a { color: var(--text-color); transition: color 0.3s ease, transform 0.3s ease; }
         .social-links a:hover { color: var(--primary-color-start); transform: scale(1.2); }
 
-        /* --- Footer --- */
-        footer {
-            text-align: center; padding: 2rem; margin-top: 2rem;
-            background: transparent;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        footer { text-align: center; padding: 2rem; margin-top: 2rem; background: transparent; border-top: 1px solid rgba(255, 255, 255, 0.1); }
         .reveal { position: relative; transform: translateY(100px); opacity: 0; transition: transform 1s, opacity 1s; }
         .reveal.active { transform: translateY(0); opacity: 1; }
 
-        /* Responsive */
         @media (max-width: 768px) {
             nav ul { display: none; }
             .hero-content h1 { font-size: 2.5rem; }
@@ -298,14 +230,12 @@
             .timeline-dot, .timeline-item:nth-child(odd) .timeline-dot, .timeline-item:nth-child(even) .timeline-dot { left: 23px; }
         }
 
-        /* Gán ảnh nền cho từng dự án */
         #project-1 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-giam-sat.jpg'); }
         #project-2 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-quan-ly-thuoc.png'); }
         #project-3 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-zentap.jpg'); }
         #project-4 {
             background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-lisseno.png');
-            background-size: contain;
-            background-color: var(--surface-color);
+            background-size: contain; background-color: var(--surface-color);
         }
         #project-5 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-vrchannels.jpg'); }
         #project-6 { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/project-meika.png'); }
@@ -319,6 +249,8 @@
             <ul>
                 <li><a href="#about">Giới thiệu</a></li>
                 <li><a href="#education">Học tập</a></li>
+                <!-- ===== [THÊM MỚI] Link Kỹ năng trên NAV ===== -->
+                <li><a href="#skills">Kỹ năng</a></li>
                 <li><a href="#achievements">Thành tích</a></li>
                 <li><a href="#projects">Dự án</a></li>
                 <li><a href="#contact">Liên hệ</a></li>
@@ -351,80 +283,65 @@
                 <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h3>Tiểu học An Cựu</h3><p>Nền tảng khởi đầu</p></div></div>
             </div>
         </section>
+        
+        <!-- ===== [THÊM MỚI] Section Kỹ năng & Chuyên môn ===== -->
+        <section id="skills" class="container reveal">
+            <h2>Kỹ năng & Chuyên môn</h2>
+            <div class="skills-grid">
+                <!-- Lập trình -->
+                <div class="skill-card">
+                    <div class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12l-5.657 5.657-1.414-1.414L21.172 12l-4.243-4.243 1.414-1.414L24 12zM2.828 12l4.243 4.243-1.414 1.414L0 12l5.657-5.657L7.07 7.757 2.828 12zm6.95 9.172l-1.414-1.414 4.242-4.243-4.242-4.242 1.414-1.414 5.656 5.656-5.656 5.657z"/></svg></div>
+                    <h3>Lập trình</h3>
+                    <p>Ngôn ngữ Python</p>
+                </div>
+                <!-- Thiết kế -->
+                <div class="skill-card">
+                    <div class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.38 0 2.69-.28 3.89-.78.34-.14.55-.5.41-.85-.14-.34-.5-.55-.85-.41C14.53 20.64 13.3 21 12 21c-4.97 0-9-4.03-9-9s4.03-9 9-9c2.38 0 4.54.93 6.14 2.44.29.29.77.29.01 0l-1.15-1.15c-.29-.29-.29-.77 0-1.06C18.15 3.09 20.97 3 21 3c.55 0 1 .45 1 1 0 .03-1.09 2.85-2.23 3.99-.29.29-.77.29-1.06 0l-1.15-1.15c-.29-.29-.29-.77 0-1.06C18.71 4.62 19 4.38 19 4c0-.55-.45-1-1-1-.38 0-1.29.29-2.44 1.14-.29.2-.68.21-.97.03-.02 0-.03-.01-.05-.02-.29-.18-.48-.49-.48-.85 0-.55-.45-1-1-1s-1 .45-1 1c0 .36-.19.67-.48.85-.29.18-.68.17-.97-.03C9.43 3.29 8.52 3 8.14 3c-.55 0-1 .45-1 1 0 .38.29 1.29 1.14 2.44.29.29.29.77 0 1.06l-1.15 1.15c-.29.29-.77.29 0 1.06C8.54 9.85 10.15 11 12 11c.55 0 1-.45 1-1s-.45-1-1-1c-1.6 0-2.92-.85-3.86-2.14.08.01.15.02.23.02.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1c0 .08.01.15.02.23C5.15 6.08 4 8.4 4 12c0 4.41 3.59 8 8 8s8-3.59 8-8c0-2.02-.75-3.85-2-5.22V12c0 .55-.45 1-1 1s-1-.45-1-1V6.27c-1.12-.9-2.51-1.27-4-1.27z"/></svg></div>
+                    <h3>Thiết kế</h3>
+                    <p>Canva, Photoshop</p>
+                </div>
+                <!-- Edit Video -->
+                <div class="skill-card">
+                    <div class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 8v8l6-4-6-4zm10-4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z"/></svg></div>
+                    <h3>Edit Video</h3>
+                    <p>Capcut, Final Cut Pro</p>
+                </div>
+                <!-- Điện tử -->
+                <div class="skill-card">
+                    <div class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 18H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V8h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V8h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V8h2v2z"/></svg></div>
+                    <h3>Điện tử</h3>
+                    <p>Arduino, ESP8266, Rubber Ducky, Raspberry Pi</p>
+                </div>
+                <!-- Sở trường -->
+                <div class="skill-card">
+                    <div class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg></div>
+                    <h3>Sở trường</h3>
+                    <p>Vật Lý, Toán Học</p>
+                </div>
+            </div>
+        </section>
 
         <section id="achievements" class="container reveal">
             <h2>Thành tích Nổi bật</h2>
             <div class="achievements-grid">
-                <!-- ===== [NÂNG CẤP] Thay Emoji bằng Icon SVG ===== -->
                 <div class="achievement-card">
-                    <div class="icon-container">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 15.667L8.443 16.11l-4.11-1.373.917-4.24-3.11-3.11 3.11-3.11-.917-4.24 4.11-1.373L12 6.333l3.557 1.556 4.11 1.373-.917 4.24 3.11 3.11-3.11 3.11.917 4.24-4.11 1.373L12 17.667zM12 15l2.443.917.667 2.443-2.11-1.667L12 15zm-2.443-.917L12 15v-1.75l-1.333-1.333L8.223 14.083z"/></svg>
-                    </div>
-                    <h3>Giải Nhất Sáng tạo</h3>
-                    <p>Cuộc thi Sáng tạo Thanh thiếu niên nhi đồng tỉnh 2023-2024.</p>
+                    <div class="icon-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 15.667L8.443 16.11l-4.11-1.373.917-4.24-3.11-3.11 3.11-3.11-.917-4.24 4.11-1.373L12 6.333l3.557 1.556 4.11 1.373-.917 4.24 3.11 3.11-3.11 3.11.917 4.24-4.11 1.373L12 17.667zM12 15l2.443.917.667 2.443-2.11-1.667L12 15zm-2.443-.917L12 15v-1.75l-1.333-1.333L8.223 14.083z"/></svg></div>
+                    <h3>Giải Nhất Sáng tạo</h3><p>Cuộc thi Sáng tạo Thanh thiếu niên nhi đồng tỉnh 2023-2024.</p>
                 </div>
                 <div class="achievement-card">
-                    <div class="icon-container">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-2.4 7.2H2l6 4.8-2.4 7.2L12 16.4l6.4 4.8-2.4-7.2 6-4.8h-7.6L12 2z"/></svg>
-                    </div>
-                    <h3>Giải Ba HSG KHTN 2</h3>
-                    <p>Kỳ thi HSG các môn văn hóa TP Huế 2024-2025 (môn Vật Lý).</p>
+                    <div class="icon-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-2.4 7.2H2l6 4.8-2.4 7.2L12 16.4l6.4 4.8-2.4-7.2 6-4.8h-7.6L12 2z"/></svg></div>
+                    <h3>Giải Ba HSG KHTN 2</h3><p>Kỳ thi HSG các môn văn hóa TP Huế 2024-2025 (môn Vật Lý).</p>
                 </div>
                 <div class="achievement-card">
-                    <div class="icon-container">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    </div>
-                    <h3>Á khoa đầu vào</h3>
-                    <p>Tổng điểm xét tuyển vào lớp 10 chuyên Vật Lý.</p>
+                    <div class="icon-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div>
+                    <h3>Á khoa đầu vào</h3><p>Tổng điểm xét tuyển vào lớp 10 chuyên Vật Lý.</p>
                 </div>
                 <div class="achievement-card">
-                    <div class="icon-container">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-3V2h-2v2h-4V2H8v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 12H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
-                    </div>
-                    <h3>Top 3 đầu vào</h3>
-                    <p>Tổng điểm xét tuyển vào lớp 10 chuyên Vật Lý.</p>
+                    <div class="icon-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-3V2h-2v2h-4V2H8v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 12H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg></div>
+                    <h3>Top 3 đầu vào</h3><p>Tổng điểm xét tuyển vào lớp 10 chuyên Vật Lý.</p>
                 </div>
             </div>
              <div class="certificates reveal">
                 <h3>Giấy khen & Chứng nhận</h3>
                 <div class="certificate-gallery">
-                    <img src="images/giay-khen-1.PNG" alt="Giấy khen Giải Nhất Sáng tạo" class="cert-portrait">
-                    <img src="images/giay-khen-2.png" alt="Giấy khen Học sinh giỏi" class="cert-landscape">
-                    <img src="images/giay-khen-3.png" alt="Giấy khen khác" class="cert-landscape">
-                </div>
-            </div>
-        </section>
-
-        <section id="projects" class="container reveal">
-            <h2>Dự án đã Thực hiện</h2>
-            <div class="projects-grid">
-                <div class="project-card" id="project-1"><div class="project-info"><h3>Phần mềm giám sát thi cử</h3><p>Phần mềm giám sát học sinh trong kỳ thi, ứng dụng công nghệ để đảm bảo tính minh bạch.</p><a href="#" target="_blank">Xem chi tiết</a></div></div>
-                <div class="project-card" id="project-2"><div class="project-info"><h3>Phần mềm quản lý thuốc</h3><p>Hệ thống quản lý việc giao và nhận thuốc trong bệnh viện, tối ưu hóa quy trình.</p><a href="#" target="_blank">Xem chi tiết</a></div></div>
-                <div class="project-card" id="project-3"><div class="project-info"><h3>ZenTap - Thiết bị thanh toán số</h3><p>Thiết bị thanh toán nhỏ gọn, tiện lợi và an toàn.</p><a href="#" target="_blank">Xem chi tiết</a></div></div>
-                <div class="project-card" id="project-4"><div class="project-info"><h3>Lisseno - Blockchain NFT</h3><p>Nền tảng ứng dụng công nghệ Blockchain cho NFT.</p><a href="#" target="_blank">Xem chi tiết</a></div></div>
-                <div class="project-card" id="project-5"><div class="project-info"><h3>Leader của VR Channels</h3><p>Group chia sẻ kiến thức về Crypto với gần 1000 thành viên.</p><a href="#" target="_blank">Tham gia</a></div></div>
-                <div class="project-card" id="project-6"><div class="project-info"><h3>CEO & Marketing của Meika Tech</h3><p>Điều hành và phụ trách marketing cho startup công nghệ Meika Tech.</p><a href="#" target="_blank">Tìm hiểu thêm</a></div></div>
-            </div>
-        </section>
-
-        <section id="contact" class="container reveal">
-            <h2>Liên hệ</h2>
-            <p>Kết nối với tôi qua các nền tảng mạng xã hội:</p>
-            <div class="social-links">
-                <a href="https://www.instagram.com/ltnpp_hieu" target="_blank" aria-label="Instagram"><svg height="32" width="32" fill="currentColor" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Lê Trần Ngọc Hiếu. All Rights Reserved.</p>
-    </footer>
-
-    <!-- JavaScript giữ nguyên, không cần thay đổi -->
-    <script>
-        document.addEventListener('DOMContentLoaded',function(){const e=document.querySelector(".typewriter"),t=["Trường THPT Chuyên Quốc Học Huế.","một người đam mê công nghệ.","nhà phát triển tương lai."];let n=0,c=0,o=!1;function i(){const s=t[n];o?(e.textContent=s.substring(0,c-1),c--):(e.textContent=s.substring(0,c+1),c++),!o&&c===s.length?setTimeout(()=>o=!0,2e3):o&&0===c&&(o=!1,n=(n+1)%t.length);const l=o?50:150;setTimeout(i,l)}i();const s=document.querySelectorAll(".reveal");function l(){const e=window.innerHeight;for(let t=0;t<s.length;t++){s[t].getBoundingClientRect().top<e-150?s[t].classList.add("active"):s[t].classList.remove("active")}}window.addEventListener("scroll",l),l(),document.querySelectorAll('nav a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault(),document.querySelector(this.getAttribute("href")).scrollIntoView({behavior:"smooth"})})})});
-    </script>
-
-</body>
-
-</html>
+                    <img src
