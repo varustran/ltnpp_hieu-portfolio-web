@@ -188,7 +188,6 @@
         }
         .skill-card:hover::before { opacity: 1; }
         .skill-icon svg, .icon-container svg {
-            /* Sửa lỗi icon quá to */
             width: 36px;
             height: 36px;
             color: var(--accent-glow);
@@ -257,8 +256,8 @@
             background: var(--surface-bg);
         }
         .camera-video {
-            display: block; /* Mặc định là block để hiển thị */
-            transform: scaleX(-1); /* Lật ngang để giống camera trước */
+            display: block;
+            transform: scaleX(-1);
         }
         .camera-output {
             position: relative;
@@ -282,6 +281,11 @@
             border-image: linear-gradient(45deg, var(--primary-start), var(--accent-glow)) 1;
             box-shadow: 0 0 20px rgba(142, 45, 226, 0.5);
             border-radius: 12px;
+            animation: glow-border 2s infinite alternate;
+        }
+        @keyframes glow-border {
+            0% { box-shadow: 0 0 10px rgba(142, 45, 226, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(142, 45, 226, 0.8), 0 0 50px rgba(242, 0, 165, 0.3); }
         }
         .ptb-frame-text {
             position: absolute;
@@ -295,9 +299,12 @@
             color: var(--text-main);
         }
         
-        /* Nút chụp ảnh */
-        .capture-button {
-            padding: 1rem 3rem;
+        .capture-buttons-container {
+            display: flex;
+            gap: 1rem;
+        }
+        .capture-button, .save-button {
+            padding: 1rem 2rem;
             background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
             color: var(--text-main);
             border: none;
@@ -306,7 +313,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .capture-button:hover {
+        .capture-button:hover, .save-button:hover {
             transform: scale(1.05);
             box-shadow: 0 0 20px rgba(142, 45, 226, 0.5);
         }
@@ -471,7 +478,10 @@
             <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Chụp một khoảnh khắc của bạn và ghép vào khung PTB độc đáo.</p>
             <div class="camera-container">
                 <video class="camera-video" id="camera-feed" autoplay playsinline></video>
-                <button class="capture-button" id="capture-btn">Chụp PTB</button>
+                <div class="capture-buttons-container">
+                    <button class="capture-button" id="capture-btn">Chụp PTB</button>
+                    <button class="save-button" id="save-btn" style="display: none;">Lưu ảnh</button>
+                </div>
                 <div class="camera-output">
                     <canvas class="camera-output-canvas" id="ptb-canvas" width="600" height="450"></canvas>
                     <div class="ptb-frame-overlay">
@@ -561,18 +571,20 @@
             // =======================================================
             const video = document.getElementById('camera-feed');
             const captureBtn = document.getElementById('capture-btn');
+            const saveBtn = document.getElementById('save-btn');
             const canvas = document.getElementById('ptb-canvas');
             const context = canvas.getContext('2d');
             
-            // Ẩn canvas ban đầu
+            // Ẩn canvas và nút lưu ảnh ban đầu
             canvas.style.display = 'none';
+            saveBtn.style.display = 'none';
 
             // Mở camera
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: true })
                     .then(stream => {
                         video.srcObject = stream;
-                        video.style.display = 'block'; // Hiển thị video sau khi có stream
+                        video.style.display = 'block';
                     })
                     .catch(err => {
                         console.error("Lỗi khi truy cập camera: " + err);
@@ -584,15 +596,25 @@
 
             // Xử lý sự kiện chụp ảnh
             captureBtn.addEventListener('click', () => {
-                // Đảm bảo canvas có cùng tỷ lệ với video
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
-                
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 
-                video.style.display = 'none'; // Ẩn video feed
-                canvas.style.display = 'block'; // Hiển thị ảnh đã chụp
-                captureBtn.textContent = 'Chụp lại'; // Thay đổi text nút
+                video.style.display = 'none';
+                canvas.style.display = 'block';
+                captureBtn.textContent = 'Chụp lại';
+                saveBtn.style.display = 'inline-block'; // Hiển thị nút lưu ảnh
+            });
+
+            // Xử lý sự kiện lưu ảnh
+            saveBtn.addEventListener('click', () => {
+                const dataURL = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'PTB_Snapshot_LeTranNgocHieu.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             });
         });
     </script>
