@@ -20,6 +20,7 @@
             --text-secondary: #B0B0B0;
             --surface-bg: rgba(20, 20, 30, 0.8);
             --border-color: rgba(255, 255, 255, 0.1);
+            /* --- THAY ĐỔI FONT CHỮ --- */
             --font-main: 'Be Vietnam Pro', sans-serif;
             --font-heading: 'Montserrat', sans-serif;
         }
@@ -28,7 +29,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
 
         body {
-            font-family: var(--font-main);
+            /* --- TINH CHỈNH FONT: Ưu tiên font Apple, sau đó đến font bạn chọn --- */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", var(--font-main);
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.7;
@@ -56,7 +58,8 @@
         }
         nav { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2.5rem; }
         nav .logo {
-            font-family: var(--font-heading);
+             /* --- TINH CHỈNH FONT TIÊU ĐỀ --- */
+            font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             font-size: 2rem; font-weight: 900;
             background: linear-gradient(90deg, var(--accent-glow), var(--primary-end));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -79,8 +82,12 @@
 
         /* ------------------ CÁC PHẦN CHÍNH ------------------ */
         .container { max-width: 1100px; margin: 8rem auto; padding: 2rem; }
+        h1, h2, h3 {
+             /* --- TINH CHỈNH FONT TIÊU ĐỀ CHUNG --- */
+            font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        
         h1 {
-            font-family: var(--font-heading);
             font-size: clamp(3rem, 12vw, 6rem);
             font-weight: 900;
             margin-bottom: 1rem;
@@ -94,7 +101,6 @@
         @keyframes flicker-text { 0% { opacity: 1; } 50% { opacity: 0.9; } 100% { opacity: 1; } }
         
         h2 {
-            font-family: var(--font-heading);
             font-size: 3rem; text-align: center; margin-bottom: 4rem; letter-spacing: 2px;
             background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -103,7 +109,6 @@
         }
         
         h3 {
-            font-family: var(--font-heading);
             font-weight: 700;
             margin-bottom: 1.5rem;
         }
@@ -148,25 +153,39 @@
         .avatar:hover { transform: rotateY(15deg) rotateX(8deg) scale(1.05); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 20px var(--primary-end); }
 
         /* Timeline */
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
         .timeline::after {
+            content: ''; position: absolute; width: 4px;
+            top: 0; bottom: 0; left: 50%; margin-left: -2px;
             background: linear-gradient(to bottom, var(--primary-end), var(--accent-glow));
             box-shadow: 0 0 15px var(--primary-end);
         }
+        .timeline-item { padding: 10px 40px; position: relative; width: 50%; }
+        .timeline-item:nth-child(odd) { left: 0; }
+        .timeline-item:nth-child(even) { left: 50%; }
         .timeline-dot {
+            content: ''; position: absolute;
+            width: 20px; height: 20px;
+            right: -10px; top: 20px;
             background-color: var(--bg-color); border: 4px solid var(--accent-glow);
+            border-radius: 50%; z-index: 1;
             animation: pulse-glow 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
         }
+        .timeline-item:nth-child(even) .timeline-dot { left: -10px; }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(242, 0, 165, 0.7); } 50% { box-shadow: 0 0 10px 10px rgba(242, 0, 165, 0); } }
         .timeline-content {
+            padding: 20px 30px;
             background: var(--surface-bg);
             border-radius: 12px; border: 2px solid var(--border-color);
             backdrop-filter: blur(20px);
+            position: relative;
             transition: all 0.5s ease;
         }
         .timeline-content:hover { border-color: var(--primary-end); box-shadow: 0 0 30px rgba(142, 45, 226, 0.4); }
         .timeline-content h3 { color: var(--primary-start); }
 
         /* Thẻ (Kỹ năng, Thành tích) */
-        .skills-grid, .achievements-grid { gap: 3rem; }
+        .skills-grid, .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; }
         .skill-card, .achievement-card {
             background: var(--surface-bg); backdrop-filter: blur(20px);
             border: 2px solid var(--border-color);
@@ -182,20 +201,22 @@
         }
         .skill-card::before {
             content: ''; position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, var(--primary-start), var(--primary-end));
-            opacity: 0.1; transition: opacity 0.5s ease;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(242, 0, 165, 0.2) 0%, rgba(124, 77, 255, 0) 70%);
+            transition: opacity 0.8s ease; opacity: 0; transform-origin: center;
         }
         .skill-card:hover::before { opacity: 1; }
+        .skill-icon, .icon-container { display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
         .skill-icon svg, .icon-container svg {
-            width: 36px;
-            height: 36px;
+            width: 48px; height: 48px;
             color: var(--accent-glow);
             filter: drop-shadow(0 0 10px var(--accent-glow));
+            transition: all 0.3s ease;
         }
+        .skill-card:hover .skill-icon svg, .achievement-card:hover .icon-container svg { transform: scale(1.2); }
 
         /* Projects */
-        .projects-grid { gap: 2.5rem; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; }
         .project-card {
             border-radius: 20px; height: 320px;
             border: 2px solid var(--border-color);
@@ -204,37 +225,66 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
         }
-        .project-card:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow); }
+        .project-card:hover { transform: scale(1.03); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow); }
         .project-info {
             background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(25px);
             transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            padding: 2.5rem; border-radius: 0 0 20px 20px;
+            padding: 1.5rem; width: 100%;
+            border-top: 1px solid var(--border-color);
         }
-        .project-info h3 { color: var(--accent-glow); }
+        .project-card:hover .project-info { transform: translateY(0); }
+        .project-info h3 { color: var(--accent-glow); margin-bottom: 0.5rem; }
+        .project-info p { font-size: 0.9rem; line-height: 1.5; }
         .project-info a {
-            font-size: 1rem; letter-spacing: 0.5px;
+            font-size: 0.9rem; letter-spacing: 0.5px;
             color: var(--text-main); text-decoration: none; font-weight: bold;
-            display: inline-block; margin-top: 1.5rem;
+            display: inline-block; margin-top: 1rem;
             border-bottom: 2px solid var(--accent-glow);
             transition: all 0.3s ease;
         }
-        .project-info a:hover { color: var(--accent-glow); border-color: var(--text-main); }
+        .project-info a:hover { color: var(--accent-glow); padding-right: 10px; }
         
+        /* Certificates */
+        .certificates { text-align: center; margin-top: 4rem; }
+        .certificate-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .certificate-gallery img {
+            width: 100%; height: auto;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .certificate-gallery img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(242, 0, 165, 0.4);
+            border-color: var(--accent-glow);
+        }
+
         /* Liên hệ */
         #contact { text-align: center; }
-        .social-links { gap: 3rem; }
+        .social-links { display: flex; justify-content: center; gap: 3rem; margin-top: 2rem; }
         .social-links a { color: var(--text-secondary); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .social-links a:hover {
-            color: var(--accent-glow); transform: scale(1.4);
+            color: var(--accent-glow); transform: scale(1.4) translateY(-5px);
             filter: drop-shadow(0 0 10px var(--accent-glow));
         }
+
+        /* Footer */
+        footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border-color); color: var(--text-secondary); font-size: 0.9rem; margin-top: 4rem; }
 
         /* Hiệu ứng Reveal */
         .reveal {
             opacity: 0;
-            transform: translateY(100px);
-            transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1), transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translateY(80px);
+            transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
@@ -245,7 +295,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2rem;
+            gap: 1.5rem;
         }
         .camera-video, .camera-output-canvas {
             width: 100%;
@@ -254,6 +304,7 @@
             border: 2px solid var(--primary-end);
             box-shadow: 0 0 20px rgba(142, 45, 226, 0.3);
             background: var(--surface-bg);
+            height: auto;
         }
         .camera-video {
             display: block;
@@ -263,6 +314,7 @@
             position: relative;
             width: 100%;
             max-width: 600px;
+            line-height: 0; /* Loại bỏ khoảng trống dưới canvas */
         }
         .camera-output-canvas {
             position: relative;
@@ -279,13 +331,13 @@
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             border: 10px solid transparent;
             border-image: linear-gradient(45deg, var(--primary-start), var(--accent-glow)) 1;
-            box-shadow: 0 0 20px rgba(142, 45, 226, 0.5);
+            box-shadow: 0 0 20px rgba(142, 45, 226, 0.5), inset 0 0 20px rgba(142, 45, 226, 0.3);
             border-radius: 12px;
             animation: glow-border 2s infinite alternate;
         }
         @keyframes glow-border {
-            0% { box-shadow: 0 0 10px rgba(142, 45, 226, 0.5); }
-            100% { box-shadow: 0 0 30px rgba(142, 45, 226, 0.8), 0 0 50px rgba(242, 0, 165, 0.3); }
+            from { filter: hue-rotate(0deg); box-shadow: 0 0 10px rgba(142, 45, 226, 0.5); }
+            to { filter: hue-rotate(45deg); box-shadow: 0 0 30px rgba(142, 45, 226, 0.8), 0 0 50px rgba(242, 0, 165, 0.3); }
         }
         .ptb-frame-text {
             position: absolute;
@@ -333,7 +385,7 @@
             .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
             .timeline-item:nth-child(odd), .timeline-item:nth-child(even) { left: 0; text-align: left; }
             .timeline-dot, .timeline-item:nth-child(odd) .timeline-dot, .timeline-item:nth-child(even) .timeline-dot { left: 23px; }
-            .skills-grid, .achievements-grid, .projects-grid { gap: 2rem; }
+            .skills-grid, .achievements-grid, .projects-grid { grid-template-columns: 1fr; gap: 2rem; }
             .skill-card, .achievement-card { padding: 2rem; }
             .project-card { height: 280px; }
         }
@@ -379,6 +431,7 @@
             <h2>Về Bản thân</h2>
             <div class="about-content">
                 <div class="about-image-container">
+                    <!-- ĐƯỜNG DẪN ẢNH ĐƯỢC GIỮ NGUYÊN -->
                     <img src="images/avatar1.jpg" alt="Ảnh đại diện Lê Trần Ngọc Hiếu" class="avatar">
                 </div>
                 <div class="about-text">
@@ -454,9 +507,10 @@
             <div class="certificates reveal">
                 <h3>Giấy khen & Chứng nhận</h3>
                 <div class="certificate-gallery">
-                    <img src="images/giay-khen-1.PNG" alt="Giấy khen Giải Nhất Sáng tạo" class="cert-portrait">
-                    <img src="images/giay-khen-2.png" alt="Giấy khen Học sinh giỏi" class="cert-landscape">
-                    <img src="images/giay-khen-3.png" alt="Giấy khen khác" class="cert-landscape">
+                    <!-- ĐƯỜNG DẪN ẢNH ĐƯỢC GIỮ NGUYÊN -->
+                    <img src="images/giay-khen-1.PNG" alt="Giấy khen Giải Nhất Sáng tạo">
+                    <img src="images/giay-khen-2.png" alt="Giấy khen Học sinh giỏi">
+                    <img src="images/giay-khen-3.png" alt="Giấy khen khác">
                 </div>
             </div>
         </section>
@@ -478,19 +532,19 @@
             <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Chụp một khoảnh khắc của bạn và ghép vào khung PTB độc đáo.</p>
             <div class="camera-container">
                 <video class="camera-video" id="camera-feed" autoplay playsinline></video>
-                <div class="capture-buttons-container">
-                    <button class="capture-button" id="capture-btn">Chụp PTB</button>
-                    <button class="save-button" id="save-btn" style="display: none;">Lưu ảnh</button>
-                </div>
-                <div class="camera-output">
-                    <canvas class="camera-output-canvas" id="ptb-canvas" width="600" height="450"></canvas>
+                <div class="camera-output" id="output-container" style="display: none;">
+                    <canvas class="camera-output-canvas" id="ptb-canvas"></canvas>
                     <div class="ptb-frame-overlay">
                         <div class="ptb-frame-border"></div>
                         <div class="ptb-frame-text">
                             <h3>PTB Snapshot</h3>
-                            <p style="color: var(--text-secondary);">Khoảnh khắc của Hiếu</p>
+                            <p id="snapshot-time" style="color: var(--text-secondary); font-size: 0.8em; margin: 0;"></p>
                         </div>
                     </div>
+                </div>
+                 <div class="capture-buttons-container">
+                    <button class="capture-button" id="capture-btn">Chụp PTB</button>
+                    <button class="save-button" id="save-btn" style="display: none;">Lưu ảnh</button>
                 </div>
             </div>
         </section>
@@ -510,11 +564,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Hiệu ứng typewriter
             const typewriterEl = document.querySelector(".typewriter");
-            const textArray = ["một người đam mê công nghệ.", "nhà phát triển tương lai."];
+            const textArray = ["một người đam mê công nghệ.", "nhà phát triển tương lai.", "nhà sáng tạo nội dung."];
             let textArrayIndex = 0;
             let charIndex = 0;
-            const typingDelay = 150;
-            const erasingDelay = 50;
+            const typingDelay = 120;
+            const erasingDelay = 40;
             const newTextDelay = 2000;
 
             function type() {
@@ -542,30 +596,18 @@
 
             // Hiệu ứng Reveal
             const revealElements = document.querySelectorAll(".reveal");
-            function reveal() {
-                const windowHeight = window.innerHeight;
-                for (let i = 0; i < revealElements.length; i++) {
-                    const elementTop = revealElements[i].getBoundingClientRect().top;
-                    if (elementTop < windowHeight - 150) {
-                        revealElements[i].classList.add("active");
-                    } else {
-                        revealElements[i].classList.remove("active");
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("active");
                     }
-                }
-            }
-            window.addEventListener("scroll", reveal);
-            reveal();
-            
-            // Cuộn mượt
-            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
                 });
-            });
+            }, { threshold: 0.1 });
 
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+            
             // =======================================================
             // ============== LOGIC CHO TÍNH NĂNG CAMERA ==============
             // =======================================================
@@ -573,45 +615,93 @@
             const captureBtn = document.getElementById('capture-btn');
             const saveBtn = document.getElementById('save-btn');
             const canvas = document.getElementById('ptb-canvas');
+            const outputContainer = document.getElementById('output-container');
+            const snapshotTimeEl = document.getElementById('snapshot-time');
             const context = canvas.getContext('2d');
             
-            // Ẩn canvas và nút lưu ảnh ban đầu
-            canvas.style.display = 'none';
-            saveBtn.style.display = 'none';
+            let stream = null;
 
-            // Mở camera
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(stream => {
-                        video.srcObject = stream;
-                        video.style.display = 'block';
-                    })
-                    .catch(err => {
-                        console.error("Lỗi khi truy cập camera: " + err);
-                        alert("Không thể truy cập camera. Vui lòng cho phép truy cập.");
-                    });
-            } else {
-                alert("Trình duyệt của bạn không hỗ trợ tính năng camera.");
+            async function startCamera() {
+                try {
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                         alert("Trình duyệt của bạn không hỗ trợ tính năng camera.");
+                         return;
+                    }
+                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    outputContainer.style.display = 'none';
+                    captureBtn.textContent = 'Chụp PTB';
+                    saveBtn.style.display = 'none';
+                } catch (err) {
+                    console.error("Lỗi khi truy cập camera: ", err);
+                    alert("Không thể truy cập camera. Vui lòng kiểm tra quyền truy cập trong cài đặt trình duyệt của bạn.");
+                }
             }
 
-            // Xử lý sự kiện chụp ảnh
+            startCamera();
+
             captureBtn.addEventListener('click', () => {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                video.style.display = 'none';
-                canvas.style.display = 'block';
-                captureBtn.textContent = 'Chụp lại';
-                saveBtn.style.display = 'inline-block'; // Hiển thị nút lưu ảnh
+                if (video.style.display === 'block') {
+                    // Chụp ảnh
+                    const videoWidth = video.videoWidth;
+                    const videoHeight = video.videoHeight;
+                    canvas.width = videoWidth;
+                    canvas.height = videoHeight;
+                    
+                    context.save();
+                    context.translate(videoWidth, 0);
+                    context.scale(-1, 1);
+                    context.drawImage(video, 0, 0, videoWidth, videoHeight);
+                    context.restore();
+                    
+                    video.style.display = 'none';
+                    outputContainer.style.display = 'block';
+                    captureBtn.textContent = 'Chụp lại';
+                    saveBtn.style.display = 'inline-block';
+                    
+                    const now = new Date();
+                    snapshotTimeEl.textContent = now.toLocaleString('vi-VN');
+
+                    // Dừng stream camera
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                    }
+
+                } else {
+                    // Chụp lại
+                    startCamera();
+                }
             });
 
-            // Xử lý sự kiện lưu ảnh
             saveBtn.addEventListener('click', () => {
-                const dataURL = canvas.toDataURL('image/png');
+                 // Tạo canvas mới để vẽ cả ảnh và overlay
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = canvas.width;
+                finalCanvas.height = canvas.height;
+                const finalCtx = finalCanvas.getContext('2d');
+
+                // Vẽ ảnh đã chụp
+                finalCtx.drawImage(canvas, 0, 0);
+
+                // Vẽ overlay (đây là phần phức tạp vì nó là HTML/CSS)
+                // Cách đơn giản hóa: Vẽ lại các yếu tố frame bằng canvas API
+                finalCtx.strokeStyle = 'rgba(255,255,255,0.5)';
+                finalCtx.lineWidth = 20; 
+                finalCtx.strokeRect(0, 0, finalCanvas.width, finalCanvas.height); // Đây chỉ là ví dụ, frame thật phức tạp hơn
+                
+                // Vẽ chữ
+                finalCtx.fillStyle = 'white';
+                finalCtx.font = 'bold 24px ' + getComputedStyle(document.body).fontFamily;
+                finalCtx.fillText('PTB Snapshot', 30, finalCanvas.height - 60);
+                finalCtx.font = '18px ' + getComputedStyle(document.body).fontFamily;
+                finalCtx.fillText(snapshotTimeEl.textContent, 30, finalCanvas.height - 30);
+
+
+                const dataURL = finalCanvas.toDataURL('image/png');
                 const link = document.createElement('a');
                 link.href = dataURL;
-                link.download = 'PTB_Snapshot_LeTranNgocHieu.png';
+                link.download = `PTB_Snapshot_${Date.now()}.png`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
