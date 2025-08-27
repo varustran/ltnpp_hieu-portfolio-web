@@ -20,7 +20,6 @@
         .container {
             max-width: 500px; width: 100%; background: var(--white-color);
             padding: 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow);
-            transition: all 0.3s ease;
         }
         h1 {
             color: var(--primary-color); text-align: center; margin-bottom: 25px; font-size: 2em;
@@ -116,26 +115,30 @@
         const MESSAGE_ENTRY_ID = 'entry.922968917';
         // ------------------------------------
 
-        window.currentUserName = '';
-        window.currentMessageCategory = '';
+        let currentUserName = '';
+        let currentMessageCategory = '';
         const chatBox = document.getElementById('chat-box');
         const userMessageInput = document.getElementById('userMessage');
 
-        window.startChat = function() {
-            window.currentUserName = document.getElementById('userName').value.trim();
-            window.currentMessageCategory = document.getElementById('messageCategory').value;
+        // Đưa các hàm ra ngoài "cửa sổ" global để HTML có thể gọi được
+        window.startChat = startChat;
+        window.sendMessage = sendMessage;
 
-            if (window.currentUserName === '') {
+        function startChat() {
+            currentUserName = document.getElementById('userName').value.trim();
+            currentMessageCategory = document.getElementById('messageCategory').value;
+
+            if (currentUserName === '') {
                 alert('Bạn ơi, đừng quên nhập tên nhé!');
                 return;
             }
 
             document.getElementById('setup-section').style.display = 'none';
             document.getElementById('chat-section').style.display = 'block';
-            addBotMessage(`Chào ${window.currentUserName}, bạn muốn gửi gắm điều gì cho Ngọc Hiếu? Mình là trợ lý AI của Hiếu, mình có thể trò chuyện với bạn trong lúc chờ Hiếu trả lời.`);
+            addBotMessage(`Chào ${currentUserName}, nhắn cho mình có việc gì không?`);
         }
 
-        window.sendMessage = function() {
+        function sendMessage() {
             const messageText = userMessageInput.value.trim();
             if (messageText === '') return;
 
@@ -151,24 +154,20 @@
             addTypingIndicator();
             
             try {
-                const chat = model.startChat({
-                    history: [],
-                    generationConfig: {
-                        maxOutputTokens: 200,
-                    },
-                    // --- HỆ THỐNG CHỈ DẪN CHO AI (ĐÃ CẬP NHẬT) ---
-                    systemInstruction: `Bạn là một trợ lý AI thân thiện của Ngọc Hiếu. Tên bạn là "Trợ lý ảo". 
-                    Nhiệm vụ của bạn là trò chuyện với bạn bè của Ngọc Hiếu trong lúc họ chờ Hiếu trả lời tin nhắn. 
-                    Hãy trả lời các tin nhắn một cách ngắn gọn, vui vẻ, lịch sự, và tự nhiên bằng tiếng Việt. 
-                    Đừng trả lời quá dài dòng. Đừng bao giờ tiết lộ bạn là một model ngôn ngữ.
+                // --- HỆ THỐNG CHỈ DẪN MỚI CHO AI ---
+                const systemInstruction = `Bạn hãy đóng vai là Ngọc Hiếu và trò chuyện với bạn bè của tôi.
+                Hãy trả lời tin nhắn của họ một cách tự nhiên, thân thiện, và vui vẻ bằng tiếng Việt.
+                Giữ cho các câu trả lời ngắn gọn và gần gũi. Nếu có thông báo gì từ bạn tôi về lịch học hãy hỏi chi tiết là mấy giờ , ai dạy, môn gì nhé.
+                Đừng bao giờ tiết lộ bạn là một AI hay một model ngôn ngữ. Hãy hành động như bạn là Ngọc Hiếu thật.
 
-                    QUAN TRỌNG: Nếu tin nhắn của người dùng có nhắc đến tên "Phi Phong" hoặc "Mio", bạn PHẢI trả lời chính xác bằng câu sau và không thêm bất kỳ điều gì khác: "Cảm ơn bạn đã gửi tin nhắn tới cho Ngọc Hiếu, mình đã thực hiện thay bạn việc gửi tin nhắn đến bạn ấy, phiền bạn chờ trong giây lát và Ngọc Hiếu sẽ trả lời bạn ngay lập tức khi đọc được. Trân trọng!". 
-                    
-                    Đối với các tin nhắn khác không chứa các tên đó, hãy trò chuyện bình thường.`,
-                });
+                QUAN TRỌNG: Nếu tin nhắn của người dùng có nhắc đến tên "Phi Phong" hoặc "Mio", hãy trả lời một cách chung chung và thân thiện, ví dụ như: "Cảm ơn bạn đã nhắn tin nhé, mình sẽ xem và trả lời sớm nhất có thể!".
 
-                const result = await chat.sendMessage(userMessage);
-                const response = result.response;
+                Đối với các tin nhắn khác không chứa các tên đó, hãy trò chuyện bình thường như hai người bạn.`;
+                
+                const fullPrompt = `${systemInstruction}\n\nHãy trả lời tin nhắn sau từ người dùng tên là "${currentUserName}": "${userMessage}"`;
+
+                const result = await model.generateContent(fullPrompt);
+                const response = await result.response;
                 const text = response.text();
 
                 removeTypingIndicator();
@@ -177,7 +176,7 @@
             } catch (error) {
                 console.error("Lỗi từ API Gemini:", error);
                 removeTypingIndicator();
-                addBotMessage("Ôi, hình như bộ não AI của mình đang có chút vấn đề. 😵 Nhưng bạn yên tâm, tin nhắn của bạn đã được gửi tới Hiếu rồi nhé!");
+                addBotMessage("Ôi, hình như mình đang có chút vấn đề. 😵 Nhưng bạn yên tâm, tin nhắn của bạn đã được gửi tới mình rồi nhé!");
             }
         }
 
@@ -188,8 +187,8 @@
             successIndicator.style.display = 'none';
 
             const formData = new FormData();
-            formData.append(NAME_ENTRY_ID, window.currentUserName);
-            formData.append(CATEGORY_ENTRY_ID, window.currentMessageCategory);
+            formData.append(NAME_ENTRY_ID, currentUserName);
+            formData.append(CATEGORY_ENTRY_ID, currentMessageCategory);
             formData.append(MESSAGE_ENTRY_ID, `[Tin nhắn gốc] ${message}`);
 
             try {
@@ -224,7 +223,7 @@
         }
 
         function addTypingIndicator() {
-            const indicator = addMessageToBox("Trợ lý ảo đang nghĩ...", "bot-message");
+            const indicator = addMessageToBox("Đang trả lời...", "bot-message");
             indicator.classList.add("typing-indicator");
             indicator.id = "typing-indicator";
         }
