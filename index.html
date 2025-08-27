@@ -3,165 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gửi Tin Nhắn Cho Ngọc Hiếu</title>
+    <title>Gửi Tin Nhắn Cho Ngọc Hiếu (với AI)</title>
     <style>
-        /* CSS tích hợp */
+        /* CSS không thay đổi, vẫn giữ nguyên như cũ */
         @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
-        
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5a623;
-            --background-color: #f4f7f9;
-            --text-color: #333;
-            --white-color: #fff;
-            --border-radius: 12px;
-            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --primary-color: #4a90e2; --secondary-color: #f5a623;
+            --background-color: #f4f7f9; --text-color: #333; --white-color: #fff;
+            --border-radius: 12px; --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-
         body {
-            font-family: 'Be Vietnam Pro', sans-serif;
-            background-color: var(--background-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: var(--text-color);
+            font-family: 'Be Vietnam Pro', sans-serif; background-color: var(--background-color);
+            margin: 0; padding: 20px; display: flex; justify-content: center;
+            align-items: center; min-height: 100vh; color: var(--text-color);
         }
-
         .container {
-            max-width: 500px;
-            width: 100%;
-            background: var(--white-color);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+            max-width: 500px; width: 100%; background: var(--white-color);
+            padding: 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow);
             transition: all 0.3s ease;
         }
-
         h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 2em;
+            color: var(--primary-color); text-align: center; margin-bottom: 25px; font-size: 2em;
         }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #555;
-        }
-
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: #555; }
         input[type="text"], select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+            box-sizing: border-box; transition: border-color 0.3s ease;
         }
-
         input[type="text"]:focus, select:focus {
-            border-color: var(--primary-color);
-            outline: none;
+            border-color: var(--primary-color); outline: none;
         }
-
         button {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: var(--white-color);
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%; padding: 15px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--white-color); border: none; border-radius: 8px; font-size: 1em;
+            font-weight: 700; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        #chat-section {
-            display: none;
-            margin-top: 30px;
-        }
-        
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); }
+        #chat-section { display: none; margin-top: 30px; }
         #chat-box {
-            height: 250px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            height: 250px; border: 1px solid #ddd; border-radius: 8px; padding: 15px;
+            margin-bottom: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
         }
-
-        .message {
-            padding: 10px 15px;
-            border-radius: 18px;
-            max-width: 80%;
-            line-height: 1.4;
-        }
-
+        .message { padding: 10px 15px; border-radius: 18px; max-width: 80%; line-height: 1.4; white-space: pre-wrap; }
         .user-message {
-            background-color: var(--primary-color);
-            color: var(--white-color);
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
+            background-color: var(--primary-color); color: var(--white-color);
+            align-self: flex-end; border-bottom-right-radius: 4px;
         }
-
         .bot-message {
-            background-color: #e9ebee;
-            color: var(--text-color);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
+            background-color: #e9ebee; color: var(--text-color);
+            align-self: flex-start; border-bottom-left-radius: 4px;
         }
-
-        .chat-input-area {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input-area input {
-            flex-grow: 1;
-        }
-
-        .chat-input-area button {
-            width: auto;
-            padding: 12px 20px;
-        }
-        
+        .typing-indicator { font-style: italic; color: #888; align-self: flex-start; }
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input-area input { flex-grow: 1; }
+        .chat-input-area button { width: auto; padding: 12px 20px; }
         #loading, #success-message {
-            text-align: center;
-            margin-top: 15px;
-            font-weight: 500;
-            display: none;
+            text-align: center; margin-top: 15px; font-weight: 500; display: none;
         }
-        
-        #loading {
-            color: var(--secondary-color);
-        }
-
-        #success-message {
-            color: #28a745;
-        }
+        #loading { color: var(--secondary-color); }
+        #success-message { color: #28a745; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Gửi Lời Nhắn 💌</h1>
+        <h1>Gửi Lời Nhắn (AI) 🤖</h1>
         
         <div id="setup-section">
             <div class="input-group">
@@ -186,39 +93,49 @@
                 <input type="text" id="userMessage" placeholder="Nhập tin nhắn của bạn..." onkeydown="if(event.key==='Enter') sendMessage();">
                 <button onclick="sendMessage()">Gửi</button>
             </div>
-            <p id="loading">Đang gửi tin nhắn...</p>
-            <p id="success-message">Gửi thành công!</p>
+            <p id="loading">Đang gửi tin nhắn tới Google Sheet...</p>
+            <p id="success-message">Đã gửi tới Google Sheet thành công!</p>
         </div>
     </div>
 
-    <script>
-        // --- CẤU HÌNH GOOGLE FORM ---
+    <script type="module">
+        // --- PHẦN MỚI CỦA GEMINI ---
+        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+        // !!! DÁN API KEY CỦA BẠN VÀO ĐÂY !!!
+        const GEMINI_API_KEY = 'AIzaSyAi_WIPEx4jJJ4Wj-GSGxvk2vuivQ5JNbs';
+        
+        const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
+        // -----------------------------
+
+        // --- CẤU HÌNH GOOGLE FORM (Giữ nguyên) ---
         const GOOGLE_FORM_ACTION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSebgT1-Yws43khPRwEHGvNEbLlhEF4P7Tyg_3rj-nNyrH9Srw/formResponse';
         const NAME_ENTRY_ID = 'entry.1002171265';
         const CATEGORY_ENTRY_ID = 'entry.1137914858';
         const MESSAGE_ENTRY_ID = 'entry.922968917';
-        // -----------------------------
+        // ------------------------------------
 
-        let currentUserName = '';
-        let currentMessageCategory = '';
+        window.currentUserName = '';
+        window.currentMessageCategory = '';
         const chatBox = document.getElementById('chat-box');
         const userMessageInput = document.getElementById('userMessage');
 
-        function startChat() {
-            currentUserName = document.getElementById('userName').value.trim();
-            currentMessageCategory = document.getElementById('messageCategory').value;
+        window.startChat = function() {
+            window.currentUserName = document.getElementById('userName').value.trim();
+            window.currentMessageCategory = document.getElementById('messageCategory').value;
 
-            if (currentUserName === '') {
+            if (window.currentUserName === '') {
                 alert('Bạn ơi, đừng quên nhập tên nhé!');
                 return;
             }
 
             document.getElementById('setup-section').style.display = 'none';
             document.getElementById('chat-section').style.display = 'block';
-            addBotMessage(`Chào ${currentUserName}, bạn muốn gửi gắm điều gì về chủ đề "${currentMessageCategory}" cho Ngọc Hiếu?`);
+            addBotMessage(`Chào ${window.currentUserName}, bạn muốn gửi gắm điều gì cho Ngọc Hiếu? Mình là trợ lý AI của Hiếu, mình có thể trò chuyện với bạn trong lúc chờ Hiếu trả lời.`);
         }
 
-        function sendMessage() {
+        window.sendMessage = function() {
             const messageText = userMessageInput.value.trim();
             if (messageText === '') return;
 
@@ -230,43 +147,62 @@
             userMessageInput.focus();
         }
         
-        function handleBotResponse(userMessage) {
-            const botReply = `Cảm ơn bạn đã gửi tin nhắn tới cho Ngọc Hiếu, mình đã thực hiện thay bạn việc gửi tin nhắn đến bạn ấy, phiền bạn chờ trong giây lát và Ngọc Hiếu sẽ trả lời bạn ngay lập tức khi đọc được. Trân trọng!`;
+        async function handleBotResponse(userMessage) {
+            addTypingIndicator();
             
-            setTimeout(() => {
-                addBotMessage(botReply);
-            }, 600);
+            try {
+                const chat = model.startChat({
+                    history: [],
+                    generationConfig: {
+                        maxOutputTokens: 200,
+                    },
+                    // --- HỆ THỐNG CHỈ DẪN CHO AI (ĐÃ CẬP NHẬT) ---
+                    systemInstruction: `Bạn là một trợ lý AI thân thiện của Ngọc Hiếu. Tên bạn là "Trợ lý ảo". 
+                    Nhiệm vụ của bạn là trò chuyện với bạn bè của Ngọc Hiếu trong lúc họ chờ Hiếu trả lời tin nhắn. 
+                    Hãy trả lời các tin nhắn một cách ngắn gọn, vui vẻ, lịch sự, và tự nhiên bằng tiếng Việt. 
+                    Đừng trả lời quá dài dòng. Đừng bao giờ tiết lộ bạn là một model ngôn ngữ.
+
+                    QUAN TRỌNG: Nếu tin nhắn của người dùng có nhắc đến tên "Phi Phong" hoặc "Mio", bạn PHẢI trả lời chính xác bằng câu sau và không thêm bất kỳ điều gì khác: "Cảm ơn bạn đã gửi tin nhắn tới cho Ngọc Hiếu, mình đã thực hiện thay bạn việc gửi tin nhắn đến bạn ấy, phiền bạn chờ trong giây lát và Ngọc Hiếu sẽ trả lời bạn ngay lập tức khi đọc được. Trân trọng!". 
+                    
+                    Đối với các tin nhắn khác không chứa các tên đó, hãy trò chuyện bình thường.`,
+                });
+
+                const result = await chat.sendMessage(userMessage);
+                const response = result.response;
+                const text = response.text();
+
+                removeTypingIndicator();
+                addBotMessage(text);
+
+            } catch (error) {
+                console.error("Lỗi từ API Gemini:", error);
+                removeTypingIndicator();
+                addBotMessage("Ôi, hình như bộ não AI của mình đang có chút vấn đề. 😵 Nhưng bạn yên tâm, tin nhắn của bạn đã được gửi tới Hiếu rồi nhé!");
+            }
         }
 
         async function sendDataToForm(message) {
             const loadingIndicator = document.getElementById('loading');
             const successIndicator = document.getElementById('success-message');
-            
             loadingIndicator.style.display = 'block';
             successIndicator.style.display = 'none';
 
             const formData = new FormData();
-            formData.append(NAME_ENTRY_ID, currentUserName);
-            formData.append(CATEGORY_ENTRY_ID, currentMessageCategory);
-            formData.append(MESSAGE_ENTRY_ID, message);
+            formData.append(NAME_ENTRY_ID, window.currentUserName);
+            formData.append(CATEGORY_ENTRY_ID, window.currentMessageCategory);
+            formData.append(MESSAGE_ENTRY_ID, `[Tin nhắn gốc] ${message}`);
 
             try {
-                // Gửi dữ liệu tới Google Form
                 await fetch(GOOGLE_FORM_ACTION_URL, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'no-cors' // Quan trọng: Chế độ này để tránh lỗi CORS
+                    method: 'POST', body: formData, mode: 'no-cors'
                 });
-                
-                // Cập nhật giao diện sau khi gửi
                 loadingIndicator.style.display = 'none';
                 successIndicator.style.display = 'block';
                 setTimeout(() => { successIndicator.style.display = 'none'; }, 2000);
-
             } catch (error) {
-                console.error('Error submitting form:', error);
+                console.error('Lỗi gửi form:', error);
                 loadingIndicator.style.display = 'none';
-                alert('Gửi tin nhắn thất bại. Vui lòng thử lại sau.');
+                alert('Gửi tin nhắn tới Google Sheet thất bại.');
             }
         }
         
@@ -276,6 +212,7 @@
             messageElement.textContent = content;
             chatBox.appendChild(messageElement);
             chatBox.scrollTop = chatBox.scrollHeight;
+            return messageElement;
         }
 
         function addUserMessage(message) {
@@ -285,7 +222,20 @@
         function addBotMessage(message) {
             addMessageToBox(message, 'bot-message');
         }
+
+        function addTypingIndicator() {
+            const indicator = addMessageToBox("Trợ lý ảo đang nghĩ...", "bot-message");
+            indicator.classList.add("typing-indicator");
+            indicator.id = "typing-indicator";
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById("typing-indicator");
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
     </script>
 </body>
 </html>
-
