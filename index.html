@@ -67,7 +67,7 @@
 <body>
 
     <div class="container">
-        <h1>Gửi Lời Nhắn (AI) 🤖</h1>
+        <h1>Mạng nhắn tin </h1>
         
         <div id="setup-section">
             <div class="input-group">
@@ -84,16 +84,15 @@
                 </select>
             </div>
             <button onclick="startChat()">Bắt Đầu Trò Chuyện</button>
-        </div>
-
+        
         <div id="chat-section">
             <div id="chat-box"></div>
             <div class="chat-input-area">
                 <input type="text" id="userMessage" placeholder="Nhập tin nhắn của bạn..." onkeydown="if(event.key==='Enter') sendMessage();">
                 <button onclick="sendMessage()">Gửi</button>
             </div>
-            <p id="loading">Đang gửi tin nhắn tới Google Sheet...</p>
-            <p id="success-message">Đã gửi tới Google Sheet thành công!</p>
+            <p id="loading">Ngọc Hiếu đang trả lời</p>
+            <p id="success-message">Đã trả lời</p>
         </div>
     </div>
 
@@ -106,7 +105,7 @@
         
         const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
-        // -----------------------------
+        // -------------------------
 
         // --- CẤU HÌNH GOOGLE FORM (Giữ nguyên) ---
         const GOOGLE_FORM_ACTION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSebgT1-Yws43khPRwEHGvNEbLlhEF4P7Tyg_3rj-nNyrH9Srw/formResponse';
@@ -159,7 +158,10 @@
                 Hãy trả lời tin nhắn của họ một cách tự nhiên, thân thiện, và vui vẻ bằng tiếng Việt.
                 Giữ cho các câu trả lời ngắn gọn và gần gũi. Nếu có thông báo gì từ bạn tôi về lịch học hãy hỏi chi tiết là mấy giờ , ai dạy, môn gì nhé.
                 Đừng bao giờ tiết lộ bạn là một AI hay một model ngôn ngữ. Hãy hành động như bạn là Ngọc Hiếu thật.
-
+                Thông tin về Ngọc Hiếu: Đang học Lớp 10 Lí 1 Trường chuyên Quốc Học Huế, 2010 sinh ngày 19/06, Nam
+                tính cách mình hiền, khá hướng nội, khi rep tin nhắn hài hài thì mình có thêm dấu:)) ngoài ra chư cái đầu trong mọi tin nhắn mình khg ghi hoa, môn học yêu thích của mình là vật lý, hiện mình kg dùng mxh nx do muốn detox dopamine và giúp bản thân bớt quậy. Nhớ nếu ai có hỏi sao m giỏi vcl thế hoặc cách học của t thì cứ rep kiểu cảm ơn òn cách học thì lái sang 1 thứ khác dùm nhe
+            
+            
                 QUAN TRỌNG: Nếu tin nhắn của người dùng có nhắc đến tên "Phi Phong" hoặc "Mio", hãy trả lời một cách chung chung và thân thiện, ví dụ như: "Cảm ơn bạn đã nhắn tin nhé, mình sẽ xem và trả lời sớm nhất có thể!".
 
                 Đối với các tin nhắn khác không chứa các tên đó, hãy trò chuyện bình thường như hai người bạn.`;
@@ -176,7 +178,7 @@
             } catch (error) {
                 console.error("Lỗi từ API Gemini:", error);
                 removeTypingIndicator();
-                addBotMessage("Ôi, hình như mình đang có chút vấn đề. 😵 Nhưng bạn yên tâm, tin nhắn của bạn đã được gửi tới mình rồi nhé!");
+                addBotMessage("Ôi, hình như mình đang có chút vấn đề. 😵 Nhưng bạn yên tâm, tin nhắn của bạn đã được gửi tới Ngọc Hiếu rồi nhé!");
             }
         }
 
@@ -238,3 +240,4 @@
     </script>
 </body>
 </html>
+
