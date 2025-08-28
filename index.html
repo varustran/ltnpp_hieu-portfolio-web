@@ -49,8 +49,8 @@
             color: #555;
         }
         .social-content {
-            width: 100px; /* Tăng kích thước để phù hợp hơn */
-            height: 150px; /* Tăng kích thước để phù hợp hơn */
+            width: 120px; /* Tăng kích thước */
+            height: 180px; /* Tăng kích thước */
             border-radius: 10px;
             background-color: #e9ebee;
             display: flex;
@@ -62,15 +62,13 @@
             box-sizing: border-box;
             overflow: hidden;
             position: relative;
+            text-align: center; /* Căn giữa text trong ô */
         }
         .social-content img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 10px;
-        }
-        #note-content {
-            font-style: italic;
         }
         /* -------------------------------------- */
 
@@ -112,6 +110,12 @@
         }
         #loading { color: var(--secondary-color); }
         #success-message { color: #28a745; }
+        #no-updates-message {
+            text-align: center;
+            color: #888;
+            margin-top: 20px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -134,6 +138,7 @@
                     <div class="social-content" id="locket-content"></div>
                 </div>
             </div>
+            <p id="no-updates-message" style="display: none;">Ngọc Hiếu chưa đăng tin gì mới</p>
         </div>
         <div id="setup-section">
             <div class="input-group">
@@ -193,45 +198,52 @@
         // --- HÀM MỚI ĐỂ TẢI CÁC CẬP NHẬT MẠNG XÃ HỘI ---
         function loadSocialUpdates() {
             // GIẢ LẬP: Thay đổi các đường dẫn này thành ảnh thật trong thư mục 'images' của bạn
-            // Để trống mảng này nếu không có ảnh: const imageFiles = {};
-            const imageFiles = {
-                note: "Đang detox dopamine, đừng làm phiền :))", // Nội dung ghi chú là văn bản
-                story: "images/story.jpg", // Ví dụ: ảnh trong thư mục images
-                locket: "images/locket.png"  // Ví dụ: ảnh trong thư mục images
+            // Để trống mảng này nếu không có ảnh/text:
+            // const socialData = {}; 
+            const socialData = {
+                note: "Dùng MXH chán quá mình tự tạo mxh luôn", // Nội dung ghi chú là văn bản
+                story: "", // Ví dụ: ảnh trong thư mục images (đảm bảo có file này)
+                locket: ""  // Để trống nếu không có ảnh locket
             };
 
             const noteEl = document.getElementById('note-content');
             const storyEl = document.getElementById('story-content');
             const locketEl = document.getElementById('locket-content');
+            const noUpdatesMessage = document.getElementById('no-updates-message');
             
-            let hasUpdates = false;
+            let hasAnyUpdate = false;
 
             // Xử lý Ghi chú
-            if (imageFiles.note) {
-                noteEl.textContent = imageFiles.note;
-                hasUpdates = true;
+            if (socialData.note) {
+                noteEl.textContent = socialData.note;
+                hasAnyUpdate = true;
+            } else {
+                noteEl.textContent = 'Ngọc Hiếu chưa đăng ghi chú nào';
             }
 
             // Xử lý Tin
-            if (imageFiles.story) {
-                storyEl.innerHTML = `<img src="${imageFiles.story}" alt="Story Image">`;
-                hasUpdates = true;
+            if (socialData.story) {
+                storyEl.innerHTML = `<img src="${socialData.story}" alt="Story Image">`;
+                hasAnyUpdate = true;
+            } else {
+                storyEl.textContent = 'Chưa có gì';
             }
 
             // Xử lý Locket
-            if (imageFiles.locket) {
-                locketEl.innerHTML = `<img src="${imageFiles.locket}" alt="Locket Image">`;
-                hasUpdates = true;
+            if (socialData.locket) {
+                locketEl.innerHTML = `<img src="${socialData.locket}" alt="Locket Image">`;
+                hasAnyUpdate = true;
+            } else {
+                locketEl.textContent = 'Chưa có gì';
             }
 
-            // Nếu không có cập nhật nào
-            if (!hasUpdates) {
-                document.getElementById('social-updates').innerHTML = "<p style='text-align: center; color: #888;'>Ngọc Hiếu chưa đăng tin gì mới</p>";
+            // Hiển thị thông báo chung nếu không có bất kỳ cập nhật nào
+            if (!hasAnyUpdate) {
+                document.getElementById('social-updates').style.display = 'none'; // Ẩn toàn bộ grid
+                noUpdatesMessage.style.display = 'block'; // Hiển thị thông báo chung
             } else {
-                 // Nếu có cập nhật nhưng một mục nào đó trống
-                if (!imageFiles.note) noteEl.textContent = 'Chưa có gì';
-                if (!imageFiles.story) storyEl.textContent = 'Chưa có gì';
-                if (!imageFiles.locket) locketEl.textContent = 'Chưa có gì';
+                document.getElementById('social-updates').style.display = 'block'; // Đảm bảo grid hiển thị
+                noUpdatesMessage.style.display = 'none'; // Ẩn thông báo chung
             }
         }
         
@@ -250,6 +262,7 @@
 
             document.getElementById('setup-section').style.display = 'none';
             document.getElementById('social-updates').style.display = 'none'; // Ẩn mục MXH khi vào chat
+            document.getElementById('no-updates-message').style.display = 'none'; // Ẩn thông báo chung nếu đang hiển thị
             document.getElementById('chat-section').style.display = 'block';
             addBotMessage(`Chào ${currentUserName}, nhắn cho mình có việc gì không?`);
         }
