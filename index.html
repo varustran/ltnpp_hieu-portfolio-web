@@ -22,8 +22,58 @@
             padding: 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow);
         }
         h1 {
-            color: var(--primary-color); text-align: center; margin-bottom: 25px; font-size: 2em;
+            color: var(--primary-color); text-align: center; margin-bottom: 15px; font-size: 2em;
         }
+        
+        /* --- CSS MỚI CHO MỤC MẠNG XÃ HỘI --- */
+        #social-updates {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            text-align: center;
+        }
+        .social-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .social-item-title {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .social-content {
+            width: 100px; /* Tăng kích thước để phù hợp hơn */
+            height: 150px; /* Tăng kích thước để phù hợp hơn */
+            border-radius: 10px;
+            background-color: #e9ebee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8em;
+            color: #888;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow: hidden;
+            position: relative;
+        }
+        .social-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        #note-content {
+            font-style: italic;
+        }
+        /* -------------------------------------- */
+
         .input-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 500; color: #555; }
         input[type="text"], select {
@@ -67,8 +117,24 @@
 <body>
 
     <div class="container">
-        <h1>Mạng nhắn tin </h1>
+        <h1>Mạng nhắn tin đến Ngọc Hiếu</h1>
         
+        <div id="social-updates">
+            <div class="social-grid">
+                <div class="social-item">
+                    <div class="social-item-title">Ghi chú 📝</div>
+                    <div class="social-content" id="note-content"></div>
+                </div>
+                <div class="social-item">
+                    <div class="social-item-title">Tin 📸</div>
+                    <div class="social-content" id="story-content"></div>
+                </div>
+                <div class="social-item">
+                    <div class="social-item-title">Locket 🖼️</div>
+                    <div class="social-content" id="locket-content"></div>
+                </div>
+            </div>
+        </div>
         <div id="setup-section">
             <div class="input-group">
                 <label for="userName">Tên của bạn:</label>
@@ -84,7 +150,9 @@
                 </select>
             </div>
             <button onclick="startChat()">Bắt Đầu Trò Chuyện</button>
-        </div> <div id="chat-section">
+        </div>
+        
+        <div id="chat-section">
             <div id="chat-box"></div>
             <div class="chat-input-area">
                 <input type="text" id="userMessage" placeholder="Nhập tin nhắn của bạn..." onkeydown="if(event.key==='Enter') sendMessage();">
@@ -122,6 +190,55 @@
         window.startChat = startChat;
         window.sendMessage = sendMessage;
 
+        // --- HÀM MỚI ĐỂ TẢI CÁC CẬP NHẬT MẠNG XÃ HỘI ---
+        function loadSocialUpdates() {
+            // GIẢ LẬP: Thay đổi các đường dẫn này thành ảnh thật trong thư mục 'images' của bạn
+            // Để trống mảng này nếu không có ảnh: const imageFiles = {};
+            const imageFiles = {
+                note: "Đang detox dopamine, đừng làm phiền :))", // Nội dung ghi chú là văn bản
+                story: "images/story.jpg", // Ví dụ: ảnh trong thư mục images
+                locket: "images/locket.png"  // Ví dụ: ảnh trong thư mục images
+            };
+
+            const noteEl = document.getElementById('note-content');
+            const storyEl = document.getElementById('story-content');
+            const locketEl = document.getElementById('locket-content');
+            
+            let hasUpdates = false;
+
+            // Xử lý Ghi chú
+            if (imageFiles.note) {
+                noteEl.textContent = imageFiles.note;
+                hasUpdates = true;
+            }
+
+            // Xử lý Tin
+            if (imageFiles.story) {
+                storyEl.innerHTML = `<img src="${imageFiles.story}" alt="Story Image">`;
+                hasUpdates = true;
+            }
+
+            // Xử lý Locket
+            if (imageFiles.locket) {
+                locketEl.innerHTML = `<img src="${imageFiles.locket}" alt="Locket Image">`;
+                hasUpdates = true;
+            }
+
+            // Nếu không có cập nhật nào
+            if (!hasUpdates) {
+                document.getElementById('social-updates').innerHTML = "<p style='text-align: center; color: #888;'>Ngọc Hiếu chưa đăng tin gì mới</p>";
+            } else {
+                 // Nếu có cập nhật nhưng một mục nào đó trống
+                if (!imageFiles.note) noteEl.textContent = 'Chưa có gì';
+                if (!imageFiles.story) storyEl.textContent = 'Chưa có gì';
+                if (!imageFiles.locket) locketEl.textContent = 'Chưa có gì';
+            }
+        }
+        
+        // Gọi hàm khi trang được tải
+        document.addEventListener('DOMContentLoaded', loadSocialUpdates);
+        // --------------------------------------------------
+
         function startChat() {
             currentUserName = document.getElementById('userName').value.trim();
             currentMessageCategory = document.getElementById('messageCategory').value;
@@ -132,6 +249,7 @@
             }
 
             document.getElementById('setup-section').style.display = 'none';
+            document.getElementById('social-updates').style.display = 'none'; // Ẩn mục MXH khi vào chat
             document.getElementById('chat-section').style.display = 'block';
             addBotMessage(`Chào ${currentUserName}, nhắn cho mình có việc gì không?`);
         }
@@ -239,4 +357,3 @@
     </script>
 </body>
 </html>
-
