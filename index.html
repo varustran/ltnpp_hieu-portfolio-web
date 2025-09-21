@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
 
+    <!-- Thư viện để chuyển đổi Markdown thành HTML -->
     <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
 
     <style>
@@ -217,8 +218,7 @@
 
             const fetchArticle = async (id) => {
                 try {
-                    // SỬA LỖI CACHE: Thêm tham số ngẫu nhiên để buộc tải lại
-                    const response = await fetch(`./articles/${id}.md?v=${new Date().getTime()}`);
+                    const response = await fetch(`articles/${id}.md?v=${new Date().getTime()}`);
                     if (!response.ok) return null;
                     const markdown = await response.text();
                     const htmlContent = showdownConverter.makeHtml(markdown);
@@ -238,19 +238,7 @@
                         articles.push(article);
                         id++;
                     } else {
-                        // Thử thêm 2 lần nữa để phòng trường hợp file bị lỗi mạng tạm thời
-                        let retries = 2;
-                        let found = false;
-                        for(let i=0; i<retries; i++){
-                            const retryArticle = await fetchArticle(id);
-                            if(retryArticle){
-                                articles.push(retryArticle);
-                                id++;
-                                found = true;
-                                break;
-                            }
-                        }
-                        if(!found) break;
+                        break;
                     }
                 }
                 allArticlesCache = articles.sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')));
@@ -478,15 +466,10 @@
                     ui.progressBar.style.width = '0%';
                     return;
                 }
-                const scrollableHeight = articleContent.scrollHeight - window.innerHeight;
-                const scrollTop = articleContent.getBoundingClientRect().top;
-                
-                if (scrollTop > 0) { // Not yet started scrolling into the article
-                     ui.progressBar.style.width = '0%';
-                } else {
-                     const progress = (Math.abs(scrollTop) / scrollableHeight) * 100;
-                     ui.progressBar.style.width = `${Math.min(progress, 100)}%`;
-                }
+                const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollTop = document.documentElement.scrollTop;
+                const progress = (scrollTop / scrollableHeight) * 100;
+                ui.progressBar.style.width = `${progress}%`;
             };
             
             // --- EVENT LISTENERS ---
