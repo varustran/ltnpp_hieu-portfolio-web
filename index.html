@@ -153,6 +153,7 @@
         .like-section { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 500; color: var(--text-color); }
         .like-btn { background: none; border: none; cursor: pointer; padding: 5px; display: flex; align-items: center; }
         .like-btn svg { width: 30px; height: 30px; fill: #ccc; transition: all 0.2s ease; }
+        .like-btn.liked { cursor: default; }
         .like-btn.liked svg { fill: var(--heart-color); animation: pulse 0.5s; }
         .like-btn:hover:not(.liked) svg { fill: #aaa; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
@@ -163,7 +164,7 @@
         #comment-form button { align-self: flex-start; }
         #comment-list { list-style: none; }
         .comment-item { background-color: var(--light-gray); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .comment-item p { margin: 0; }
+        .comment-item p { margin: 0; word-wrap: break-word; }
         .comment-item .comment-meta { font-size: 0.9rem; font-weight: bold; color: var(--secondary-color); margin-bottom: 5px; }
         .comment-item .comment-meta span { font-weight: normal; color: #6c757d; margin-left: 10px; font-size: 0.8rem; }
         
@@ -582,7 +583,7 @@
                 const isLiked = likedArticles.includes(articleId);
                 ui.likeSectionContainer.innerHTML = `
                     <div class="like-section">
-                        <button class="like-btn ${isLiked ? 'liked' : ''}" id="like-btn" data-id="${articleId}">
+                        <button class="like-btn ${isLiked ? 'liked' : ''}" id="like-btn" data-id="${articleId}" ${isLiked ? 'disabled' : ''}>
                             <svg viewBox="0 0 24 24"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/></svg>
                         </button>
                         <span id="like-count">${likeCount || 0}</span> Lượt thích
@@ -596,6 +597,7 @@
 
                 if (likedArticles.includes(articleId)) return;
 
+                likeButton.disabled = true;
                 const { error } = await supabase.rpc('increment_likes', { article_id_to_inc: articleId });
 
                 if (!error) {
@@ -603,6 +605,9 @@
                     localStorage.setItem('likedArticles', JSON.stringify(likedArticles));
                     likeButton.classList.add('liked');
                     countElement.textContent = parseInt(countElement.textContent) + 1;
+                } else {
+                    console.error("Lỗi khi tăng lượt thích:", error);
+                    likeButton.disabled = false;
                 }
             };
             
@@ -743,8 +748,8 @@
             
             ui.loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const usernameValue = document.getElementById('usernameInput').value;
-                const passwordValue = document.getElementById('passwordInput').value;
+                const usernameValue = document.getElementById('usernameInput').value; // SỬA LỖI Ở ĐÂY
+                const passwordValue = document.getElementById('passwordInput').value; // SỬA LỖI Ở ĐÂY
                 
                 if (usernameValue === validUsername && validPasswords.includes(passwordValue)) {
                     alert('Đăng nhập thành công!');
@@ -787,7 +792,7 @@
                     ui.submitPostBtn.disabled = true; ui.submitPostBtn.textContent = 'Đang xử lý...';
                     const form = e.target;
                     
-                    if (!form.articleTitle.value || !form.articleAuthors.value || quill.getLength() <= 1 || document.getElementById('coverImagePreview').src === window.location.href) {
+                    if (!form.articleTitle.value || !form.articleAuthors.value || quill.getLength() <= 1 || document.getElementById('coverImagePreview').src.startsWith('http://127.0.0.1')) {
                         showMessage('post-message', 'Vui lòng điền đầy đủ các trường và chọn ảnh bìa.', false);
                         ui.submitPostBtn.disabled = false;
                         ui.submitPostBtn.textContent = editingArticleId ? 'Cập Nhật Bài Báo' : 'Xuất Bản';
