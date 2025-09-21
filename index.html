@@ -34,6 +34,11 @@
         .main-header.scrolled { box-shadow: var(--shadow); }
         .main-header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-family: var(--font-heading); color: var(--primary-color); font-size: 2.5rem; margin: 0; font-weight: 700; text-decoration: none; }
+        .main-nav ul { list-style: none; display: flex; }
+        .main-nav li { margin-left: 30px; }
+        .main-nav a { text-decoration: none; color: var(--primary-color); font-weight: 500; font-size: 1rem; padding-bottom: 5px; position: relative; }
+        .main-nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: var(--accent-color); transition: all 0.3s ease-in-out; }
+        .main-nav a:hover::after, .main-nav a.active::after { width: 100%; left: 0; }
         
         .hero-section { background: linear-gradient(rgba(10, 47, 91, 0.85), rgba(10, 47, 91, 0.85)), url('https://placehold.co/1920x1080/0A2F5B/FFFFFF?text=PhysiVerse+Background') no-repeat center center; background-size: cover; color: #fff; text-align: center; padding: 120px 0; }
         .hero-section h2 { font-family: var(--font-heading); font-size: 3.5rem; margin-bottom: 20px; font-weight: 700; }
@@ -81,6 +86,16 @@
         .article-full-content img { max-width: 100%; height: auto; border-radius: 5px; margin: 1rem 0; }
         #backToHomeBtn { margin-bottom: 40px; display: inline-block; background-color: var(--primary-color); color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none; transition: all 0.3s ease; }
         #backToHomeBtn:hover { background-color: var(--secondary-color); }
+        
+        .main-footer { background-color: var(--primary-color); color: rgba(255, 255, 255, 0.8); padding: 60px 0; line-height: 1.8; }
+        .main-footer a { color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s ease; }
+        .main-footer a:hover { color: #fff; text-decoration: underline; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-content h4 { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 20px; color: var(--accent-color); }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-contact p { margin-bottom: 10px; }
+        .footer-copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.2); opacity: 0.7; }
 
         #scrollToTopBtn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 99; border: none; outline: none; background-color: var(--primary-color); color: white; cursor: pointer; padding: 15px; border-radius: 50%; font-size: 18px; width: 50px; height: 50px; transition: all 0.3s; opacity: 0.8; }
         #scrollToTopBtn:hover { opacity: 1; transform: scale(1.1); }
@@ -96,13 +111,44 @@
 
     <header class="main-header" id="mainHeader">
         <div class="container">
-            <a href="#" class="logo" id="logo-link">PhysiVerse</a>
+            <a href="#" class="logo nav-link" data-target="homePage">PhysiVerse</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" class="nav-link active" data-target="homePage">Trang Chủ</a></li>
+                    <li><a href="#" class="nav-link" data-target="aboutUsPage">Về Chúng Tôi</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
     <main id="main-content">
         <!-- Nội dung sẽ được render vào đây bởi JavaScript -->
     </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <h4>Về PhysiVerse</h4>
+                    <p>Tạp chí khoa học & công nghệ truy cập mở, dành riêng cho việc phổ biến tri thức và thúc đẩy các khám phá tiên phong.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Liên Kết Hữu Ích</h4>
+                    <ul>
+                        <li><a href="#" class="nav-link" data-target="homePage">Trang Chủ</a></li>
+                        <li><a href="#" class="nav-link" data-target="aboutUsPage">Về Chúng Tôi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Thông Tin Liên Hệ</h4>
+                    <p><strong>Email:</strong> <a href="mailto:contact@physiverse.com">contact@physiverse.com</a></p>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 PhysiVerse. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
     
     <button id="scrollToTopBtn" title="Lên đầu trang">&#8679;</button>
 
@@ -116,17 +162,16 @@
                 header: document.getElementById('mainHeader'),
                 mainContent: document.getElementById('main-content'),
                 scrollToTopBtn: document.getElementById('scrollToTopBtn'),
-                logoLink: document.getElementById('logo-link')
+                navLinks: document.querySelectorAll('.nav-link')
             };
 
-            const showdownConverter = new showdown.Converter({ metadata: true });
+            const showdownConverter = new showdown.Converter({ metadata: true, tables: true, emoji: true });
             let allArticlesCache = [];
 
             const showLoader = () => ui.loader.classList.add('show');
             const hideLoader = () => ui.loader.classList.remove('show');
 
             const parseFrontMatter = (metadata) => {
-                // Showdown's getMetadata() returns raw strings. We need to parse them.
                 const parsed = {};
                 for (const key in metadata) {
                     if (Object.hasOwnProperty.call(metadata, key)) {
@@ -145,7 +190,6 @@
                     const metadata = parseFrontMatter(showdownConverter.getMetadata());
                     return { id, ...metadata, content: htmlContent };
                 } catch (error) {
-                    console.error(`Error fetching article ${id}.md:`, error);
                     return null;
                 }
             };
@@ -208,26 +252,22 @@
                                         </select>
                                     </div>
                                 </div>
-                                ${articlesToRender.length === 0 ? `
-                                <div id="no-articles-message">
-                                    <h3>Không tìm thấy bài báo nào.</h3>
-                                </div>` : ''}
-                                <div class="articles-grid">
+                                <div id="articles-grid-container" class="articles-grid">
                                     ${articlesHTML}
+                                </div>
+                                <div id="no-articles-message" style="display: ${articlesToRender.length === 0 ? 'block' : 'none'};">
+                                    <h3>Không tìm thấy bài báo nào phù hợp.</h3>
                                 </div>
                             </div>
                         </section>
                     </section>`;
-
-                document.getElementById('homeSearchInput')?.addEventListener('input', handleFilters);
-                document.getElementById('categoryFilter')?.addEventListener('change', handleFilters);
             };
 
             const renderArticlePage = (article) => {
                 ui.mainContent.innerHTML = `
                     <section id="articleDetailPage" class="page-section active">
                         <div class="container">
-                            <a href="#" id="backToHomeBtn">&larr; Quay lại Trang chủ</a>
+                            <a href="#" id="backToHomeBtn" class="nav-link" data-target="homePage">&larr; Quay lại Trang chủ</a>
                             <div class="article-detail-container">
                                 <div class="article-detail-header">
                                     <img src="${article.coverImage}" alt="Article Cover Image">
@@ -245,46 +285,71 @@
                     </section>`;
             };
 
+             const renderAboutPage = () => {
+                ui.mainContent.innerHTML = `
+                    <section id="aboutUsPage" class="page-section active" style="padding: 80px 0;">
+                        <div class="container">
+                            <h2 class="section-title">Về Chúng Tôi</h2>
+                            <div class="page-content-container">
+                                <h3>Tầm Nhìn</h3>
+                                <p>PhysiVerse được xây dựng với tầm nhìn trở thành một kho lưu trữ tri thức hiện đại, dễ tiếp cận và đáng tin cậy trong các lĩnh vực khoa học và công nghệ mũi nhọn.</p>
+                                <h3>Sứ Mệnh</h3>
+                                <p>Sứ mệnh của chúng tôi là đẩy nhanh tốc độ phổ biến tri thức và thúc đẩy các khám phá khoa học tiên tiến. Bằng cách cung cấp một nền tảng xuất bản truy cập mở, chúng tôi kết nối cộng đồng các nhà nghiên cứu, đồng thời truyền cảm hứng cho thế hệ các nhà khoa học tương lai.</p>
+                            </div>
+                        </div>
+                    </section>`;
+            };
+
             const handleFilters = () => {
                 const searchTerm = document.getElementById('homeSearchInput').value.toLowerCase();
                 const selectedCategory = document.getElementById('categoryFilter').value;
                 
                 let filtered = allArticlesCache;
-
                 if (searchTerm) {
-                    filtered = filtered.filter(a => 
-                        a.title.toLowerCase().includes(searchTerm) || 
-                        a.authors.toLowerCase().includes(searchTerm)
-                    );
+                    filtered = filtered.filter(a => a.title.toLowerCase().includes(searchTerm) || a.authors.toLowerCase().includes(searchTerm));
                 }
-
                 if (selectedCategory) {
                     filtered = filtered.filter(a => a.category === selectedCategory);
                 }
                 
-                renderHomePage(filtered);
-                 // Re-attach listeners because the DOM is re-rendered
-                document.getElementById('homeSearchInput').value = searchTerm;
-                document.getElementById('categoryFilter').value = selectedCategory;
-                document.getElementById('homeSearchInput').addEventListener('input', handleFilters);
-                document.getElementById('categoryFilter').addEventListener('change', handleFilters);
+                const grid = document.getElementById('articles-grid-container');
+                const noResults = document.getElementById('no-articles-message');
+                grid.innerHTML = '';
+                if (filtered.length === 0) {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                    filtered.forEach(article => {
+                         grid.insertAdjacentHTML('beforeend', `
+                            <a href="#article/${article.id}" class="article-card" data-id="${article.id}">
+                                <img src="${article.coverImage}" alt="${article.title}" class="article-image">
+                                <div class="article-content">
+                                    <span class="article-category">${article.category}</span>
+                                    <h4 class="article-title">${article.title}</h4>
+                                    <p class="article-authors">Bởi ${article.authors}</p>
+                                    <p class="article-excerpt">${article.excerpt}</p>
+                                </div>
+                            </a>`);
+                    });
+                }
             };
             
             const router = () => {
                 const path = window.location.hash.slice(1);
                 const articleIdMatch = path.match(/^article\/(\d+)$/);
 
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+
                 if (articleIdMatch) {
                     const articleId = parseInt(articleIdMatch[1]);
                     const article = allArticlesCache.find(a => a.id == articleId);
-                    if (article) {
-                        renderArticlePage(article);
-                    } else {
-                        // Handle case where article is not found after initial load
-                        window.location.hash = ''; // Go back to home
-                        renderHomePage();
-                    }
+                    if (article) renderArticlePage(article);
+                    else window.location.hash = ''; // Go home if article not found
+                } else if (path === 'aboutUsPage') {
+                    document.querySelector('.nav-link[data-target="aboutUsPage"]').classList.add('active');
+                    renderAboutPage();
                 } else {
+                    document.querySelector('.nav-link[data-target="homePage"]').classList.add('active');
                     renderHomePage();
                 }
                  window.scrollTo(0, 0);
@@ -294,21 +359,28 @@
             window.addEventListener('hashchange', router);
 
             ui.mainContent.addEventListener('click', (e) => {
-                const articleLink = e.target.closest('a.article-card, a#backToHomeBtn, a.logo');
-                if (articleLink) {
-                    const articleId = articleLink.dataset.id;
-                    if (articleId) {
-                        window.location.hash = `article/${articleId}`;
-                    } else {
-                        window.location.hash = '';
-                    }
+                const cardLink = e.target.closest('a.article-card');
+                if (cardLink) {
+                    e.preventDefault();
+                    window.location.hash = `article/${cardLink.dataset.id}`;
                 }
             });
             
-            ui.logoLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.location.hash = '';
+            document.body.addEventListener('click', (e) => {
+                 const navLink = e.target.closest('.nav-link');
+                 if (navLink) {
+                     e.preventDefault();
+                     window.location.hash = navLink.dataset.target;
+                 }
             });
+
+            ui.mainContent.addEventListener('input', (e) => {
+                if (e.target.id === 'homeSearchInput') handleFilters();
+            });
+            ui.mainContent.addEventListener('change', (e) => {
+                if (e.target.id === 'categoryFilter') handleFilters();
+            });
+
 
             window.onscroll = () => {
                 const isScrolled = document.body.scrollTop > 100 || document.documentElement.scrollTop > 100;
