@@ -5,795 +5,191 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhysiVerse - Tạp chí Khoa học & Công nghệ</title>
     
-    <!-- Google Fonts for professional typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <!-- QuillJS CSS for rich text editor -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
-    <!-- All CSS is embedded here -->
     <style>
         /* --- CSS Variables & Global Reset --- */
         :root {
-            --primary-color: #0A2F5B; /* Navy Blue */
-            --secondary-color: #005A9C; /* Brighter Blue */
-            --accent-color: #E8A87C; /* Soft Orange/Peach */
-            --text-color: #333333;
-            --light-gray: #f8f9fa;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --error-color: #dc3545;
-            --font-heading: 'Lora', serif;
-            --font-body: 'Montserrat', sans-serif;
+            --primary-color: #0A2F5B; --secondary-color: #005A9C; --accent-color: #E8A87C;
+            --text-color: #333333; --light-gray: #f8f9fa; --border-color: #dee2e6;
+            --success-color: #28a745; --error-color: #dc3545; --heart-color: #e2264d;
+            --font-heading: 'Lora', serif; --font-body: 'Montserrat', sans-serif;
             --shadow: 0 4px 15px rgba(0,0,0,0.07);
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: var(--font-body);
-            line-height: 1.7;
-            color: var(--text-color);
-            background-color: #ffffff;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); line-height: 1.7; color: var(--text-color); background-color: #ffffff; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
         /* --- LOADING SPINNER --- */
-        .loader-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-        .loader-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .loader {
-            border: 8px solid var(--light-gray);
-            border-top: 8px solid var(--primary-color);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .loader-overlay.show { opacity: 1; visibility: visible; }
+        .loader { border: 8px solid var(--light-gray); border-top: 8px solid var(--primary-color); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* --- Header & Navigation --- */
-        .main-header {
-            background-color: #fff;
-            border-bottom: 1px solid var(--border-color);
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            transition: box-shadow 0.3s ease;
-        }
-        .main-header.scrolled {
-            box-shadow: var(--shadow);
-        }
-
-        .main-header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: var(--font-heading);
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin: 0;
-            font-weight: 700;
-        }
-
-        .main-nav ul {
-            list-style: none;
-            display: flex;
-        }
-
-        .main-nav li {
-            margin-left: 30px;
-        }
-        
-        #management-nav-link {
-            display: none; /* Hidden by default */
-        }
-
-        .main-nav a {
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: 500;
-            font-size: 1rem;
-            padding-bottom: 5px;
-            position: relative;
-        }
-        .main-nav a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: var(--accent-color);
-            transition: all 0.3s ease-in-out;
-        }
-        .main-nav a:hover::after,
-        .main-nav a.active::after {
-            width: 100%;
-            left: 0;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-        }
-
-        .header-actions .user-info {
-            display: none; /* Hidden by default, shown on login */
-            align-items: center;
-        }
-
-        .header-actions .user-info span {
-            margin-right: 15px;
-            font-weight: 500;
-            color: var(--primary-color);
-        }
-        .header-actions .user-info .btn {
-             margin-left: 10px;
-        }
+        .main-header { background-color: #fff; border-bottom: 1px solid var(--border-color); padding: 15px 0; position: sticky; top: 0; z-index: 1000; transition: box-shadow 0.3s ease; }
+        .main-header.scrolled { box-shadow: var(--shadow); }
+        .main-header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-heading); color: var(--primary-color); font-size: 2.5rem; margin: 0; font-weight: 700; }
+        .main-nav ul { list-style: none; display: flex; }
+        .main-nav li { margin-left: 30px; }
+        #management-nav-link { display: none; }
+        .main-nav a { text-decoration: none; color: var(--primary-color); font-weight: 500; font-size: 1rem; padding-bottom: 5px; position: relative; }
+        .main-nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: var(--accent-color); transition: all 0.3s ease-in-out; }
+        .main-nav a:hover::after, .main-nav a.active::after { width: 100%; left: 0; }
+        .header-actions { display: flex; align-items: center; }
+        .header-actions .user-info { display: none; align-items: center; }
+        .header-actions .user-info span { margin-right: 15px; font-weight: 500; color: var(--primary-color); }
+        .header-actions .user-info .btn { margin-left: 10px; }
 
         /* --- Buttons --- */
-        .btn {
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 0.95rem;
-        }
-        .btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
+        .btn { padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: all 0.3s ease; border: none; cursor: pointer; font-size: 0.95rem; }
+        .btn:disabled { background-color: #ccc; cursor: not-allowed; transform: none; }
+        .btn-primary { background-color: var(--primary-color); color: #fff; }
+        .btn-primary:hover:not(:disabled) { background-color: var(--secondary-color); transform: translateY(-2px); }
+        .btn-secondary { background-color: var(--accent-color); color: #fff; padding: 12px 28px; font-size: 1.05rem; }
+        .btn-secondary:hover:not(:disabled) { background-color: #d99160; transform: translateY(-2px); }
+        .btn-logout { background-color: var(--error-color); color: white; }
+        .btn-logout:hover:not(:disabled) { background-color: #c82333; }
+        .btn-post-article { background-color: var(--success-color); color: white; }
+        .btn-post-article:hover:not(:disabled) { background-color: #218838; }
 
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: #fff;
-        }
-        .btn-primary:hover:not(:disabled) {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background-color: var(--accent-color);
-            color: #fff;
-            padding: 12px 28px;
-            font-size: 1.05rem;
-        }
+        /* --- Hero & General Sections --- */
+        .hero-section { background: linear-gradient(rgba(10, 47, 91, 0.85), rgba(10, 47, 91, 0.85)), url('https://placehold.co/1920x1080/0A2F5B/FFFFFF?text=PhysiVerse+Background') no-repeat center center; background-size: cover; color: #fff; text-align: center; padding: 120px 0; }
+        .hero-section h2 { font-family: var(--font-heading); font-size: 3.5rem; margin-bottom: 20px; font-weight: 700; }
+        .hero-section p { font-size: 1.25rem; max-width: 700px; margin: 0 auto 40px auto; opacity: 0.9; }
+        .latest-issue { padding: 80px 0; background-color: var(--light-gray); min-height: 400px; }
+        .section-title { text-align: center; font-family: var(--font-heading); font-size: 2.8rem; color: var(--primary-color); margin-bottom: 60px; position: relative; }
+        .section-title::after { content: ''; display: block; width: 80px; height: 3px; background-color: var(--accent-color); margin: 15px auto 0; }
+        #no-articles-message { text-align: center; color: #6c757d; padding: 50px 0; }
+        #no-articles-message h3 { font-family: var(--font-heading); margin-bottom: 10px; }
+        .search-bar { max-width: 600px; margin: -20px auto 40px auto; position: relative; }
+        .search-bar input { width: 100%; padding: 15px 20px; font-size: 1rem; border-radius: 50px; border: 1px solid var(--border-color); transition: box-shadow 0.3s; }
+        .search-bar input:focus { outline: none; box-shadow: 0 0 0 4px rgba(0, 90, 156, 0.2); border-color: var(--secondary-color); }
 
-        .btn-secondary:hover:not(:disabled) {
-            background-color: #d99160;
-            transform: translateY(-2px);
-        }
-
-        .btn-logout {
-            background-color: var(--error-color);
-            color: white;
-        }
-        .btn-logout:hover:not(:disabled) {
-            background-color: #c82333;
-        }
-
-        .btn-post-article {
-            background-color: var(--success-color);
-            color: white;
-        }
-        .btn-post-article:hover:not(:disabled) {
-            background-color: #218838;
-        }
-
-
-        /* --- Hero Section --- */
-        .hero-section {
-            background: linear-gradient(rgba(10, 47, 91, 0.85), rgba(10, 47, 91, 0.85)), url('https://placehold.co/1920x1080/0A2F5B/FFFFFF?text=PhysiVerse+Background') no-repeat center center;
-            background-size: cover;
-            color: #fff;
-            text-align: center;
-            padding: 120px 0;
-        }
-
-        .hero-section h2 {
-            font-family: var(--font-heading);
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .hero-section p {
-            font-size: 1.25rem;
-            max-width: 700px;
-            margin: 0 auto 40px auto;
-            opacity: 0.9;
-        }
-
-        /* --- Latest Issue Section --- */
-        .latest-issue {
-            padding: 80px 0;
-            background-color: var(--light-gray);
-            min-height: 400px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-family: var(--font-heading);
-            font-size: 2.8rem;
-            color: var(--primary-color);
-            margin-bottom: 60px;
-            position: relative;
-        }
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 3px;
-            background-color: var(--accent-color);
-            margin: 15px auto 0;
-        }
-
-        #no-articles-message {
-            text-align: center;
-            color: #6c757d;
-            padding: 50px 0;
-        }
-        #no-articles-message h3 {
-            font-family: var(--font-heading);
-            margin-bottom: 10px;
-        }
-
-        .search-bar {
-            max-width: 600px;
-            margin: -20px auto 40px auto;
-            position: relative;
-        }
-        .search-bar input {
-            width: 100%;
-            padding: 15px 20px;
-            font-size: 1rem;
-            border-radius: 50px;
-            border: 1px solid var(--border-color);
-            transition: box-shadow 0.3s;
-        }
-        .search-bar input:focus {
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(0, 90, 156, 0.2);
-            border-color: var(--secondary-color);
-        }
-
-        .articles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .article-card {
-            background-color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-
-        .article-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-
-        .article-image {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            background-color: var(--light-gray);
-        }
-
-        .article-content {
-            padding: 25px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .article-category {
-            display: inline-block;
-            background-color: var(--secondary-color);
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            align-self: flex-start;
-        }
-
-        .article-title {
-            font-family: var(--font-heading);
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-        }
-
-        .article-title a {
-            text-decoration: none;
-            color: var(--primary-color);
-            transition: color 0.3s ease;
-        }
-
-        .article-card:hover .article-title a {
-            color: var(--accent-color);
-        }
-
-        .article-authors {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 15px;
-        }
-
-        .article-excerpt {
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-
-        .read-more {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: bold;
-            align-self: flex-start;
-        }
-        .article-card:hover .read-more {
-            text-decoration: underline;
-        }
+        /* --- Article Card --- */
+        .articles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .article-card { background-color: #fff; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+        .article-card:hover { transform: translateY(-8px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .article-image { width: 100%; height: 220px; object-fit: cover; background-color: var(--light-gray); }
+        .article-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+        .article-category { display: inline-block; background-color: var(--secondary-color); color: #fff; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; margin-bottom: 15px; align-self: flex-start; }
+        .article-title { font-family: var(--font-heading); font-size: 1.4rem; margin-bottom: 10px; }
+        .article-title a { text-decoration: none; color: var(--primary-color); transition: color 0.3s ease; }
+        .article-card:hover .article-title a { color: var(--accent-color); }
+        .article-authors { font-size: 0.9rem; color: #6c757d; margin-bottom: 15px; }
+        .article-excerpt { margin-bottom: 20px; flex-grow: 1; }
+        .read-more { color: var(--secondary-color); text-decoration: none; font-weight: bold; align-self: flex-start; }
+        .article-card:hover .read-more { text-decoration: underline; }
 
         /* --- Footer --- */
-        .main-footer {
-            background-color: var(--primary-color);
-            color: rgba(255, 255, 255, 0.8);
-            padding: 60px 0;
-            line-height: 1.8;
-        }
-        .main-footer a { 
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .main-footer a:hover {
-            color: #fff;
-            text-decoration: underline;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-content h4 {
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--accent-color);
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-        
-        .footer-contact p {
-            margin-bottom: 10px;
-        }
-
-        .footer-copyright {
-            text-align: center;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            opacity: 0.7;
-        }
+        .main-footer { background-color: var(--primary-color); color: rgba(255, 255, 255, 0.8); padding: 60px 0; line-height: 1.8; }
+        .main-footer a { color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s ease; }
+        .main-footer a:hover { color: #fff; text-decoration: underline; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-content h4 { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 20px; color: var(--accent-color); }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-contact p { margin-bottom: 10px; }
+        .footer-copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.2); opacity: 0.7; }
 
         /* --- Login Modal --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: none; /* Initially hidden */
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            animation: fadeIn 0.3s ease-out;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-container {
-            background: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 450px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: relative;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.5rem;
-            border: none;
-            background: none;
-            cursor: pointer;
-            color: #aaa;
-            transition: color 0.2s ease;
-        }
-        .modal-close:hover {
-            color: var(--text-color);
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 2000; animation: fadeIn 0.3s ease-out; }
+        .modal-overlay.active { display: flex; }
+        .modal-container { background: #fff; padding: 40px; border-radius: 8px; width: 90%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; animation: slideIn 0.3s ease-out; }
+        .modal-close { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; border: none; background: none; cursor: pointer; color: #aaa; transition: color 0.2s ease; }
+        .modal-close:hover { color: var(--text-color); }
+        .modal-header h3 { font-family: var(--font-heading); color: var(--primary-color); margin-bottom: 20px; text-align: center; font-size: 1.8rem; }
         
-        .modal-header h3 {
-            font-family: var(--font-heading);
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.8rem;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-color);
-        }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            font-size: 1rem;
-            font-family: var(--font-body);
-        }
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
+        /* --- Forms & Messages --- */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-color); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 1rem; font-family: var(--font-body); }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        #login-error, #post-message { padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center; display: none; font-weight: 500; }
+        #login-error, #post-message.error { background-color: rgba(220, 53, 69, 0.1); color: var(--error-color); }
+        #post-message.success { background-color: rgba(40, 167, 69, 0.1); color: var(--success-color); }
         
-        #login-error, #post-message {
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            text-align: center;
-            display: none; /* Hidden by default */
-            font-weight: 500;
-        }
-        #login-error {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: var(--error-color);
-        }
-        #post-message.success {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: var(--success-color);
-        }
-        #post-message.error {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: var(--error-color);
-        }
-
-        /* --- Page & Form Styles --- */
-        .page-section {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        .page-section.active {
-            display: block;
-        }
-
-        #postArticlePage, #managementPage {
-            padding: 80px 0;
-            background-color: var(--light-gray);
-        }
-
-        #postArticlePage h2, #managementPage h2 {
-            font-family: var(--font-heading);
-            font-size: 2.8rem;
-            color: var(--primary-color);
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
-        .post-form, .management-container {
-            background: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        #coverImagePreview {
-            max-width: 100%;
-            height: auto;
-            max-height: 300px;
-            margin-top: 15px;
-            border-radius: 5px;
-            border: 1px solid var(--border-color);
-            display: none; /* Hidden by default */
-        }
+        /* --- Page Sections --- */
+        .page-section { display: none; animation: slideUp 0.5s ease-in-out; }
+        .page-section.active { display: block; }
+        #postArticlePage, #managementPage { padding: 80px 0; background-color: var(--light-gray); }
+        #postArticlePage h2, #managementPage h2 { font-family: var(--font-heading); font-size: 2.8rem; color: var(--primary-color); margin-bottom: 40px; text-align: center; }
+        .post-form, .management-container { background: #fff; padding: 40px; border-radius: 8px; box-shadow: var(--shadow); max-width: 900px; margin: 0 auto; }
+        #coverImagePreview { max-width: 100%; height: auto; max-height: 300px; margin-top: 15px; border-radius: 5px; border: 1px solid var(--border-color); display: none; }
         
-        /* --- Management Page Table --- */
-        .management-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        .management-table th, .management-table td {
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            text-align: left;
-            vertical-align: middle;
-        }
-        .management-table th {
-            background-color: var(--light-gray);
-            font-weight: bold;
-        }
-        .management-table tbody tr:hover {
-            background-color: var(--light-gray);
-        }
-        .management-table td.actions {
-            text-align: center;
-            width: 120px;
-        }
-        .action-btn {
-            background: none;
-            border: none;
-            padding: 5px;
-            margin: 0 5px;
-            cursor: pointer;
-        }
-        .action-btn svg {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.2s;
-        }
-        .action-btn:hover svg {
-            transform: scale(1.2);
-        }
+        /* --- Management Page --- */
+        .management-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .management-table th, .management-table td { padding: 12px 15px; border: 1px solid var(--border-color); text-align: left; vertical-align: middle; }
+        .management-table th { background-color: var(--light-gray); font-weight: bold; }
+        .management-table tbody tr:hover { background-color: var(--light-gray); }
+        .management-table td.actions { text-align: center; width: 120px; }
+        .action-btn { background: none; border: none; padding: 5px; margin: 0 5px; cursor: pointer; }
+        .action-btn svg { width: 20px; height: 20px; transition: transform 0.2s; }
+        .action-btn:hover svg { transform: scale(1.2); }
         .btn-edit svg { fill: var(--secondary-color); }
         .btn-delete svg { fill: var(--error-color); }
 
+        /* --- Article Detail Page --- */
+        #articleDetailPage { padding: 80px 0; }
+        .article-detail-container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: var(--shadow); }
+        .article-detail-header img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 5px; margin-bottom: 20px; background-color: var(--light-gray); }
+        .article-detail-header h1 { font-family: var(--font-heading); font-size: 2.8rem; color: var(--primary-color); line-height: 1.3; margin-bottom: 15px; }
+        .article-meta { font-size: 0.9rem; color: #6c757d; margin-bottom: 30px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 15px; background-color: var(--light-gray); border-radius: 5px; }
+        .article-meta p { margin: 5px 0; }
+        .article-meta strong { color: var(--text-color); }
+        .article-full-content { font-size: 1.1rem; line-height: 1.8; }
+        .article-full-content h2, .article-full-content h3 { font-family: var(--font-heading); color: var(--primary-color); margin-top: 30px; margin-bottom: 15px; }
+        .article-full-content blockquote { border-left: 4px solid var(--accent-color); padding-left: 20px; margin: 20px 0; font-style: italic; color: #555; }
+        #backToHomeBtn { margin-bottom: 40px; }
 
-        /* --- Article Detail Page Styles --- */
-        #articleDetailPage {
-            padding: 80px 0;
-        }
-        .article-detail-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        .article-detail-header img {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            background-color: var(--light-gray);
-        }
-        .article-detail-header h1 {
-            font-family: var(--font-heading);
-            font-size: 2.8rem;
-            color: var(--primary-color);
-            line-height: 1.3;
-            margin-bottom: 15px;
-        }
-        .article-meta {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 30px;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 15px;
-            background-color: var(--light-gray);
-            border-radius: 5px;
-        }
-        .article-meta p {
-            margin: 5px 0;
-        }
-        .article-meta strong {
-            color: var(--text-color);
-        }
-
-        .article-full-content {
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-        .article-full-content h2, .article-full-content h3 {
-            font-family: var(--font-heading);
-            color: var(--primary-color);
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-        .article-full-content blockquote {
-            border-left: 4px solid var(--accent-color);
-            padding-left: 20px;
-            margin: 20px 0;
-            font-style: italic;
-            color: #555;
-        }
-        #backToHomeBtn {
-            margin-bottom: 40px;
-        }
+        /* --- Likes & Comments --- */
+        .interaction-section { margin-top: 40px; border-top: 1px solid var(--border-color); padding-top: 20px; }
+        .like-section { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 500; color: var(--text-color); }
+        .like-btn { background: none; border: none; cursor: pointer; padding: 5px; display: flex; align-items: center; }
+        .like-btn svg { width: 30px; height: 30px; fill: #ccc; transition: all 0.2s ease; }
+        .like-btn.liked svg { fill: var(--heart-color); animation: pulse 0.5s; }
+        .like-btn:hover:not(.liked) svg { fill: #aaa; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        .comment-section { margin-top: 40px; }
+        .comment-section h3 { font-family: var(--font-heading); color: var(--primary-color); margin-bottom: 20px; }
+        #comment-form { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+        #comment-form input, #comment-form textarea { width: 100%; }
+        #comment-form button { align-self: flex-start; }
+        #comment-list { list-style: none; }
+        .comment-item { background-color: var(--light-gray); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .comment-item p { margin: 0; }
+        .comment-item .comment-meta { font-size: 0.9rem; font-weight: bold; color: var(--secondary-color); margin-bottom: 5px; }
+        .comment-item .comment-meta span { font-weight: normal; color: #6c757d; margin-left: 10px; font-size: 0.8rem; }
         
-        /* --- General Page Content Styles --- */
-        .page-content-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            line-height: 1.8;
-        }
-        .page-content-container p, .page-content-container ul {
-            margin-bottom: 1.5rem;
-        }
-        .page-content-container h3 {
-            font-family: var(--font-heading);
-            color: var(--secondary-color);
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 0.5rem;
-        }
+        /* --- General Page Content --- */
+        .page-content-container { max-width: 900px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: var(--shadow); line-height: 1.8; }
+        .page-content-container p, .page-content-container ul { margin-bottom: 1.5rem; }
+        .page-content-container h3 { font-family: var(--font-heading); color: var(--secondary-color); margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; }
         
-        /* --- Scroll to Top Button --- */
-        #scrollToTopBtn {
-            display: none;
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 99;
-            border: none;
-            outline: none;
-            background-color: var(--primary-color);
-            color: white;
-            cursor: pointer;
-            padding: 15px;
-            border-radius: 50%;
-            font-size: 18px;
-            width: 50px;
-            height: 50px;
-            transition: background-color 0.3s, opacity 0.3s, transform 0.3s;
-            opacity: 0.8;
-        }
-        #scrollToTopBtn:hover {
-            background-color: var(--secondary-color);
-            opacity: 1;
-            transform: scale(1.1);
-        }
+        /* --- Scroll to Top --- */
+        #scrollToTopBtn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 99; border: none; outline: none; background-color: var(--primary-color); color: white; cursor: pointer; padding: 15px; border-radius: 50%; font-size: 18px; width: 50px; height: 50px; transition: all 0.3s; opacity: 0.8; }
+        #scrollToTopBtn:hover { opacity: 1; transform: scale(1.1); }
 
-
-        /* Quill Editor styles */
-        .ql-toolbar.ql-snow {
-            border-radius: 5px 5px 0 0;
-            border-color: var(--border-color);
-            background-color: #f0f2f5;
-        }
-        .ql-container.ql-snow {
-            border-radius: 0 0 5px 5px;
-            border-color: var(--border-color);
-            min-height: 300px;
-            font-family: var(--font-body);
-            font-size: 1rem;
-            line-height: 1.6;
-        }
+        /* --- Quill Editor --- */
+        .ql-toolbar.ql-snow { border-radius: 5px 5px 0 0; border-color: var(--border-color); background-color: #f0f2f5; }
+        .ql-container.ql-snow { border-radius: 0 0 5px 5px; border-color: var(--border-color); min-height: 300px; font-family: var(--font-body); font-size: 1rem; line-height: 1.6; }
         .ql-editor strong { font-weight: bold; }
         .ql-editor em { font-style: italic; }
 
-        /* Animation Keyframes */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .page-section {
-             animation: slideUp 0.5s ease-in-out;
-        }
-
-
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
-            .main-header .container {
-                flex-direction: column;
-            }
-            .logo {
-                margin-bottom: 15px;
-            }
-            .main-nav ul {
-                justify-content: center;
-                flex-wrap: wrap;
-                margin-bottom: 15px;
-            }
-            .main-nav li {
-                margin: 5px 10px;
-            }
-            .hero-section h2 {
-                font-size: 2.5rem;
-            }
-            .header-actions {
-                flex-direction: column;
-            }
-            .header-actions .user-info {
-                flex-direction: column;
-            }
-            .header-actions .user-info span {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-            .header-actions .user-info .btn {
-                margin-left: 0;
-                margin-top: 10px;
-            }
+            .hero-section h2 { font-size: 2.5rem; }
+            .main-header .container, .header-actions, .header-actions .user-info { flex-direction: column; }
+            .logo, .main-nav ul { margin-bottom: 15px; }
+            .main-nav li { margin: 5px 10px; }
+            .header-actions .user-info span { margin-right: 0; margin-bottom: 10px; }
+            .header-actions .user-info .btn { margin-left: 0; margin-top: 10px; }
         }
     </style>
 </head>
@@ -858,33 +254,27 @@
                 <h2 id="post-form-title">Đăng Bài Báo Mới</h2>
                 <form id="articlePostForm" class="post-form">
                     <div id="post-message"></div>
-                    
                     <div class="form-group">
                         <label for="articleTitle">Tiêu đề bài báo</label>
-                        <input type="text" id="articleTitle" name="articleTitle" required placeholder="Nhập tiêu đề bài báo khoa học của bạn">
+                        <input type="text" id="articleTitle" name="articleTitle" required>
                     </div>
-
                     <div class="form-group">
                         <label for="coverImageInput">Ảnh bìa (chọn từ máy tính, dưới 2MB)</label>
                         <input type="file" id="coverImageInput" name="coverImageInput" accept="image/*">
                         <img id="coverImagePreview" src="#" alt="Xem trước ảnh bìa">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="articleAuthors">Tác giả (Ví dụ: Nguyễn Văn An, Trần Thị Bình)</label>
-                        <input type="text" id="articleAuthors" name="articleAuthors" required placeholder="Tên các tác giả, phân cách bởi dấu phẩy">
+                        <label for="articleAuthors">Tác giả</label>
+                        <input type="text" id="articleAuthors" name="articleAuthors" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="articleAffiliation">Đơn vị công tác</label>
-                        <input type="text" id="articleAffiliation" name="articleAffiliation" required placeholder="Ví dụ: Viện Vật lý, Đại học Quốc gia">
+                        <input type="text" id="articleAffiliation" name="articleAffiliation" required>
                     </div>
-
                     <div class="form-group">
                         <label for="articleEmail">Email liên hệ</label>
-                        <input type="email" id="articleEmail" name="articleEmail" required placeholder="Ví dụ: nvan@email.com">
+                        <input type="email" id="articleEmail" name="articleEmail" required>
                     </div>
-
                     <div class="form-group">
                         <label for="articleCategory">Phân loại</label>
                         <select id="articleCategory" name="articleCategory" required>
@@ -893,31 +283,23 @@
                                 <option value="Vật lý Lượng tử">Vật lý Lượng tử</option>
                                 <option value="Vật lý Thiên văn">Vật lý Thiên văn</option>
                                 <option value="Vật lý Chất rắn">Vật lý Chất rắn</option>
-                                <option value="Vật lý Hạt nhân">Vật lý Hạt nhân</option>
-                                <option value="Vật lý Plasma">Vật lý Plasma</option>
-                                <option value="Vật lý Sinh học">Vật lý Sinh học</option>
                             </optgroup>
                             <optgroup label="Công nghệ & Tin học">
                                 <option value="Trí tuệ Nhân tạo">Trí tuệ Nhân tạo (AI)</option>
                                 <option value="Khoa học Dữ liệu">Khoa học Dữ liệu</option>
                                 <option value="Công nghệ">Công nghệ</option>
-                                <option value="Tin học">Tin học</option>
-                                <option value="Vật lý Tính toán">Vật lý Tính toán</option>
                             </optgroup>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label for="articleExcerpt">Mô tả tóm tắt</label>
-                        <textarea id="articleExcerpt" name="articleExcerpt" rows="4" required placeholder="Tóm tắt ngắn gọn nội dung chính của bài báo..."></textarea>
+                        <textarea id="articleExcerpt" name="articleExcerpt" rows="4" required></textarea>
                     </div>
-
                     <div class="form-group">
-                        <label for="articleContent">Nội dung bài báo</label>
+                        <label>Nội dung bài báo</label>
                         <div id="editor-container"></div>
                     </div>
-                    
-                    <button type="submit" id="submit-post-btn" class="btn btn-primary" style="width: 100%; margin-top: 30px;">Xuất Bản Bài Báo</button>
+                    <button type="submit" id="submit-post-btn" class="btn btn-primary" style="width: 100%; margin-top: 30px;">Xuất Bản</button>
                 </form>
             </div>
         </section>
@@ -937,8 +319,24 @@
                             <p><strong>Ngày đăng:</strong> <span id="detailDate"></span> | <strong>Chuyên ngành:</strong> <span id="detailCategory"></span></p>
                         </div>
                     </div>
-                    <div id="detailContent" class="article-full-content ql-editor">
-                        <!-- Full article content will be injected here -->
+                    <div id="detailContent" class="article-full-content ql-editor"></div>
+                    <div class="interaction-section">
+                         <div id="like-section-container"></div>
+                         <div class="comment-section">
+                            <h3>Bình Luận</h3>
+                            <form id="comment-form">
+                                <div class="form-group">
+                                    <label for="commentAuthor">Tên của bạn</label>
+                                    <input type="text" id="commentAuthor" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="commentContent">Nội dung bình luận</label>
+                                    <textarea id="commentContent" rows="4" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Gửi Bình Luận</button>
+                            </form>
+                            <ul id="comment-list"></ul>
+                         </div>
                     </div>
                 </div>
             </div>
@@ -963,9 +361,7 @@
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
-                            <tbody id="management-table-body">
-                                <!-- Article list will be populated here -->
-                            </tbody>
+                            <tbody id="management-table-body"></tbody>
                         </table>
                     </div>
                 </div>
@@ -973,17 +369,15 @@
         </section>
 
 
-        <!-- About Us Page Section -->
+        <!-- About Us & Submit Page Sections (Giữ nguyên) -->
         <section id="aboutUs" class="page-section" style="padding: 80px 0;">
-            <div class="container">
+             <div class="container">
                 <h2 class="section-title">Về Chúng Tôi</h2>
                 <div class="page-content-container">
                     <h3>Tầm Nhìn</h3>
                     <p>PhysiVerse được xây dựng với tầm nhìn trở thành một kho lưu trữ tri thức hiện đại, dễ tiếp cận và đáng tin cậy trong các lĩnh vực khoa học và công nghệ mũi nhọn. Chúng tôi mong muốn tạo ra một không gian nơi những ý tưởng đột phá và các công trình nghiên cứu tâm huyết được trình bày một cách trang trọng và lan tỏa mạnh mẽ đến cộng đồng.</p>
-                    
                     <h3>Sứ Mệnh Của PhysiVerse</h3>
                     <p>Sứ mệnh của chúng tôi là đẩy nhanh tốc độ phổ biến tri thức và thúc đẩy các khám phá khoa học tiên tiến. PhysiVerse tin rằng khoa học là tài sản chung của nhân loại. Bằng cách cung cấp một nền tảng xuất bản truy cập mở, chúng tôi kết nối cộng đồng các nhà nghiên cứu, đồng thời truyền cảm hứng cho thế hệ các nhà khoa học tương lai.</p>
-
                     <h3>Phạm Vi và Lĩnh Vực</h3>
                     <p>Tạp chí PhysiVerse chào đón các bài báo nghiên cứu, bài tổng quan, và các bài bình luận trong các lĩnh vực khoa học và công nghệ, bao gồm nhưng không giới hạn:</p>
                     <ul>
@@ -994,20 +388,12 @@
                 </div>
             </div>
         </section>
-
-        <!-- Submit Article Page Section -->
         <section id="submitArticle" class="page-section" style="padding: 80px 0;">
             <div class="container">
                 <h2 class="section-title">Nộp Bài Báo</h2>
                 <div class="page-content-container">
                     <h3>Quy Trình Xuất Bản</h3>
                     <p>Tại PhysiVerse, chúng tôi áp dụng một quy trình xuất bản tinh gọn và hiệu quả dành cho Quản trị viên. Với vai trò là người điều hành cao nhất, bạn có toàn quyền đăng tải và quản lý nội dung của tạp chí.</p>
-                    <ul>
-                        <li><b>Soạn thảo:</b> Chuẩn bị bản thảo với đầy đủ các cấu phần khoa học cần thiết.</li>
-                        <li><b>Đăng nhập:</b> Truy cập trang web với tài khoản Quản trị viên của bạn.</li>
-                        <li><b>Đăng bài:</b> Sử dụng chức năng "Đăng Bài" để điền thông tin, tải lên hình ảnh và dán nội dung.</li>
-                        <li><b>Xuất bản:</b> Sau khi nhấn nút "Xuất Bản Bài Báo", công trình của bạn sẽ ngay lập tức xuất hiện trên trang chủ của PhysiVerse.</li>
-                    </ul>
                     <h3>Lưu ý cho Admin</h3>
                     <p>Bạn chịu trách nhiệm về tính chính xác, khoa học và bản quyền của mọi nội dung được đăng tải. Hãy đảm bảo rằng các bài báo đều đạt chất lượng cao nhất trước khi xuất bản để duy trì uy tín và giá trị học thuật của PhysiVerse.</p>
                     <div style="text-align: center; margin-top: 30px;">
@@ -1016,7 +402,6 @@
                 </div>
             </div>
         </section>
-
     </main>
 
     <footer class="main-footer">
@@ -1036,9 +421,7 @@
                 </div>
                 <div class="footer-contact">
                     <h4>Thông Tin Liên Hệ</h4>
-                    <p><strong>Email:</strong> contact@physiverse.com</p>
-                    <p><strong>Điện thoại:</strong> (+84) 123 456 789</p>
-                    <p><strong>Địa chỉ:</strong> Khu Công nghệ cao, TP. Thủ Đức, Việt Nam</p>
+                    <p><strong>Email:</strong> <a href="mailto:contact@physiverse.com">contact@physiverse.com</a></p>
                 </div>
             </div>
             <div class="footer-copyright">
@@ -1047,39 +430,26 @@
         </div>
     </footer>
     
-    <!-- Login Modal HTML -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-container">
             <button class="modal-close" id="closeModalBtn">&times;</button>
-            <div class="modal-header">
-                <h3>Đăng Nhập Quản Trị</h3>
-            </div>
+            <div class="modal-header"><h3>Đăng Nhập Quản Trị</h3></div>
             <div class="modal-body">
                 <form id="loginForm">
                     <p id="login-error"></p>
-                    <div class="form-group">
-                        <label for="username">Tên đăng nhập</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Mật khẩu</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
+                    <div class="form-group"><label for="username">Tên đăng nhập</label><input type="text" id="username" required></div>
+                    <div class="form-group"><label for="password">Mật khẩu</label><input type="password" id="password" required></div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Đăng Nhập</button>
                 </form>
             </div>
         </div>
     </div>
     
-    <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn" title="Lên đầu trang">&#8679;</button>
 
-    <!-- Tải thư viện SUPABASE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- QuillJS script -->
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-    <!-- All Javascript is embedded here -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -1092,11 +462,10 @@
 
             const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-            // --- STATE & CACHE ---
             let editingArticleId = null;
             let allArticlesCache = [];
+            let currentArticleId = null;
 
-            // --- UI ELEMENTS ---
             const ui = {
                 loader: document.getElementById('loader-overlay'),
                 header: document.getElementById('mainHeader'),
@@ -1120,9 +489,11 @@
                 submitPostBtn: document.getElementById('submit-post-btn'),
                 homeSearchInput: document.getElementById('homeSearchInput'),
                 manageSearchInput: document.getElementById('manageSearchInput'),
+                likeSectionContainer: document.getElementById('like-section-container'),
+                commentForm: document.getElementById('comment-form'),
+                commentList: document.getElementById('comment-list')
             };
 
-            // --- HELPER FUNCTIONS ---
             const showLoader = () => ui.loader.classList.add('show');
             const hideLoader = () => ui.loader.classList.remove('show');
 
@@ -1132,8 +503,6 @@
                 el.className = isSuccess ? 'success' : 'error';
                 el.style.display = 'block';
             };
-
-            // --- CORE FUNCTIONS ---
 
             const showPage = (targetId) => {
                 ui.pageSections.forEach(section => section.style.display = 'none');
@@ -1160,10 +529,8 @@
             };
 
             const renderArticles = (articles) => {
-                if (!ui.articlesGrid) return;
                 ui.articlesGrid.innerHTML = '';
                 ui.noArticlesMessage.style.display = articles.length === 0 ? 'block' : 'none';
-                
                 articles.forEach(article => {
                     ui.articlesGrid.insertAdjacentHTML('beforeend', `
                         <article class="article-card" data-id="${article.id}">
@@ -1182,22 +549,23 @@
             const fetchAndRenderArticles = async () => {
                 showLoader();
                 const { data, error } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
+                hideLoader();
                 if (error) {
-                    alert("Lỗi kết nối đến kho lưu trữ đám mây. Vui lòng kiểm tra lại cấu hình Supabase URL/Key.");
+                    alert("Lỗi kết nối đến kho lưu trữ đám mây.");
                 } else {
                     allArticlesCache = data;
                     renderArticles(allArticlesCache);
                 }
-                hideLoader();
             };
 
             const displayArticleDetail = async (articleId) => {
+                currentArticleId = articleId;
                 showLoader();
                 const { data: article, error } = await supabase.from('articles').select('*').eq('id', articleId).single();
                 hideLoader();
 
                 if (error || !article) {
-                     alert("Không tìm thấy bài báo. Có thể nó đã bị xóa.");
+                     alert("Không tìm thấy bài báo.");
                      return;
                 }
                 
@@ -1210,28 +578,103 @@
                 document.getElementById('detailDate').textContent = article.date;
                 document.getElementById('detailCategory').textContent = article.category;
                 document.getElementById('detailContent').innerHTML = article.content;
+                
+                renderLikeSection(article.id, article.like_count);
+                renderComments(article.id);
                 showPage('articleDetailPage');
+            };
+
+            const renderLikeSection = (articleId, likeCount) => {
+                const likedArticles = JSON.parse(localStorage.getItem('likedArticles')) || [];
+                const isLiked = likedArticles.includes(articleId);
+                ui.likeSectionContainer.innerHTML = `
+                    <div class="like-section">
+                        <button class="like-btn ${isLiked ? 'liked' : ''}" id="like-btn" data-id="${articleId}">
+                            <svg viewBox="0 0 24 24"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/></svg>
+                        </button>
+                        <span id="like-count">${likeCount || 0}</span> Lượt thích
+                    </div>`;
+            };
+
+            const handleLikeClick = async (articleId) => {
+                const likeButton = document.getElementById('like-btn');
+                const countElement = document.getElementById('like-count');
+                const likedArticles = JSON.parse(localStorage.getItem('likedArticles')) || [];
+
+                if (likedArticles.includes(articleId)) return; // Already liked
+
+                const { error } = await supabase.rpc('increment_likes', { article_id_to_inc: articleId });
+
+                if (!error) {
+                    likedArticles.push(articleId);
+                    localStorage.setItem('likedArticles', JSON.stringify(likedArticles));
+                    likeButton.classList.add('liked');
+                    countElement.textContent = parseInt(countElement.textContent) + 1;
+                } else {
+                    console.error("Lỗi khi tăng lượt thích:", error);
+                }
+            };
+            
+            const renderComments = async (articleId) => {
+                const { data: comments, error } = await supabase.from('comments').select('*').eq('article_id', articleId).order('created_at', { ascending: false });
+                ui.commentList.innerHTML = '';
+                if (comments) {
+                    comments.forEach(comment => {
+                        const commentDate = new Date(comment.created_at).toLocaleString('vi-VN');
+                        ui.commentList.insertAdjacentHTML('beforeend', `
+                            <li class="comment-item">
+                                <p class="comment-meta">${comment.author_name} <span>${commentDate}</span></p>
+                                <p>${comment.content}</p>
+                            </li>`);
+                    });
+                }
+            };
+
+            const handleCommentSubmit = async (e) => {
+                e.preventDefault();
+                const authorInput = document.getElementById('commentAuthor');
+                const contentInput = document.getElementById('commentContent');
+                const submitBtn = e.target.querySelector('button');
+
+                if (!authorInput.value.trim() || !contentInput.value.trim()) {
+                    alert('Vui lòng nhập tên và nội dung bình luận.');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Đang gửi...';
+
+                const { error } = await supabase.from('comments').insert([{
+                    article_id: currentArticleId,
+                    author_name: authorInput.value.trim(),
+                    content: contentInput.value.trim()
+                }]);
+
+                if (error) {
+                    alert('Lỗi khi gửi bình luận. Vui lòng thử lại.');
+                } else {
+                    authorInput.value = '';
+                    contentInput.value = '';
+                    await renderComments(currentArticleId);
+                }
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Gửi Bình Luận';
             };
 
             const renderManagementList = (articles) => {
                 ui.managementTableBody.innerHTML = '';
                 articles.forEach(article => {
-                    const row = `
+                    ui.managementTableBody.insertAdjacentHTML('beforeend', `
                         <tr>
                             <td>${article.title}</td>
                             <td>${article.authors}</td>
                             <td>${article.category}</td>
                             <td>${article.date}</td>
                             <td class="actions">
-                                <button class="action-btn btn-edit" data-id="${article.id}" title="Sửa bài báo">
-                                    <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.13,5.12L18.88,8.87M3,17.25V21H6.75L17.81,9.94L14.06,6.19L3,17.25Z" /></svg>
-                                </button>
-                                <button class="action-btn btn-delete" data-id="${article.id}" title="Xóa bài báo">
-                                    <svg viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>
-                                </button>
+                                <button class="action-btn btn-edit" data-id="${article.id}" title="Sửa"><svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.13,5.12L18.88,8.87M3,17.25V21H6.75L17.81,9.94L14.06,6.19L3,17.25Z" /></svg></button>
+                                <button class="action-btn btn-delete" data-id="${article.id}" title="Xóa"><svg viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg></button>
                             </td>
-                        </tr>`;
-                    ui.managementTableBody.insertAdjacentHTML('beforeend', row);
+                        </tr>`);
                 });
             };
 
@@ -1266,13 +709,12 @@
                 document.getElementById('coverImagePreview').style.display = 'none';
                 document.getElementById('coverImagePreview').src = '#';
                 ui.postFormTitle.textContent = 'Đăng Bài Báo Mới';
-                ui.submitPostBtn.textContent = 'Xuất Bản Bài Báo';
+                ui.submitPostBtn.textContent = 'Xuất Bản';
             };
 
 
             // --- EVENT LISTENERS ---
 
-            // Scroll & Navigation
             window.onscroll = () => {
                 const isScrolled = document.body.scrollTop > 100 || document.documentElement.scrollTop > 100;
                 ui.header.classList.toggle('scrolled', isScrolled);
@@ -1287,7 +729,7 @@
                     showPage(targetId);
                     if (targetId === 'managementPage') {
                         showLoader();
-                        await fetchAndRenderArticles(); // Make sure cache is up-to-date
+                        if (allArticlesCache.length === 0) await fetchAndRenderArticles();
                         renderManagementList(allArticlesCache);
                         hideLoader();
                     }
@@ -1309,7 +751,6 @@
                 }
             });
 
-            // Login/Logout
             const validUsername = 'admin';
             const validPasswords = ['hieu2k10', 'khoi2k10', 'hung2k10'];
             ui.openModalBtn.addEventListener('click', () => ui.loginModal.classList.add('active'));
@@ -1338,7 +779,6 @@
                 showPage('postArticlePage');
             });
 
-            // Quill Editor
             let quill;
             if (document.getElementById('editor-container')) {
                 quill = new Quill('#editor-container', {
@@ -1353,19 +793,16 @@
                 });
             }
 
-            // Post Form Submission (Create & Update)
             if (ui.articlePostForm) {
                 ui.articlePostForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
-                    ui.submitPostBtn.disabled = true;
-                    ui.submitPostBtn.textContent = 'Đang xử lý...';
-
+                    ui.submitPostBtn.disabled = true; ui.submitPostBtn.textContent = 'Đang xử lý...';
                     const form = e.target;
                     
                     if (!form.articleTitle.value || !form.articleAuthors.value || quill.getLength() <= 1 || document.getElementById('coverImagePreview').src === window.location.href) {
                         showMessage('post-message', 'Vui lòng điền đầy đủ các trường và chọn ảnh bìa.', false);
                         ui.submitPostBtn.disabled = false;
-                        ui.submitPostBtn.textContent = editingArticleId ? 'Cập Nhật Bài Báo' : 'Xuất Bản Bài Báo';
+                        ui.submitPostBtn.textContent = editingArticleId ? 'Cập Nhật Bài Báo' : 'Xuất Bản';
                         return;
                     }
                     
@@ -1405,7 +842,7 @@
 
                 document.getElementById('coverImageInput').addEventListener('change', function(e) {
                     const file = e.target.files[0];
-                    if (file && file.size < 2 * 1024 * 1024) { // Giới hạn ảnh 2MB
+                    if (file && file.size < 2 * 1024 * 1024) {
                         const reader = new FileReader();
                         reader.onload = (event) => {
                             document.getElementById('coverImagePreview').src = event.target.result;
@@ -1419,17 +856,16 @@
                 });
             }
 
-            // Management Page Actions
             ui.managementTableBody.addEventListener('click', async (e) => {
                 const target = e.target.closest('.action-btn');
                 if (!target) return;
-
                 const articleId = target.dataset.id;
                 if (target.classList.contains('btn-edit')) {
                     await populateFormForEdit(articleId);
                 } else if (target.classList.contains('btn-delete')) {
-                    if (confirm('Bạn có chắc chắn muốn xóa bài báo này? Hành động này không thể hoàn tác.')) {
+                    if (confirm('Bạn có chắc chắn muốn xóa bài báo này? Tất cả bình luận liên quan cũng sẽ bị xóa.')) {
                         showLoader();
+                        // In a real app, you might want to delete comments first, or set up cascading deletes in the DB
                         const { error } = await supabase.from('articles').delete().eq('id', articleId);
                         hideLoader();
                         if (error) {
@@ -1442,7 +878,6 @@
                 }
             });
             
-            // Search Functionality
             const handleSearch = (searchInput, listRenderer, articleSource) => {
                 const searchTerm = searchInput.value.toLowerCase();
                 const filteredArticles = articleSource.filter(article => 
@@ -1454,6 +889,14 @@
 
             ui.homeSearchInput.addEventListener('input', () => handleSearch(ui.homeSearchInput, renderArticles, allArticlesCache));
             ui.manageSearchInput.addEventListener('input', () => handleSearch(ui.manageSearchInput, renderManagementList, allArticlesCache));
+            
+            ui.likeSectionContainer.addEventListener('click', (e) => {
+                if (e.target.closest('#like-btn')) {
+                    const articleId = e.target.closest('#like-btn').dataset.id;
+                    handleLikeClick(parseInt(articleId));
+                }
+            });
+            ui.commentForm.addEventListener('submit', handleCommentSubmit);
 
 
             // --- INITIALIZATION ---
