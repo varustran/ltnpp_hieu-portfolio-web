@@ -23,6 +23,8 @@
             --text-color: #333333;
             --light-gray: #f8f9fa;
             --border-color: #dee2e6;
+            --success-color: #28a745;
+            --error-color: #dc3545;
             --font-heading: 'Lora', serif;
             --font-body: 'Montserrat', sans-serif;
             --shadow: 0 4px 15px rgba(0,0,0,0.07);
@@ -49,6 +51,39 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+        }
+
+        /* --- LOADING SPINNER --- */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .loader-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .loader {
+            border: 8px solid var(--light-gray);
+            border-top: 8px solid var(--primary-color);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* --- Header & Navigation --- */
@@ -146,13 +181,16 @@
             cursor: pointer;
             font-size: 0.95rem;
         }
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
 
         .btn-primary {
             background-color: var(--primary-color);
             color: #fff;
         }
-
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             background-color: var(--secondary-color);
             transform: translateY(-2px);
         }
@@ -164,24 +202,24 @@
             font-size: 1.05rem;
         }
 
-        .btn-secondary:hover {
+        .btn-secondary:hover:not(:disabled) {
             background-color: #d99160;
             transform: translateY(-2px);
         }
 
         .btn-logout {
-            background-color: #dc3545; /* Red */
+            background-color: var(--error-color);
             color: white;
         }
-        .btn-logout:hover {
+        .btn-logout:hover:not(:disabled) {
             background-color: #c82333;
         }
 
         .btn-post-article {
-            background-color: #28a745; /* Green */
+            background-color: var(--success-color);
             color: white;
         }
-        .btn-post-article:hover {
+        .btn-post-article:hover:not(:disabled) {
             background-color: #218838;
         }
 
@@ -243,6 +281,24 @@
             margin-bottom: 10px;
         }
 
+        .search-bar {
+            max-width: 600px;
+            margin: -20px auto 40px auto;
+            position: relative;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            transition: box-shadow 0.3s;
+        }
+        .search-bar input:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0, 90, 156, 0.2);
+            border-color: var(--secondary-color);
+        }
 
         .articles-grid {
             display: grid;
@@ -453,14 +509,24 @@
         }
         
         #login-error, #post-message {
-            color: #dc3545;
+            padding: 10px;
+            border-radius: 5px;
             margin-bottom: 15px;
             text-align: center;
             display: none; /* Hidden by default */
             font-weight: 500;
         }
+        #login-error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--error-color);
+        }
         #post-message.success {
-            color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+        #post-message.error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--error-color);
         }
 
         /* --- Page & Form Styles --- */
@@ -514,21 +580,36 @@
             padding: 12px 15px;
             border: 1px solid var(--border-color);
             text-align: left;
+            vertical-align: middle;
         }
         .management-table th {
             background-color: var(--light-gray);
             font-weight: bold;
         }
+        .management-table tbody tr:hover {
+            background-color: var(--light-gray);
+        }
         .management-table td.actions {
             text-align: center;
+            width: 120px;
         }
         .action-btn {
-            padding: 5px 10px;
+            background: none;
+            border: none;
+            padding: 5px;
             margin: 0 5px;
-            font-size: 0.85rem;
+            cursor: pointer;
         }
-        .btn-edit { background-color: var(--secondary-color); color: #fff; }
-        .btn-delete { background-color: #dc3545; color: #fff; }
+        .action-btn svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.2s;
+        }
+        .action-btn:hover svg {
+            transform: scale(1.2);
+        }
+        .btn-edit svg { fill: var(--secondary-color); }
+        .btn-delete svg { fill: var(--error-color); }
 
 
         /* --- Article Detail Page Styles --- */
@@ -717,6 +798,9 @@
     </style>
 </head>
 <body>
+    <div class="loader-overlay" id="loader-overlay">
+        <div class="loader"></div>
+    </div>
 
     <header class="main-header" id="mainHeader">
         <div class="container">
@@ -754,6 +838,9 @@
             <section class="latest-issue" id="latest-issue-section">
                 <div class="container">
                     <h3 class="section-title">Nghiên Cứu Nổi Bật</h3>
+                    <div class="search-bar">
+                         <input type="text" id="homeSearchInput" placeholder="Tìm kiếm bài báo theo tiêu đề hoặc tác giả...">
+                    </div>
                     <div id="no-articles-message" style="display: none;">
                         <h3>Chưa có bài báo nào được xuất bản.</h3>
                         <p>Hãy đăng nhập và là người đầu tiên đóng góp cho PhysiVerse!</p>
@@ -770,7 +857,7 @@
             <div class="container">
                 <h2 id="post-form-title">Đăng Bài Báo Mới</h2>
                 <form id="articlePostForm" class="post-form">
-                    <p id="post-message"></p>
+                    <div id="post-message"></div>
                     
                     <div class="form-group">
                         <label for="articleTitle">Tiêu đề bài báo</label>
@@ -778,7 +865,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="coverImageInput">Ảnh bìa (chọn từ máy tính)</label>
+                        <label for="coverImageInput">Ảnh bìa (chọn từ máy tính, dưới 2MB)</label>
                         <input type="file" id="coverImageInput" name="coverImageInput" accept="image/*">
                         <img id="coverImagePreview" src="#" alt="Xem trước ảnh bìa">
                     </div>
@@ -862,6 +949,9 @@
             <div class="container">
                 <h2>Quản Lý Bài Báo</h2>
                 <div class="management-container">
+                    <div class="search-bar">
+                         <input type="text" id="manageSearchInput" placeholder="Tìm kiếm bài báo...">
+                    </div>
                     <div class="table-responsive">
                          <table class="management-table">
                             <thead>
@@ -956,7 +1046,7 @@
             </div>
         </div>
     </footer>
-
+    
     <!-- Login Modal HTML -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-container">
@@ -966,7 +1056,7 @@
             </div>
             <div class="modal-body">
                 <form id="loginForm">
-                    <p id="login-error">Tên đăng nhập hoặc mật khẩu không đúng.</p>
+                    <p id="login-error"></p>
                     <div class="form-group">
                         <label for="username">Tên đăng nhập</label>
                         <input type="text" id="username" name="username" required>
@@ -984,6 +1074,8 @@
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn" title="Lên đầu trang">&#8679;</button>
 
+    <!-- Tải thư viện SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- QuillJS script -->
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
@@ -991,15 +1083,22 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            // --- STATE MANAGEMENT ---
-            let editingArticleId = null;
+            // =================================================================
+            // === CẤU HÌNH KHO LƯU TRỮ ĐÁM MÂY (SUPABASE) ===
+            // =================================================================
+            const SUPABASE_URL = 'https://fkvrocertlbzawsrazxt.supabase.co'; // Dán URL của bạn vào đây
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrdnJvY2VydGxiemF3c3Jhenh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg0MzUyODEsImV4cCI6MjA3NDAxMTI4MX0.s81PEwFfUO9ewJbwx-1yLRCW9S44pjeYYikgmLsKEI0'; // Dán anon key của bạn vào đây
+            // =================================================================
 
-            // --- DATA LAYER ---
-            const getAllArticles = () => JSON.parse(localStorage.getItem('physiverseArticles')) || [];
-            const saveArticles = (articles) => localStorage.setItem('physiverseArticles', JSON.stringify(articles));
+            const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+            // --- STATE & CACHE ---
+            let editingArticleId = null;
+            let allArticlesCache = [];
 
             // --- UI ELEMENTS ---
             const ui = {
+                loader: document.getElementById('loader-overlay'),
                 header: document.getElementById('mainHeader'),
                 navLinks: document.querySelectorAll('.nav-link'),
                 pageSections: document.querySelectorAll('.page-section'),
@@ -1018,10 +1117,23 @@
                 managementNavLink: document.getElementById('management-nav-link'),
                 managementTableBody: document.getElementById('management-table-body'),
                 postFormTitle: document.getElementById('post-form-title'),
-                submitPostBtn: document.getElementById('submit-post-btn')
+                submitPostBtn: document.getElementById('submit-post-btn'),
+                homeSearchInput: document.getElementById('homeSearchInput'),
+                manageSearchInput: document.getElementById('manageSearchInput'),
             };
 
-            // --- FUNCTIONS ---
+            // --- HELPER FUNCTIONS ---
+            const showLoader = () => ui.loader.classList.add('show');
+            const hideLoader = () => ui.loader.classList.remove('show');
+
+            const showMessage = (elementId, message, isSuccess = true) => {
+                const el = document.getElementById(elementId);
+                el.textContent = message;
+                el.className = isSuccess ? 'success' : 'error';
+                el.style.display = 'block';
+            };
+
+            // --- CORE FUNCTIONS ---
 
             const showPage = (targetId) => {
                 ui.pageSections.forEach(section => section.style.display = 'none');
@@ -1037,29 +1149,23 @@
 
             const updateLoginState = () => {
                 const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+                ui.openModalBtn.style.display = isLoggedIn ? 'none' : 'block';
+                ui.userInfoContainer.style.display = isLoggedIn ? 'flex' : 'none';
+                ui.managementNavLink.style.display = isLoggedIn ? 'list-item' : 'none';
                 if (isLoggedIn) {
-                    ui.openModalBtn.style.display = 'none';
-                    ui.userInfoContainer.style.display = 'flex';
-                    ui.managementNavLink.style.display = 'list-item';
                     document.getElementById('loggedInUsername').textContent = `Chào, ${sessionStorage.getItem('loggedInUser')}!`;
-                } else {
-                    ui.openModalBtn.style.display = 'block';
-                    ui.userInfoContainer.style.display = 'none';
-                    ui.managementNavLink.style.display = 'none';
-                    if (!document.getElementById('homePage').classList.contains('active')) {
-                        showPage('homePage');
-                    }
+                } else if (!document.getElementById('homePage').classList.contains('active')) {
+                    showPage('homePage');
                 }
             };
 
-            const loadArticles = () => {
-                const articles = getAllArticles();
+            const renderArticles = (articles) => {
                 if (!ui.articlesGrid) return;
-                ui.articlesGrid.innerHTML = ''; 
+                ui.articlesGrid.innerHTML = '';
                 ui.noArticlesMessage.style.display = articles.length === 0 ? 'block' : 'none';
                 
                 articles.forEach(article => {
-                    const articleCardHTML = `
+                    ui.articlesGrid.insertAdjacentHTML('beforeend', `
                         <article class="article-card" data-id="${article.id}">
                             <img src="${article.coverImage}" alt="${article.title}" class="article-image">
                             <div class="article-content">
@@ -1069,29 +1175,45 @@
                                 <p class="article-excerpt">${article.excerpt}</p>
                                 <a href="#" class="read-more" data-id="${article.id}">Đọc Toàn Văn &rarr;</a>
                             </div>
-                        </article>`;
-                    ui.articlesGrid.insertAdjacentHTML('beforeend', articleCardHTML);
+                        </article>`);
                 });
             };
 
-            const displayArticleDetail = (articleId) => {
-                const article = getAllArticles().find(a => a.id == articleId);
-                if (article) {
-                    document.getElementById('detailCoverImage').src = article.coverImage;
-                    document.getElementById('detailTitle').textContent = article.title;
-                    document.getElementById('detailAuthors').textContent = article.authors;
-                    document.getElementById('detailAffiliation').textContent = article.affiliation;
-                    document.getElementById('detailEmail').textContent = article.email;
-                    document.getElementById('detailEmailLink').href = `mailto:${article.email}`;
-                    document.getElementById('detailDate').textContent = article.date;
-                    document.getElementById('detailCategory').textContent = article.category;
-                    document.getElementById('detailContent').innerHTML = article.content;
-                    showPage('articleDetailPage');
+            const fetchAndRenderArticles = async () => {
+                showLoader();
+                const { data, error } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
+                if (error) {
+                    alert("Lỗi kết nối đến kho lưu trữ đám mây. Vui lòng kiểm tra lại cấu hình Supabase URL/Key.");
+                } else {
+                    allArticlesCache = data;
+                    renderArticles(allArticlesCache);
                 }
+                hideLoader();
             };
 
-            const loadManagementList = () => {
-                const articles = getAllArticles();
+            const displayArticleDetail = async (articleId) => {
+                showLoader();
+                const { data: article, error } = await supabase.from('articles').select('*').eq('id', articleId).single();
+                hideLoader();
+
+                if (error || !article) {
+                     alert("Không tìm thấy bài báo. Có thể nó đã bị xóa.");
+                     return;
+                }
+                
+                document.getElementById('detailCoverImage').src = article.coverImage;
+                document.getElementById('detailTitle').textContent = article.title;
+                document.getElementById('detailAuthors').textContent = article.authors;
+                document.getElementById('detailAffiliation').textContent = article.affiliation;
+                document.getElementById('detailEmail').textContent = article.email;
+                document.getElementById('detailEmailLink').href = `mailto:${article.email}`;
+                document.getElementById('detailDate').textContent = article.date;
+                document.getElementById('detailCategory').textContent = article.category;
+                document.getElementById('detailContent').innerHTML = article.content;
+                showPage('articleDetailPage');
+            };
+
+            const renderManagementList = (articles) => {
                 ui.managementTableBody.innerHTML = '';
                 articles.forEach(article => {
                     const row = `
@@ -1101,20 +1223,25 @@
                             <td>${article.category}</td>
                             <td>${article.date}</td>
                             <td class="actions">
-                                <button class="btn btn-edit action-btn" data-id="${article.id}">Sửa</button>
-                                <button class="btn btn-delete action-btn" data-id="${article.id}">Xóa</button>
+                                <button class="action-btn btn-edit" data-id="${article.id}" title="Sửa bài báo">
+                                    <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.13,5.12L18.88,8.87M3,17.25V21H6.75L17.81,9.94L14.06,6.19L3,17.25Z" /></svg>
+                                </button>
+                                <button class="action-btn btn-delete" data-id="${article.id}" title="Xóa bài báo">
+                                    <svg viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>
+                                </button>
                             </td>
                         </tr>`;
                     ui.managementTableBody.insertAdjacentHTML('beforeend', row);
                 });
             };
 
-            const populateFormForEdit = (articleId) => {
-                const article = getAllArticles().find(a => a.id == articleId);
+            const populateFormForEdit = async (articleId) => {
+                showLoader();
+                const { data: article } = await supabase.from('articles').select('*').eq('id', articleId).single();
+                hideLoader();
                 if (!article) return;
 
                 editingArticleId = article.id;
-
                 ui.articlePostForm.articleTitle.value = article.title;
                 ui.articlePostForm.articleAuthors.value = article.authors;
                 ui.articlePostForm.articleAffiliation.value = article.affiliation;
@@ -1129,7 +1256,6 @@
 
                 ui.postFormTitle.textContent = 'Chỉnh Sửa Bài Báo';
                 ui.submitPostBtn.textContent = 'Cập Nhật Bài Báo';
-                
                 showPage('postArticlePage');
             };
             
@@ -1137,9 +1263,8 @@
                 editingArticleId = null;
                 ui.articlePostForm.reset();
                 quill.setContents([{ insert: '\n' }]);
-                const preview = document.getElementById('coverImagePreview');
-                preview.style.display = 'none';
-                preview.src = '#';
+                document.getElementById('coverImagePreview').style.display = 'none';
+                document.getElementById('coverImagePreview').src = '#';
                 ui.postFormTitle.textContent = 'Đăng Bài Báo Mới';
                 ui.submitPostBtn.textContent = 'Xuất Bản Bài Báo';
             };
@@ -1155,14 +1280,17 @@
             };
             ui.scrollToTopBtn.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
             ui.navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
+                link.addEventListener('click', async (e) => {
                     e.preventDefault();
-                    // Reset edit mode when navigating away from post page
                     if (editingArticleId) resetPostForm();
-                    
                     const targetId = e.currentTarget.dataset.target;
                     showPage(targetId);
-                    if (targetId === 'managementPage') loadManagementList();
+                    if (targetId === 'managementPage') {
+                        showLoader();
+                        await fetchAndRenderArticles(); // Make sure cache is up-to-date
+                        renderManagementList(allArticlesCache);
+                        hideLoader();
+                    }
                 });
             });
             ui.goToPostPageBtn.addEventListener('click', () => {
@@ -1197,7 +1325,7 @@
                     sessionStorage.setItem('loggedInUser', username.value);
                     updateLoginState();
                 } else {
-                    document.getElementById('login-error').style.display = 'block';
+                    showMessage('login-error', 'Tên đăng nhập hoặc mật khẩu không đúng.', false);
                 }
             });
             ui.logoutBtn.addEventListener('click', () => {
@@ -1227,89 +1355,111 @@
 
             // Post Form Submission (Create & Update)
             if (ui.articlePostForm) {
-                ui.articlePostForm.addEventListener('submit', function(e) {
+                ui.articlePostForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
-                    const postMessage = document.getElementById('post-message');
-                    const coverImagePreview = document.getElementById('coverImagePreview');
+                    ui.submitPostBtn.disabled = true;
+                    ui.submitPostBtn.textContent = 'Đang xử lý...';
+
                     const form = e.target;
                     
-                    if (!form.articleTitle.value || !form.articleAuthors.value || !form.articleAffiliation.value || !form.articleEmail.value || !form.articleCategory.value || !form.articleExcerpt.value || quill.getLength() <= 1 || coverImagePreview.src === window.location.href) {
-                        postMessage.textContent = 'Vui lòng điền đầy đủ các trường và chọn ảnh bìa.';
-                        postMessage.classList.remove('success');
-                        postMessage.style.display = 'block';
+                    if (!form.articleTitle.value || !form.articleAuthors.value || quill.getLength() <= 1 || document.getElementById('coverImagePreview').src === window.location.href) {
+                        showMessage('post-message', 'Vui lòng điền đầy đủ các trường và chọn ảnh bìa.', false);
+                        ui.submitPostBtn.disabled = false;
+                        ui.submitPostBtn.textContent = editingArticleId ? 'Cập Nhật Bài Báo' : 'Xuất Bản Bài Báo';
                         return;
                     }
                     
-                    let articles = getAllArticles();
-                    if (editingArticleId) { // UPDATE
-                        const articleIndex = articles.findIndex(a => a.id == editingArticleId);
-                        if (articleIndex > -1) {
-                            articles[articleIndex] = { ...articles[articleIndex], 
-                                title: form.articleTitle.value, coverImage: coverImagePreview.src, 
-                                authors: form.articleAuthors.value, affiliation: form.articleAffiliation.value, 
-                                email: form.articleEmail.value, category: form.articleCategory.value,
-                                excerpt: form.articleExcerpt.value, content: quill.root.innerHTML
-                            };
-                        }
-                    } else { // CREATE
-                        const newArticle = {
-                            id: Date.now(), title: form.articleTitle.value, coverImage: coverImagePreview.src,
-                            authors: form.articleAuthors.value, affiliation: form.articleAffiliation.value,
-                            email: form.articleEmail.value, category: form.articleCategory.value,
-                            excerpt: form.articleExcerpt.value, content: quill.root.innerHTML,
-                            date: new Date().toLocaleDateString('vi-VN')
-                        };
-                        articles.unshift(newArticle);
+                    const articleData = {
+                        title: form.articleTitle.value, coverImage: document.getElementById('coverImagePreview').src,
+                        authors: form.articleAuthors.value, affiliation: form.articleAffiliation.value,
+                        email: form.articleEmail.value, category: form.articleCategory.value,
+                        excerpt: form.articleExcerpt.value, content: quill.root.innerHTML,
+                        date: editingArticleId ? (allArticlesCache.find(a => a.id == editingArticleId).date) : new Date().toLocaleDateString('vi-VN')
+                    };
+
+                    showLoader();
+                    let error;
+                    if (editingArticleId) {
+                        const { error: updateError } = await supabase.from('articles').update(articleData).eq('id', editingArticleId);
+                        error = updateError;
+                    } else {
+                        const { error: insertError } = await supabase.from('articles').insert([articleData]);
+                        error = insertError;
+                    }
+                    hideLoader();
+
+                    if (error) {
+                        showMessage('post-message', `Lỗi: ${error.message}`, false);
+                    } else {
+                        showMessage('post-message', `Bài báo đã được ${editingArticleId ? 'cập nhật' : 'xuất bản'} thành công!`, true);
+                        resetPostForm();
+                        setTimeout(async () => {
+                            document.getElementById('post-message').style.display = 'none';
+                            showPage('homePage');
+                            await fetchAndRenderArticles();
+                        }, 2000);
                     }
                     
-                    saveArticles(articles);
-                    postMessage.textContent = `Bài báo đã được ${editingArticleId ? 'cập nhật' : 'xuất bản'} thành công!`;
-                    postMessage.classList.add('success');
-                    postMessage.style.display = 'block';
-                    
-                    resetPostForm();
-                    
-                    setTimeout(() => {
-                        postMessage.style.display = 'none';
-                        showPage('homePage');
-                        loadArticles();
-                    }, 2000);
+                    ui.submitPostBtn.disabled = false;
                 });
 
                 document.getElementById('coverImageInput').addEventListener('change', function(e) {
                     const file = e.target.files[0];
-                    if (file) {
+                    if (file && file.size < 2 * 1024 * 1024) { // Giới hạn ảnh 2MB
                         const reader = new FileReader();
                         reader.onload = (event) => {
                             document.getElementById('coverImagePreview').src = event.target.result;
                             document.getElementById('coverImagePreview').style.display = 'block';
                         }
                         reader.readAsDataURL(file);
+                    } else if (file) {
+                        alert("Lỗi: Kích thước ảnh không được vượt quá 2MB.");
+                        e.target.value = '';
                     }
                 });
             }
 
             // Management Page Actions
-            ui.managementTableBody.addEventListener('click', (e) => {
-                const target = e.target;
+            ui.managementTableBody.addEventListener('click', async (e) => {
+                const target = e.target.closest('.action-btn');
+                if (!target) return;
+
                 const articleId = target.dataset.id;
                 if (target.classList.contains('btn-edit')) {
-                    populateFormForEdit(articleId);
+                    await populateFormForEdit(articleId);
                 } else if (target.classList.contains('btn-delete')) {
                     if (confirm('Bạn có chắc chắn muốn xóa bài báo này? Hành động này không thể hoàn tác.')) {
-                        let articles = getAllArticles().filter(a => a.id != articleId);
-                        saveArticles(articles);
-                        loadManagementList();
-                        loadArticles();
+                        showLoader();
+                        const { error } = await supabase.from('articles').delete().eq('id', articleId);
+                        hideLoader();
+                        if (error) {
+                             alert(`Lỗi khi xóa: ${error.message}`);
+                        } else {
+                            await fetchAndRenderArticles();
+                            renderManagementList(allArticlesCache);
+                        }
                     }
                 }
             });
+            
+            // Search Functionality
+            const handleSearch = (searchInput, listRenderer, articleSource) => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filteredArticles = articleSource.filter(article => 
+                    article.title.toLowerCase().includes(searchTerm) || 
+                    article.authors.toLowerCase().includes(searchTerm)
+                );
+                listRenderer(filteredArticles);
+            };
+
+            ui.homeSearchInput.addEventListener('input', () => handleSearch(ui.homeSearchInput, renderArticles, allArticlesCache));
+            ui.manageSearchInput.addEventListener('input', () => handleSearch(ui.manageSearchInput, renderManagementList, allArticlesCache));
+
 
             // --- INITIALIZATION ---
             updateLoginState();
-            loadArticles();
+            fetchAndRenderArticles();
         });
     </script>
-
 </body>
 </html>
