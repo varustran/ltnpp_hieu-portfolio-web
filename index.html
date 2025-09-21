@@ -13,40 +13,56 @@
     <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
 
     <style>
-        /* CSS VẪN GIỮ NGUYÊN GIAO DIỆN "XỊN" NHƯ CŨ */
         :root {
             --primary-color: #0A2F5B; --secondary-color: #005A9C; --accent-color: #E8A87C;
             --text-color: #333333; --light-gray: #f8f9fa; --border-color: #dee2e6;
             --font-heading: 'Lora', serif; --font-body: 'Montserrat', sans-serif;
             --shadow: 0 4px 15px rgba(0,0,0,0.07);
+            --bg-color: #ffffff;
+            --card-bg-color: #ffffff;
         }
+
+        body.dark-mode {
+            --primary-color: #a7c7e7; --secondary-color: #89cff0; --accent-color: #f0b98d;
+            --text-color: #c9d1d9; --light-gray: #161b22; --border-color: #30363d;
+            --bg-color: #0d1117;
+            --card-bg-color: #161b22;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body { font-family: var(--font-body); line-height: 1.7; color: var(--text-color); background-color: #ffffff; }
+        body { font-family: var(--font-body); line-height: 1.7; color: var(--text-color); background-color: var(--bg-color); transition: background-color 0.3s, color 0.3s; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         
         .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        body.dark-mode .loader-overlay { background: rgba(13, 17, 23, 0.8); }
         .loader-overlay.show { opacity: 1; visibility: visible; }
-        .loader { border: 8px solid var(--light-gray); border-top: 8px solid var(--primary-color); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
+        .loader { border: 8px solid #f3f3f3; border-top: 8px solid var(--primary-color); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
+        body.dark-mode .loader { border-color: #21262d; border-top-color: var(--primary-color); }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .main-header { background-color: #fff; border-bottom: 1px solid var(--border-color); padding: 15px 0; position: sticky; top: 0; z-index: 1000; transition: box-shadow 0.3s ease; }
+        .main-header { background-color: var(--bg-color); border-bottom: 1px solid var(--border-color); padding: 15px 0; position: sticky; top: 0; z-index: 1000; transition: box-shadow 0.3s ease, background-color 0.3s; }
         .main-header.scrolled { box-shadow: var(--shadow); }
         .main-header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-family: var(--font-heading); color: var(--primary-color); font-size: 2.5rem; margin: 0; font-weight: 700; text-decoration: none; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
         .main-nav ul { list-style: none; display: flex; }
         .main-nav li { margin-left: 30px; }
-        .main-nav a { text-decoration: none; color: var(--primary-color); font-weight: 500; font-size: 1rem; padding-bottom: 5px; position: relative; }
+        .main-nav a { text-decoration: none; color: var(--text-color); font-weight: 500; font-size: 1rem; padding-bottom: 5px; position: relative; }
         .main-nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: var(--accent-color); transition: all 0.3s ease-in-out; }
-        .main-nav a:hover::after, .main-nav a.active::after { width: 100%; left: 0; }
+        .main-nav a:hover, .main-nav a:hover::after, .main-nav a.active::after { color: var(--accent-color); width: 100%; left: 0; }
         
+        #theme-toggle { background: none; border: none; cursor: pointer; color: var(--text-color); padding: 5px; }
+        #theme-toggle svg { width: 24px; height: 24px; fill: currentColor; transition: transform 0.3s ease; }
+        #theme-toggle:hover svg { transform: scale(1.2); }
+
         .hero-section { background: linear-gradient(rgba(10, 47, 91, 0.85), rgba(10, 47, 91, 0.85)), url('https://placehold.co/1920x1080/0A2F5B/FFFFFF?text=PhysiVerse+Background') no-repeat center center; background-size: cover; color: #fff; text-align: center; padding: 120px 0; }
         .hero-section h2 { font-family: var(--font-heading); font-size: 3.5rem; margin-bottom: 20px; font-weight: 700; }
         .hero-section p { font-size: 1.25rem; max-width: 700px; margin: 0 auto 40px auto; opacity: 0.9; }
-        .btn-secondary { background-color: var(--accent-color); color: #fff; padding: 12px 28px; font-size: 1.05rem; text-decoration: none; border-radius: 5px; transition: all 0.3s ease; }
+        .btn-secondary { background-color: var(--accent-color); color: #fff; padding: 12px 28px; font-size: 1.05rem; text-decoration: none; border-radius: 5px; transition: all 0.3s ease; display: inline-block; }
         .btn-secondary:hover { background-color: #d99160; transform: translateY(-2px); }
 
-        .latest-issue { padding: 80px 0; background-color: var(--light-gray); min-height: 400px; }
+        .latest-issue { padding: 80px 0; background-color: var(--light-gray); min-height: 400px; transition: background-color 0.3s; }
         .section-title { text-align: center; font-family: var(--font-heading); font-size: 2.8rem; color: var(--primary-color); margin-bottom: 60px; position: relative; }
         .section-title::after { content: ''; display: block; width: 80px; height: 3px; background-color: var(--accent-color); margin: 15px auto 0; }
         
@@ -55,16 +71,16 @@
         
         .filters-container { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; max-width: 800px; margin: -20px auto 40px auto; }
         .search-bar { flex-grow: 1; min-width: 250px; }
-        .search-bar input, .category-filter select { width: 100%; padding: 15px 20px; font-size: 1rem; border-radius: 50px; border: 1px solid var(--border-color); transition: box-shadow 0.3s; }
+        .search-bar input, .category-filter select { width: 100%; padding: 15px 20px; font-size: 1rem; border-radius: 50px; border: 1px solid var(--border-color); background-color: var(--card-bg-color); color: var(--text-color); transition: all 0.3s; }
         .search-bar input:focus, .category-filter select:focus { outline: none; box-shadow: 0 0 0 4px rgba(0, 90, 156, 0.2); border-color: var(--secondary-color); }
 
         .articles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-        .article-card { background-color: #fff; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; text-decoration: none; }
+        .article-card { background-color: var(--card-bg-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); transition: all 0.3s ease; cursor: pointer; text-decoration: none; }
         .article-card:hover { transform: translateY(-8px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
         .article-image { width: 100%; height: 220px; object-fit: cover; background-color: var(--light-gray); }
         .article-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
         .article-category { display: inline-block; background-color: var(--secondary-color); color: #fff; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; margin-bottom: 15px; align-self: flex-start; }
-        .article-title { font-family: var(--font-heading); font-size: 1.4rem; margin-bottom: 10px; color: var(--primary-color); }
+        .article-title { font-family: var(--font-heading); font-size: 1.4rem; margin-bottom: 10px; color: var(--primary-color); transition: color 0.3s ease;}
         .article-card:hover .article-title { color: var(--accent-color); }
         .article-authors { font-size: 0.9rem; color: #6c757d; margin-bottom: 15px; }
         .article-excerpt { margin-bottom: 20px; flex-grow: 1; color: var(--text-color); }
@@ -73,35 +89,51 @@
         .page-section.active { display: block; }
 
         #articleDetailPage { padding: 80px 0; }
-        .article-detail-container { max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: var(--shadow); }
+        .article-detail-container { max-width: 800px; margin: 0 auto; background: var(--card-bg-color); padding: 40px; border-radius: 8px; box-shadow: var(--shadow); }
         .article-detail-header img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 5px; margin-bottom: 20px; background-color: var(--light-gray); }
         .article-detail-header h1 { font-family: var(--font-heading); font-size: 2.8rem; color: var(--primary-color); line-height: 1.3; margin-bottom: 15px; }
         .article-meta { font-size: 0.9rem; color: #6c757d; margin-bottom: 30px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 15px; background-color: var(--light-gray); border-radius: 5px; }
         .article-meta p { margin: 5px 0; }
         .article-meta strong { color: var(--text-color); }
+        .article-meta .reading-time { font-style: italic; }
         .article-full-content { font-size: 1.1rem; line-height: 1.8; }
         .article-full-content h1, .article-full-content h2, .article-full-content h3 { font-family: var(--font-heading); color: var(--primary-color); margin-top: 30px; margin-bottom: 15px; }
         .article-full-content p { margin-bottom: 1rem; }
         .article-full-content blockquote { border-left: 4px solid var(--accent-color); padding-left: 20px; margin: 20px 0; font-style: italic; color: #555; }
+        body.dark-mode .article-full-content blockquote { color: #aaa; }
         .article-full-content img { max-width: 100%; height: auto; border-radius: 5px; margin: 1rem 0; }
+        .article-full-content pre { background-color: #f4f4f4; padding: 20px; border-radius: 5px; overflow-x: auto; position: relative; }
+        body.dark-mode .article-full-content pre { background-color: #010409; }
+        .article-full-content code { font-family: 'Courier New', Courier, monospace; }
+        .copy-code-btn { position: absolute; top: 10px; right: 10px; background-color: #ddd; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
+        body.dark-mode .copy-code-btn { background-color: #222; color: #eee; }
+        .share-section { margin-top: 40px; border-top: 1px solid var(--border-color); padding-top: 20px; text-align: center; }
+        .share-section h4 { margin-bottom: 15px; }
+        .share-buttons a { display: inline-block; margin: 0 10px; text-decoration: none; color: #fff; padding: 10px 15px; border-radius: 5px; font-size: 0.9rem; transition: transform 0.2s; }
+        .share-buttons a:hover { transform: scale(1.1); }
+        .share-twitter { background-color: #1DA1F2; }
+        .share-facebook { background-color: #1877F2; }
+        .share-linkedin { background-color: #0A66C2; }
         #backToHomeBtn { margin-bottom: 40px; display: inline-block; background-color: var(--primary-color); color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none; transition: all 0.3s ease; }
         #backToHomeBtn:hover { background-color: var(--secondary-color); }
-        
-        .main-footer { background-color: var(--primary-color); color: rgba(255, 255, 255, 0.8); padding: 60px 0; line-height: 1.8; }
-        .main-footer a { color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s ease; }
-        .main-footer a:hover { color: #fff; text-decoration: underline; }
-        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-content h4 { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 20px; color: var(--accent-color); }
-        .footer-links ul { list-style: none; }
-        .footer-links li { margin-bottom: 10px; }
-        .footer-contact p { margin-bottom: 10px; }
-        .footer-copyright { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.2); opacity: 0.7; }
 
+        .page-content-container { max-width: 900px; margin: 0 auto; background: var(--card-bg-color); padding: 40px; border-radius: 8px; box-shadow: var(--shadow); line-height: 1.8; transition: background-color 0.3s;}
+        .page-content-container p, .page-content-container ul { margin-bottom: 1.5rem; }
+        .page-content-container h3 { font-family: var(--font-heading); color: var(--secondary-color); margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; }
+        
         #scrollToTopBtn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 99; border: none; outline: none; background-color: var(--primary-color); color: white; cursor: pointer; padding: 15px; border-radius: 50%; font-size: 18px; width: 50px; height: 50px; transition: all 0.3s; opacity: 0.8; }
         #scrollToTopBtn:hover { opacity: 1; transform: scale(1.1); }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        @media (max-width: 768px) {
+            .hero-section h2 { font-size: 2.5rem; }
+            .main-header .container { flex-wrap: wrap; justify-content: center; }
+            .logo { width: 100%; text-align: center; margin-bottom: 15px; }
+            .header-right { width: 100%; justify-content: center; }
+            .main-nav ul { padding-left: 0; }
+        }
     </style>
 </head>
 <body>
@@ -112,12 +144,18 @@
     <header class="main-header" id="mainHeader">
         <div class="container">
             <a href="#" class="logo nav-link" data-target="homePage">PhysiVerse</a>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#" class="nav-link active" data-target="homePage">Trang Chủ</a></li>
-                    <li><a href="#" class="nav-link" data-target="aboutUsPage">Về Chúng Tôi</a></li>
-                </ul>
-            </nav>
+            <div class="header-right">
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-target="homePage">Trang Chủ</a></li>
+                        <li><a href="#" class="nav-link" data-target="aboutUsPage">Về Chúng Tôi</a></li>
+                    </ul>
+                </nav>
+                <button id="theme-toggle" title="Chuyển chế độ Sáng/Tối">
+                    <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,2L14.39,4.39L16.22,3.22L17.61,5.61L19.78,6.22L19.61,8.61L21.78,9.78L20.61,12.22L21.78,14.61L19.61,15.78L19.78,18.22L17.61,18.78L16.22,21.22L14.39,19.61L12,22L9.61,19.61L7.78,21.22L6.39,18.78L4.22,18.22L4.39,15.78L2.22,14.61L3.39,12.22L2.22,9.78L4.39,8.61L4.22,6.22L6.39,5.61L7.78,3.22L9.61,4.39L12,2Z" /></svg>
+                    <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="display: none;"><path d="M12 2A9.91 9.91 0 0 0 9 2.46A10 10 0 0 1 9 21.54A10 10 0 1 0 12 2Z" /></svg>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -162,10 +200,12 @@
                 header: document.getElementById('mainHeader'),
                 mainContent: document.getElementById('main-content'),
                 scrollToTopBtn: document.getElementById('scrollToTopBtn'),
-                navLinks: document.querySelectorAll('.nav-link')
+                themeToggle: document.getElementById('theme-toggle'),
+                sunIcon: document.getElementById('theme-icon-sun'),
+                moonIcon: document.getElementById('theme-icon-moon'),
             };
 
-            const showdownConverter = new showdown.Converter({ metadata: true, tables: true, emoji: true });
+            const showdownConverter = new showdown.Converter({ metadata: true, tables: true, emoji: true, openLinksInNewWindow: true });
             let allArticlesCache = [];
 
             const showLoader = () => ui.loader.classList.add('show');
@@ -197,14 +237,13 @@
             const fetchAllArticles = async () => {
                 let articles = [];
                 let id = 1;
-                let continueFetching = true;
-                while(continueFetching) {
+                while(true) {
                     const article = await fetchArticle(id);
                     if (article) {
                         articles.push(article);
                         id++;
                     } else {
-                        continueFetching = false;
+                        break;
                     }
                 }
                 allArticlesCache = articles.sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')));
@@ -262,8 +301,17 @@
                         </section>
                     </section>`;
             };
+            
+            const calculateReadingTime = (htmlContent) => {
+                const text = htmlContent.replace(/<[^>]+>/g, '');
+                const wordsPerMinute = 200;
+                const wordCount = text.split(/\s+/).length;
+                const readingTime = Math.ceil(wordCount / wordsPerMinute);
+                return `☕️ ${readingTime} phút đọc`;
+            };
 
             const renderArticlePage = (article) => {
+                const readingTime = calculateReadingTime(article.content);
                 ui.mainContent.innerHTML = `
                     <section id="articleDetailPage" class="page-section active">
                         <div class="container">
@@ -277,12 +325,19 @@
                                         <p><strong>Đơn vị:</strong> ${article.affiliation}</p>
                                         <p><strong>Email:</strong> <a href="mailto:${article.email}">${article.email}</a></p>
                                         <p><strong>Ngày đăng:</strong> ${article.date} | <strong>Chuyên ngành:</strong> ${article.category}</p>
+                                        <p class="reading-time">${readingTime}</p>
                                     </div>
                                 </div>
                                 <div class="article-full-content">${article.content}</div>
+                                <div class="share-section">
+                                    <h4>Chia sẻ bài viết</h4>
+                                    <div class="share-buttons" id="share-buttons"></div>
+                                </div>
                             </div>
                         </div>
                     </section>`;
+                addCopyButtonsToCodeBlocks();
+                renderShareButtons(article);
             };
 
              const renderAboutPage = () => {
@@ -292,12 +347,50 @@
                             <h2 class="section-title">Về Chúng Tôi</h2>
                             <div class="page-content-container">
                                 <h3>Tầm Nhìn</h3>
-                                <p>PhysiVerse được xây dựng với tầm nhìn trở thành một kho lưu trữ tri thức hiện đại, dễ tiếp cận và đáng tin cậy trong các lĩnh vực khoa học và công nghệ mũi nhọn.</p>
+                                <p>PhysiVerse được xây dựng với tầm nhìn trở thành một kho lưu trữ tri thức hiện đại, dễ tiếp cận và đáng tin cậy. Chúng tôi mong muốn tạo ra một không gian nơi những ý tưởng đột phá và các công trình nghiên cứu tâm huyết được trình bày một cách trang trọng, thẩm mỹ và lan tỏa mạnh mẽ đến cộng đồng.</p>
                                 <h3>Sứ Mệnh</h3>
-                                <p>Sứ mệnh của chúng tôi là đẩy nhanh tốc độ phổ biến tri thức và thúc đẩy các khám phá khoa học tiên tiến. Bằng cách cung cấp một nền tảng xuất bản truy cập mở, chúng tôi kết nối cộng đồng các nhà nghiên cứu, đồng thời truyền cảm hứng cho thế hệ các nhà khoa học tương lai.</p>
+                                <p>Sứ mệnh của chúng tôi là phá vỡ các rào cản trong việc tiếp cận tri thức khoa học. Bằng cách cung cấp một nền tảng xuất bản truy cập mở, nhanh chóng và hoàn toàn miễn phí, chúng tôi kết nối cộng đồng các nhà nghiên cứu, sinh viên và những người yêu khoa học, đồng thời truyền cảm hứng cho thế hệ các nhà khoa học tương lai.</p>
+                                <h3>Giá Trị Cốt Lõi</h3>
+                                <ul>
+                                    <li><b>Truy cập Mở:</b> Mọi tri thức đều được chia sẻ miễn phí, không giới hạn.</li>
+                                    <li><b>Tốc độ:</b> Mô hình tĩnh giúp trang web tải cực nhanh, mang lại trải nghiệm đọc tốt nhất.</li>
+                                    <li><b>Sự Tối giản:</b> Giao diện tập trung vào nội dung, loại bỏ những yếu tố gây xao lãng.</li>
+                                    <li><b>Cộng đồng:</b> Khuyến khích sự chia sẻ và lan tỏa kiến thức khoa học.</li>
+                                </ul>
                             </div>
                         </div>
                     </section>`;
+            };
+
+            const addCopyButtonsToCodeBlocks = () => {
+                const codeBlocks = document.querySelectorAll('.article-full-content pre');
+                codeBlocks.forEach(block => {
+                    const button = document.createElement('button');
+                    button.className = 'copy-code-btn';
+                    button.textContent = 'Copy';
+                    block.appendChild(button);
+
+                    button.addEventListener('click', () => {
+                        const code = block.querySelector('code').innerText;
+                        navigator.clipboard.writeText(code).then(() => {
+                            button.textContent = 'Đã chép!';
+                            setTimeout(() => {
+                                button.textContent = 'Copy';
+                            }, 2000);
+                        });
+                    });
+                });
+            };
+
+            const renderShareButtons = (article) => {
+                const url = encodeURIComponent(window.location.href);
+                const title = encodeURIComponent(article.title);
+                const container = document.getElementById('share-buttons');
+                container.innerHTML = `
+                    <a href="https://twitter.com/intent/tweet?url=${url}&text=${title}" target="_blank" class="share-twitter">Twitter</a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" class="share-facebook">Facebook</a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}" target="_blank" class="share-linkedin">LinkedIn</a>
+                `;
             };
 
             const handleFilters = () => {
@@ -338,49 +431,58 @@
                 const path = window.location.hash.slice(1);
                 const articleIdMatch = path.match(/^article\/(\d+)$/);
 
-                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-
                 if (articleIdMatch) {
                     const articleId = parseInt(articleIdMatch[1]);
                     const article = allArticlesCache.find(a => a.id == articleId);
-                    if (article) renderArticlePage(article);
-                    else window.location.hash = ''; // Go home if article not found
+                    if (article) {
+                        document.title = `${article.title} | PhysiVerse`;
+                        renderArticlePage(article);
+                    } else {
+                        window.location.hash = '';
+                    }
                 } else if (path === 'aboutUsPage') {
-                    document.querySelector('.nav-link[data-target="aboutUsPage"]').classList.add('active');
+                    document.title = 'Về Chúng Tôi | PhysiVerse';
                     renderAboutPage();
                 } else {
-                    document.querySelector('.nav-link[data-target="homePage"]').classList.add('active');
+                    document.title = 'PhysiVerse - Tạp chí Khoa học & Công nghệ';
                     renderHomePage();
                 }
-                 window.scrollTo(0, 0);
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.toggle('active', link.dataset.target === (path || 'homePage'));
+                });
+                window.scrollTo(0, 0);
             };
 
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    ui.sunIcon.style.display = 'none';
+                    ui.moonIcon.style.display = 'block';
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    ui.sunIcon.style.display = 'block';
+                    ui.moonIcon.style.display = 'none';
+                }
+            };
+            
             // --- EVENT LISTENERS ---
             window.addEventListener('hashchange', router);
 
-            ui.mainContent.addEventListener('click', (e) => {
-                const cardLink = e.target.closest('a.article-card');
-                if (cardLink) {
-                    e.preventDefault();
-                    window.location.hash = `article/${cardLink.dataset.id}`;
-                }
-            });
-            
             document.body.addEventListener('click', (e) => {
                  const navLink = e.target.closest('.nav-link');
                  if (navLink) {
                      e.preventDefault();
                      window.location.hash = navLink.dataset.target;
                  }
+                 const articleCard = e.target.closest('a.article-card');
+                 if (articleCard) {
+                     e.preventDefault();
+                     window.location.hash = `article/${articleCard.dataset.id}`;
+                 }
             });
 
-            ui.mainContent.addEventListener('input', (e) => {
-                if (e.target.id === 'homeSearchInput') handleFilters();
-            });
-            ui.mainContent.addEventListener('change', (e) => {
-                if (e.target.id === 'categoryFilter') handleFilters();
-            });
-
+            ui.mainContent.addEventListener('input', (e) => { if (e.target.id === 'homeSearchInput') handleFilters(); });
+            ui.mainContent.addEventListener('change', (e) => { if (e.target.id === 'categoryFilter') handleFilters(); });
 
             window.onscroll = () => {
                 const isScrolled = document.body.scrollTop > 100 || document.documentElement.scrollTop > 100;
@@ -389,10 +491,25 @@
             };
             ui.scrollToTopBtn.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
             
+            ui.themeToggle.addEventListener('click', () => {
+                const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
 
             // --- INITIALIZATION ---
             const init = async () => {
                 showLoader();
+                const savedTheme = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (savedTheme) {
+                    applyTheme(savedTheme);
+                } else if (prefersDark) {
+                    applyTheme('dark');
+                } else {
+                    applyTheme('light');
+                }
                 await fetchAllArticles();
                 router();
                 hideLoader();
