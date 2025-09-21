@@ -375,16 +375,9 @@
                 <h2 class="section-title">Về Chúng Tôi</h2>
                 <div class="page-content-container">
                     <h3>Tầm Nhìn</h3>
-                    <p>PhysiVerse được xây dựng với tầm nhìn trở thành một kho lưu trữ tri thức hiện đại, dễ tiếp cận và đáng tin cậy trong các lĩnh vực khoa học và công nghệ mũi nhọn. Chúng tôi mong muốn tạo ra một không gian nơi những ý tưởng đột phá và các công trình nghiên cứu tâm huyết được trình bày một cách trang trọng và lan tỏa mạnh mẽ đến cộng đồng.</p>
+                    <p>PhysiVerse được xây dựng với tầm nhìn trở thành một kho lưu trữ tri thức hiện đại, dễ tiếp cận và đáng tin cậy trong các lĩnh vực khoa học và công nghệ mũi nhọn.</p>
                     <h3>Sứ Mệnh Của PhysiVerse</h3>
-                    <p>Sứ mệnh của chúng tôi là đẩy nhanh tốc độ phổ biến tri thức và thúc đẩy các khám phá khoa học tiên tiến. PhysiVerse tin rằng khoa học là tài sản chung của nhân loại. Bằng cách cung cấp một nền tảng xuất bản truy cập mở, chúng tôi kết nối cộng đồng các nhà nghiên cứu, đồng thời truyền cảm hứng cho thế hệ các nhà khoa học tương lai.</p>
-                    <h3>Phạm Vi và Lĩnh Vực</h3>
-                    <p>Tạp chí PhysiVerse chào đón các bài báo nghiên cứu, bài tổng quan, và các bài bình luận trong các lĩnh vực khoa học và công nghệ, bao gồm nhưng không giới hạn:</p>
-                    <ul>
-                        <li>Khoa học Tự nhiên: Vật lý, Thiên văn học, Khoa học Vật liệu...</li>
-                        <li>Công nghệ & Tin học: Trí tuệ Nhân tạo, Khoa học Dữ liệu, Kỹ thuật Phần mềm...</li>
-                        <li>Các lĩnh vực liên ngành khác.</li>
-                    </ul>
+                    <p>Sứ mệnh của chúng tôi là đẩy nhanh tốc độ phổ biến tri thức và thúc đẩy các khám phá khoa học tiên tiến. Bằng cách cung cấp một nền tảng xuất bản truy cập mở, chúng tôi kết nối cộng đồng các nhà nghiên cứu, đồng thời truyền cảm hứng cho thế hệ các nhà khoa học tương lai.</p>
                 </div>
             </div>
         </section>
@@ -393,9 +386,9 @@
                 <h2 class="section-title">Nộp Bài Báo</h2>
                 <div class="page-content-container">
                     <h3>Quy Trình Xuất Bản</h3>
-                    <p>Tại PhysiVerse, chúng tôi áp dụng một quy trình xuất bản tinh gọn và hiệu quả dành cho Quản trị viên. Với vai trò là người điều hành cao nhất, bạn có toàn quyền đăng tải và quản lý nội dung của tạp chí.</p>
+                    <p>Tại PhysiVerse, chúng tôi áp dụng một quy trình xuất bản tinh gọn dành cho Quản trị viên. Với vai trò là người điều hành, bạn có toàn quyền đăng tải và quản lý nội dung của tạp chí.</p>
                     <h3>Lưu ý cho Admin</h3>
-                    <p>Bạn chịu trách nhiệm về tính chính xác, khoa học và bản quyền của mọi nội dung được đăng tải. Hãy đảm bảo rằng các bài báo đều đạt chất lượng cao nhất trước khi xuất bản để duy trì uy tín và giá trị học thuật của PhysiVerse.</p>
+                    <p>Bạn chịu trách nhiệm về tính chính xác, khoa học và bản quyền của mọi nội dung được đăng tải. Hãy đảm bảo rằng các bài báo đều đạt chất lượng cao nhất để duy trì uy tín của PhysiVerse.</p>
                     <div style="text-align: center; margin-top: 30px;">
                         <button class="btn btn-primary" id="goToPostPageBtn">Đến trang Đăng bài</button>
                     </div>
@@ -437,8 +430,8 @@
             <div class="modal-body">
                 <form id="loginForm">
                     <p id="login-error"></p>
-                    <div class="form-group"><label for="username">Tên đăng nhập</label><input type="text" id="username" required></div>
-                    <div class="form-group"><label for="password">Mật khẩu</label><input type="password" id="password" required></div>
+                    <div class="form-group"><label for="usernameInput">Tên đăng nhập</label><input type="text" id="usernameInput" required></div>
+                    <div class="form-group"><label for="passwordInput">Mật khẩu</label><input type="password" id="passwordInput" required></div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Đăng Nhập</button>
                 </form>
             </div>
@@ -511,9 +504,9 @@
                     targetPage.style.display = 'block';
                     window.scrollTo(0, 0);
                 }
-                ui.navLinks.forEach(link => link.classList.remove('active'));
-                const activeLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
-                if (activeLink) activeLink.classList.add('active');
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.toggle('active', link.dataset.target === targetId);
+                });
             };
 
             const updateLoginState = () => {
@@ -579,12 +572,12 @@
                 document.getElementById('detailCategory').textContent = article.category;
                 document.getElementById('detailContent').innerHTML = article.content;
                 
-                renderLikeSection(article.id, article.like_count);
-                renderComments(article.id);
+                await renderLikeSection(article.id, article.like_count);
+                await renderComments(article.id);
                 showPage('articleDetailPage');
             };
 
-            const renderLikeSection = (articleId, likeCount) => {
+            const renderLikeSection = async (articleId, likeCount) => {
                 const likedArticles = JSON.parse(localStorage.getItem('likedArticles')) || [];
                 const isLiked = likedArticles.includes(articleId);
                 ui.likeSectionContainer.innerHTML = `
@@ -601,7 +594,7 @@
                 const countElement = document.getElementById('like-count');
                 const likedArticles = JSON.parse(localStorage.getItem('likedArticles')) || [];
 
-                if (likedArticles.includes(articleId)) return; // Already liked
+                if (likedArticles.includes(articleId)) return;
 
                 const { error } = await supabase.rpc('increment_likes', { article_id_to_inc: articleId });
 
@@ -610,8 +603,6 @@
                     localStorage.setItem('likedArticles', JSON.stringify(likedArticles));
                     likeButton.classList.add('liked');
                     countElement.textContent = parseInt(countElement.textContent) + 1;
-                } else {
-                    console.error("Lỗi khi tăng lượt thích:", error);
                 }
             };
             
@@ -636,29 +627,19 @@
                 const contentInput = document.getElementById('commentContent');
                 const submitBtn = e.target.querySelector('button');
 
-                if (!authorInput.value.trim() || !contentInput.value.trim()) {
-                    alert('Vui lòng nhập tên và nội dung bình luận.');
-                    return;
-                }
+                if (!authorInput.value.trim() || !contentInput.value.trim()) return;
 
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Đang gửi...';
+                submitBtn.disabled = true; submitBtn.textContent = 'Đang gửi...';
 
-                const { error } = await supabase.from('comments').insert([{
-                    article_id: currentArticleId,
-                    author_name: authorInput.value.trim(),
-                    content: contentInput.value.trim()
-                }]);
+                const { error } = await supabase.from('comments').insert([{ article_id: currentArticleId, author_name: authorInput.value.trim(), content: contentInput.value.trim() }]);
 
                 if (error) {
-                    alert('Lỗi khi gửi bình luận. Vui lòng thử lại.');
+                    alert('Lỗi khi gửi bình luận.');
                 } else {
-                    authorInput.value = '';
-                    contentInput.value = '';
+                    e.target.reset();
                     await renderComments(currentArticleId);
                 }
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Gửi Bình Luận';
+                submitBtn.disabled = false; submitBtn.textContent = 'Gửi Bình Luận';
             };
 
             const renderManagementList = (articles) => {
@@ -721,11 +702,13 @@
                 ui.scrollToTopBtn.style.display = isScrolled ? "block" : "none";
             };
             ui.scrollToTopBtn.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
-            ui.navLinks.forEach(link => {
-                link.addEventListener('click', async (e) => {
+            
+            document.body.addEventListener('click', async (e) => {
+                const navLink = e.target.closest('.nav-link');
+                if (navLink) {
                     e.preventDefault();
                     if (editingArticleId) resetPostForm();
-                    const targetId = e.currentTarget.dataset.target;
+                    const targetId = navLink.dataset.target;
                     showPage(targetId);
                     if (targetId === 'managementPage') {
                         showLoader();
@@ -733,8 +716,9 @@
                         renderManagementList(allArticlesCache);
                         hideLoader();
                     }
-                });
+                }
             });
+            
             ui.goToPostPageBtn.addEventListener('click', () => {
                 if(sessionStorage.getItem('isLoggedIn') === 'true') showPage('postArticlePage');
                 else {
@@ -756,19 +740,23 @@
             ui.openModalBtn.addEventListener('click', () => ui.loginModal.classList.add('active'));
             ui.closeModalBtn.addEventListener('click', () => ui.loginModal.classList.remove('active'));
             ui.loginModal.addEventListener('click', (e) => { if (e.target === ui.loginModal) ui.loginModal.classList.remove('active'); });
+            
             ui.loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const { username, password } = e.target;
-                if (username.value === validUsername && validPasswords.includes(password.value)) {
+                const usernameValue = document.getElementById('usernameInput').value;
+                const passwordValue = document.getElementById('passwordInput').value;
+                
+                if (usernameValue === validUsername && validPasswords.includes(passwordValue)) {
                     alert('Đăng nhập thành công!');
                     ui.loginModal.classList.remove('active');
                     sessionStorage.setItem('isLoggedIn', 'true');
-                    sessionStorage.setItem('loggedInUser', username.value);
+                    sessionStorage.setItem('loggedInUser', usernameValue);
                     updateLoginState();
                 } else {
                     showMessage('login-error', 'Tên đăng nhập hoặc mật khẩu không đúng.', false);
                 }
             });
+
             ui.logoutBtn.addEventListener('click', () => {
                 sessionStorage.clear();
                 updateLoginState();
@@ -820,7 +808,7 @@
                         const { error: updateError } = await supabase.from('articles').update(articleData).eq('id', editingArticleId);
                         error = updateError;
                     } else {
-                        const { error: insertError } = await supabase.from('articles').insert([articleData]);
+                        const { error: insertError } = await supabase.from('articles').insert([{...articleData, like_count: 0}]);
                         error = insertError;
                     }
                     hideLoader();
@@ -836,7 +824,6 @@
                             await fetchAndRenderArticles();
                         }, 2000);
                     }
-                    
                     ui.submitPostBtn.disabled = false;
                 });
 
@@ -865,7 +852,7 @@
                 } else if (target.classList.contains('btn-delete')) {
                     if (confirm('Bạn có chắc chắn muốn xóa bài báo này? Tất cả bình luận liên quan cũng sẽ bị xóa.')) {
                         showLoader();
-                        // In a real app, you might want to delete comments first, or set up cascading deletes in the DB
+                        await supabase.from('comments').delete().eq('article_id', articleId);
                         const { error } = await supabase.from('articles').delete().eq('id', articleId);
                         hideLoader();
                         if (error) {
@@ -897,7 +884,6 @@
                 }
             });
             ui.commentForm.addEventListener('submit', handleCommentSubmit);
-
 
             // --- INITIALIZATION ---
             updateLoginState();
