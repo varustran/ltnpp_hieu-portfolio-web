@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhysiVerse - Tạp chí Khoa học Vật Lý</title>
-
+    <title>PhysiVerse - Tạp chí Khoa học & Công nghệ</title>
+    
     <!-- Google Fonts for professional typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
@@ -87,6 +87,10 @@
         .main-nav li {
             margin-left: 30px;
         }
+        
+        #management-nav-link {
+            display: none; /* Hidden by default */
+        }
 
         .main-nav a {
             text-decoration: none;
@@ -152,7 +156,7 @@
             background-color: var(--secondary-color);
             transform: translateY(-2px);
         }
-
+        
         .btn-secondary {
             background-color: var(--accent-color);
             color: #fff;
@@ -328,14 +332,23 @@
         /* --- Footer --- */
         .main-footer {
             background-color: var(--primary-color);
-            color: #fff;
+            color: rgba(255, 255, 255, 0.8);
             padding: 60px 0;
+            line-height: 1.8;
         }
-        .main-footer a { color: #fff; }
+        .main-footer a { 
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .main-footer a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 40px;
             margin-bottom: 40px;
         }
@@ -353,14 +366,9 @@
         .footer-links li {
             margin-bottom: 10px;
         }
-        .footer-links a {
-            text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-        }
-        .footer-links a:hover {
-            opacity: 1;
-            text-decoration: underline;
+        
+        .footer-contact p {
+            margin-bottom: 10px;
         }
 
         .footer-copyright {
@@ -413,7 +421,7 @@
         .modal-close:hover {
             color: var(--text-color);
         }
-
+        
         .modal-header h3 {
             font-family: var(--font-heading);
             color: var(--primary-color);
@@ -443,7 +451,7 @@
             min-height: 100px;
             resize: vertical;
         }
-
+        
         #login-error, #post-message {
             color: #dc3545;
             margin-bottom: 15px;
@@ -464,12 +472,12 @@
             display: block;
         }
 
-        #postArticlePage {
+        #postArticlePage, #managementPage {
             padding: 80px 0;
             background-color: var(--light-gray);
         }
 
-        #postArticlePage h2 {
+        #postArticlePage h2, #managementPage h2 {
             font-family: var(--font-heading);
             font-size: 2.8rem;
             color: var(--primary-color);
@@ -477,7 +485,7 @@
             text-align: center;
         }
 
-        .post-form {
+        .post-form, .management-container {
             background: #fff;
             padding: 40px;
             border-radius: 8px;
@@ -495,6 +503,33 @@
             border: 1px solid var(--border-color);
             display: none; /* Hidden by default */
         }
+        
+        /* --- Management Page Table --- */
+        .management-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .management-table th, .management-table td {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        .management-table th {
+            background-color: var(--light-gray);
+            font-weight: bold;
+        }
+        .management-table td.actions {
+            text-align: center;
+        }
+        .action-btn {
+            padding: 5px 10px;
+            margin: 0 5px;
+            font-size: 0.85rem;
+        }
+        .btn-edit { background-color: var(--secondary-color); color: #fff; }
+        .btn-delete { background-color: #dc3545; color: #fff; }
+
 
         /* --- Article Detail Page Styles --- */
         #articleDetailPage {
@@ -560,7 +595,7 @@
         #backToHomeBtn {
             margin-bottom: 40px;
         }
-
+        
         /* --- General Page Content Styles --- */
         .page-content-container {
             max-width: 900px;
@@ -582,7 +617,7 @@
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 0.5rem;
         }
-
+        
         /* --- Scroll to Top Button --- */
         #scrollToTopBtn {
             display: none;
@@ -689,6 +724,7 @@
             <nav class="main-nav">
                 <ul>
                     <li><a href="#" class="nav-link active" data-target="homePage">Trang Chủ</a></li>
+                    <li id="management-nav-link"><a href="#" class="nav-link" data-target="managementPage">Quản Lý</a></li>
                     <li><a href="#" class="nav-link" data-target="submitArticle">Nộp Bài Báo</a></li>
                     <li><a href="#" class="nav-link" data-target="aboutUs">Về Chúng Tôi</a></li>
                 </ul>
@@ -709,9 +745,9 @@
         <section id="homePage" class="page-section active">
             <section class="hero-section">
                 <div class="container">
-                    <h2>Khám Phá Ranh Giới Mới Của Tri Thức Vật Lý</h2>
-                    <p>Nơi công bố những nghiên cứu đột phá, các bài tổng quan sâu sắc và những thảo luận tiên phong trong ngành vật lý học.</p>
-                    <a href="#latest-issue-section" class="btn btn-secondary">Xem Số Mới Nhất</a>
+                    <h2>Khám Phá Ranh Giới Mới Của Tri Thức</h2>
+                    <p>Nơi công bố những nghiên cứu đột phá trong lĩnh vực Vật lý, Công nghệ và Trí tuệ nhân tạo.</p>
+                    <a href="#latest-issue-section" class="btn btn-secondary">Xem Bài Mới Nhất</a>
                 </div>
             </section>
 
@@ -732,10 +768,10 @@
         <!-- Post Article Page Section -->
         <section id="postArticlePage" class="page-section">
             <div class="container">
-                <h2>Đăng Bài Báo Mới</h2>
+                <h2 id="post-form-title">Đăng Bài Báo Mới</h2>
                 <form id="articlePostForm" class="post-form">
                     <p id="post-message"></p>
-
+                    
                     <div class="form-group">
                         <label for="articleTitle">Tiêu đề bài báo</label>
                         <input type="text" id="articleTitle" name="articleTitle" required placeholder="Nhập tiêu đề bài báo khoa học của bạn">
@@ -746,12 +782,12 @@
                         <input type="file" id="coverImageInput" name="coverImageInput" accept="image/*">
                         <img id="coverImagePreview" src="#" alt="Xem trước ảnh bìa">
                     </div>
-
+                    
                     <div class="form-group">
                         <label for="articleAuthors">Tác giả (Ví dụ: Nguyễn Văn An, Trần Thị Bình)</label>
                         <input type="text" id="articleAuthors" name="articleAuthors" required placeholder="Tên các tác giả, phân cách bởi dấu phẩy">
                     </div>
-
+                    
                     <div class="form-group">
                         <label for="articleAffiliation">Đơn vị công tác</label>
                         <input type="text" id="articleAffiliation" name="articleAffiliation" required placeholder="Ví dụ: Viện Vật lý, Đại học Quốc gia">
@@ -766,17 +802,21 @@
                         <label for="articleCategory">Phân loại</label>
                         <select id="articleCategory" name="articleCategory" required>
                             <option value="">-- Chọn chuyên ngành --</option>
-                            <option value="Vật lý Lượng tử">Vật lý Lượng tử</option>
-                            <option value="Vật lý Thiên văn">Vật lý Thiên văn</option>
-                            <option value="Vật lý Chất rắn">Vật lý Chất rắn</option>
-                            <option value="Vật lý Hạt nhân">Vật lý Hạt nhân</option>
-                            <option value="Vật lý Plasma">Vật lý Plasma</option>
-                            <option value="Vật lý Sinh học">Vật lý Sinh học</option>
-                            <option value="Vật lý Tính toán">Vật lý Tính toán</option>
-                            <option value="Quang học & Quang tử">Quang học & Quang tử</option>
-                            <option value="Vật lý Năng lượng cao">Vật lý Năng lượng cao</option>
-                            <option value="Vật lý Ứng dụng">Vật lý Ứng dụng</option>
-                            <option value="Vật lý Lý thuyết">Vật lý Lý thuyết</option>
+                            <optgroup label="Khoa học Tự nhiên">
+                                <option value="Vật lý Lượng tử">Vật lý Lượng tử</option>
+                                <option value="Vật lý Thiên văn">Vật lý Thiên văn</option>
+                                <option value="Vật lý Chất rắn">Vật lý Chất rắn</option>
+                                <option value="Vật lý Hạt nhân">Vật lý Hạt nhân</option>
+                                <option value="Vật lý Plasma">Vật lý Plasma</option>
+                                <option value="Vật lý Sinh học">Vật lý Sinh học</option>
+                            </optgroup>
+                            <optgroup label="Công nghệ & Tin học">
+                                <option value="Trí tuệ Nhân tạo">Trí tuệ Nhân tạo (AI)</option>
+                                <option value="Khoa học Dữ liệu">Khoa học Dữ liệu</option>
+                                <option value="Công nghệ">Công nghệ</option>
+                                <option value="Tin học">Tin học</option>
+                                <option value="Vật lý Tính toán">Vật lý Tính toán</option>
+                            </optgroup>
                         </select>
                     </div>
 
@@ -789,12 +829,12 @@
                         <label for="articleContent">Nội dung bài báo</label>
                         <div id="editor-container"></div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 30px;">Xuất Bản Bài Báo</button>
+                    
+                    <button type="submit" id="submit-post-btn" class="btn btn-primary" style="width: 100%; margin-top: 30px;">Xuất Bản Bài Báo</button>
                 </form>
             </div>
         </section>
-
+        
         <!-- Article Detail Page Section -->
         <section id="articleDetailPage" class="page-section">
             <div class="container">
@@ -816,6 +856,32 @@
                 </div>
             </div>
         </section>
+        
+        <!-- Management Page Section -->
+        <section id="managementPage" class="page-section">
+            <div class="container">
+                <h2>Quản Lý Bài Báo</h2>
+                <div class="management-container">
+                    <div class="table-responsive">
+                         <table class="management-table">
+                            <thead>
+                                <tr>
+                                    <th>Tiêu đề</th>
+                                    <th>Tác giả</th>
+                                    <th>Chuyên mục</th>
+                                    <th>Ngày đăng</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="management-table-body">
+                                <!-- Article list will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
         <!-- About Us Page Section -->
         <section id="aboutUs" class="page-section" style="padding: 80px 0;">
@@ -823,21 +889,17 @@
                 <h2 class="section-title">Về Chúng Tôi</h2>
                 <div class="page-content-container">
                     <h3>Tầm Nhìn</h3>
-                    <p>PhysiVerse được xây dựng với tầm nhìn trở thành một kho lưu trữ tri thức vật lý hiện đại, dễ tiếp cận và đáng tin cậy. Chúng tôi mong muốn tạo ra một không gian nơi những ý tưởng đột phá và các công trình nghiên cứu tâm huyết được trình bày một cách trang trọng và lan tỏa mạnh mẽ đến cộng đồng.</p>
-
+                    <p>PhysiVerse được xây dựng với tầm nhìn trở thành một kho lưu trữ tri thức hiện đại, dễ tiếp cận và đáng tin cậy trong các lĩnh vực khoa học và công nghệ mũi nhọn. Chúng tôi mong muốn tạo ra một không gian nơi những ý tưởng đột phá và các công trình nghiên cứu tâm huyết được trình bày một cách trang trọng và lan tỏa mạnh mẽ đến cộng đồng.</p>
+                    
                     <h3>Sứ Mệnh Của PhysiVerse</h3>
-                    <p>Sứ mệnh của chúng tôi là đẩy nhanh tốc độ phổ biến tri thức và thúc đẩy các khám phá khoa học tiên tiến. PhysiVerse tin rằng khoa học là tài sản chung của nhân loại và mọi rào cản trong việc tiếp cận các công trình nghiên cứu cần phải được gỡ bỏ. Bằng cách cung cấp một nền tảng xuất bản truy cập mở, chúng tôi kết nối cộng đồng các nhà nghiên cứu, đồng thời truyền cảm hứng cho thế hệ các nhà khoa học tương lai.</p>
+                    <p>Sứ mệnh của chúng tôi là đẩy nhanh tốc độ phổ biến tri thức và thúc đẩy các khám phá khoa học tiên tiến. PhysiVerse tin rằng khoa học là tài sản chung của nhân loại. Bằng cách cung cấp một nền tảng xuất bản truy cập mở, chúng tôi kết nối cộng đồng các nhà nghiên cứu, đồng thời truyền cảm hứng cho thế hệ các nhà khoa học tương lai.</p>
 
                     <h3>Phạm Vi và Lĩnh Vực</h3>
-                    <p>Tạp chí PhysiVerse chào đón các bài báo nghiên cứu gốc, bài tổng quan (review), và các bài bình luận (commentary) trong tất cả các lĩnh vực của Vật lý, bao gồm nhưng không giới hạn:</p>
+                    <p>Tạp chí PhysiVerse chào đón các bài báo nghiên cứu, bài tổng quan, và các bài bình luận trong các lĩnh vực khoa học và công nghệ, bao gồm nhưng không giới hạn:</p>
                     <ul>
-                        <li>Vật lý Thiên văn và Vũ trụ học</li>
-                        <li>Vật lý Lượng tử và Thông tin Lượng tử</li>
-                        <li>Vật lý Chất rắn và Khoa học Vật liệu</li>
-                        <li>Vật lý Hạt nhân và Năng lượng cao</li>
-                        <li>Vật lý Plasma, Vật lý Sinh học và Y học</li>
-                        <li>Vật lý Tính toán, Quang học và Quang tử</li>
-                        <li>Vật lý Ứng dụng và các lĩnh vực liên ngành</li>
+                        <li>Khoa học Tự nhiên: Vật lý, Thiên văn học, Khoa học Vật liệu...</li>
+                        <li>Công nghệ & Tin học: Trí tuệ Nhân tạo, Khoa học Dữ liệu, Kỹ thuật Phần mềm...</li>
+                        <li>Các lĩnh vực liên ngành khác.</li>
                     </ul>
                 </div>
             </div>
@@ -871,24 +933,26 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-about">
-                    <h4>PhysiVerse</h4>
-                    <p>Tạp chí khoa học Vật lý truy cập mở, dành riêng cho việc phổ biến tri thức và thúc đẩy các khám phá khoa học.</p>
+                    <h4>Về PhysiVerse</h4>
+                    <p>Tạp chí khoa học & công nghệ truy cập mở, dành riêng cho việc phổ biến tri thức và thúc đẩy các khám phá tiên phong.</p>
                 </div>
                 <div class="footer-links">
-                    <h4>Liên Kết Nhanh</h4>
+                    <h4>Liên Kết Hữu Ích</h4>
                     <ul>
-                        <li><a href="#">Về Tạp chí</a></li>
-                        <li><a href="#">Hướng dẫn cho Tác giả</a></li>
-                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#" class="nav-link" data-target="homePage">Trang Chủ</a></li>
+                        <li><a href="#" class="nav-link" data-target="aboutUs">Về Chúng Tôi</a></li>
+                        <li><a href="#" class="nav-link" data-target="submitArticle">Hướng dẫn Đăng bài</a></li>
                     </ul>
                 </div>
-                <div class="footer-social">
-                    <h4>Theo dõi chúng tôi</h4>
-                    <a href="#">Twitter</a> | <a href="#">LinkedIn</a>
+                <div class="footer-contact">
+                    <h4>Thông Tin Liên Hệ</h4>
+                    <p><strong>Email:</strong> contact@physiverse.com</p>
+                    <p><strong>Điện thoại:</strong> (+84) 123 456 789</p>
+                    <p><strong>Địa chỉ:</strong> Khu Công nghệ cao, TP. Thủ Đức, Việt Nam</p>
                 </div>
             </div>
             <div class="footer-copyright">
-                <p>&copy; 2025 PhysiVerse. Bảo lưu mọi quyền.</p>
+                <p>&copy; 2025 PhysiVerse. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
@@ -916,7 +980,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn" title="Lên đầu trang">&#8679;</button>
 
@@ -927,101 +991,91 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            // --- NGUỒN DỮ LIỆU ---
-            // ĐÃ XÓA DEFAULT ARTICLES, WEB BẮT ĐẦU TRỐNG
+            // --- STATE MANAGEMENT ---
+            let editingArticleId = null;
+
+            // --- DATA LAYER ---
             const getAllArticles = () => JSON.parse(localStorage.getItem('physiverseArticles')) || [];
+            const saveArticles = (articles) => localStorage.setItem('physiverseArticles', JSON.stringify(articles));
 
-            // --- CÁC THÀNH PHẦN UI ---
-            const header = document.getElementById('mainHeader');
-            const navLinks = document.querySelectorAll('.nav-link');
-            const pageSections = document.querySelectorAll('.page-section');
-            const loginModal = document.getElementById('loginModal');
-            const openModalBtn = document.getElementById('loginBtn');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const loginForm = document.getElementById('loginForm');
-            const userInfoContainer = document.getElementById('userInfo');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const postArticleLink = document.getElementById('postArticleLink');
-            const goToPostPageBtn = document.getElementById('goToPostPageBtn');
-            const articlePostForm = document.getElementById('articlePostForm');
-            const articlesGrid = document.querySelector('.articles-grid');
-            const noArticlesMessage = document.getElementById('no-articles-message');
-            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            // --- UI ELEMENTS ---
+            const ui = {
+                header: document.getElementById('mainHeader'),
+                navLinks: document.querySelectorAll('.nav-link'),
+                pageSections: document.querySelectorAll('.page-section'),
+                loginModal: document.getElementById('loginModal'),
+                openModalBtn: document.getElementById('loginBtn'),
+                closeModalBtn: document.getElementById('closeModalBtn'),
+                loginForm: document.getElementById('loginForm'),
+                userInfoContainer: document.getElementById('userInfo'),
+                logoutBtn: document.getElementById('logoutBtn'),
+                postArticleLink: document.getElementById('postArticleLink'),
+                goToPostPageBtn: document.getElementById('goToPostPageBtn'),
+                articlePostForm: document.getElementById('articlePostForm'),
+                articlesGrid: document.querySelector('.articles-grid'),
+                noArticlesMessage: document.getElementById('no-articles-message'),
+                scrollToTopBtn: document.getElementById('scrollToTopBtn'),
+                managementNavLink: document.getElementById('management-nav-link'),
+                managementTableBody: document.getElementById('management-table-body'),
+                postFormTitle: document.getElementById('post-form-title'),
+                submitPostBtn: document.getElementById('submit-post-btn')
+            };
 
-            // --- CÁC HÀM XỬ LÝ ---
+            // --- FUNCTIONS ---
 
-            // Hiển thị trang được chọn
             const showPage = (targetId) => {
-                pageSections.forEach(section => {
-                    section.classList.remove('active');
-                    section.style.display = 'none';
-                });
+                ui.pageSections.forEach(section => section.style.display = 'none');
                 const targetPage = document.getElementById(targetId);
                 if (targetPage) {
-                    targetPage.classList.add('active');
                     targetPage.style.display = 'block';
                     window.scrollTo(0, 0);
                 }
-                navLinks.forEach(link => link.classList.remove('active'));
+                ui.navLinks.forEach(link => link.classList.remove('active'));
                 const activeLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
                 if (activeLink) activeLink.classList.add('active');
             };
 
-            // Cập nhật giao diện khi đăng nhập/đăng xuất
-            const showLoggedInState = (username) => {
-                document.getElementById('loginBtn').style.display = 'none';
-                userInfoContainer.style.display = 'flex';
-                document.getElementById('loggedInUsername').textContent = `Chào, ${username}!`;
-            };
-            const showLoggedOutState = () => {
-                document.getElementById('loginBtn').style.display = 'block';
-                userInfoContainer.style.display = 'none';
-                if (!document.getElementById('homePage').classList.contains('active')) {
-                     showPage('homePage');
-                }
-            };
-
-            // Tải và hiển thị bài viết
-            const loadArticles = () => {
-                const allArticles = getAllArticles();
-
-                if (!articlesGrid) return;
-
-                articlesGrid.innerHTML = '';
-
-                if (allArticles.length === 0) {
-                    noArticlesMessage.style.display = 'block';
+            const updateLoginState = () => {
+                const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+                if (isLoggedIn) {
+                    ui.openModalBtn.style.display = 'none';
+                    ui.userInfoContainer.style.display = 'flex';
+                    ui.managementNavLink.style.display = 'list-item';
+                    document.getElementById('loggedInUsername').textContent = `Chào, ${sessionStorage.getItem('loggedInUser')}!`;
                 } else {
-                    noArticlesMessage.style.display = 'none';
-                    allArticles.forEach(article => {
-                        const articleCardHTML = `
-                            <article class="article-card" data-id="${article.id}">
-                                <img src="${article.coverImage}" alt="${article.title}" class="article-image">
-                                <div class="article-content">
-                                    <span class="article-category">${article.category}</span>
-                                    <h4 class="article-title"><a href="#" data-id="${article.id}">${article.title}</a></h4>
-                                    <p class="article-authors">Bởi ${article.authors}</p>
-                                    <p class="article-excerpt">${article.excerpt}</p>
-                                    <a href="#" class="read-more" data-id="${article.id}">Đọc Toàn Văn &rarr;</a>
-                                </div>
-                            </article>`;
-                        articlesGrid.insertAdjacentHTML('beforeend', articleCardHTML);
-                    });
-
-                    document.querySelectorAll('.article-card').forEach(card => {
-                        card.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            const articleId = e.currentTarget.dataset.id;
-                            displayArticleDetail(articleId);
-                        });
-                    });
+                    ui.openModalBtn.style.display = 'block';
+                    ui.userInfoContainer.style.display = 'none';
+                    ui.managementNavLink.style.display = 'none';
+                    if (!document.getElementById('homePage').classList.contains('active')) {
+                        showPage('homePage');
+                    }
                 }
             };
 
-            // Hiển thị chi tiết bài viết
+            const loadArticles = () => {
+                const articles = getAllArticles();
+                if (!ui.articlesGrid) return;
+                ui.articlesGrid.innerHTML = ''; 
+                ui.noArticlesMessage.style.display = articles.length === 0 ? 'block' : 'none';
+                
+                articles.forEach(article => {
+                    const articleCardHTML = `
+                        <article class="article-card" data-id="${article.id}">
+                            <img src="${article.coverImage}" alt="${article.title}" class="article-image">
+                            <div class="article-content">
+                                <span class="article-category">${article.category}</span>
+                                <h4 class="article-title"><a href="#" data-id="${article.id}">${article.title}</a></h4>
+                                <p class="article-authors">Bởi ${article.authors}</p>
+                                <p class="article-excerpt">${article.excerpt}</p>
+                                <a href="#" class="read-more" data-id="${article.id}">Đọc Toàn Văn &rarr;</a>
+                            </div>
+                        </article>`;
+                    ui.articlesGrid.insertAdjacentHTML('beforeend', articleCardHTML);
+                });
+            };
+
             const displayArticleDetail = (articleId) => {
                 const article = getAllArticles().find(a => a.id == articleId);
-
                 if (article) {
                     document.getElementById('detailCoverImage').src = article.coverImage;
                     document.getElementById('detailTitle').textContent = article.title;
@@ -1032,71 +1086,127 @@
                     document.getElementById('detailDate').textContent = article.date;
                     document.getElementById('detailCategory').textContent = article.category;
                     document.getElementById('detailContent').innerHTML = article.content;
-
                     showPage('articleDetailPage');
-                } else {
-                    alert("Không tìm thấy bài báo. Có thể nó đã bị xóa.");
                 }
             };
 
-            // --- KHỞI TẠO VÀ GÁN SỰ KIỆN ---
+            const loadManagementList = () => {
+                const articles = getAllArticles();
+                ui.managementTableBody.innerHTML = '';
+                articles.forEach(article => {
+                    const row = `
+                        <tr>
+                            <td>${article.title}</td>
+                            <td>${article.authors}</td>
+                            <td>${article.category}</td>
+                            <td>${article.date}</td>
+                            <td class="actions">
+                                <button class="btn btn-edit action-btn" data-id="${article.id}">Sửa</button>
+                                <button class="btn btn-delete action-btn" data-id="${article.id}">Xóa</button>
+                            </td>
+                        </tr>`;
+                    ui.managementTableBody.insertAdjacentHTML('beforeend', row);
+                });
+            };
 
-            // Header và Scroll-to-top
+            const populateFormForEdit = (articleId) => {
+                const article = getAllArticles().find(a => a.id == articleId);
+                if (!article) return;
+
+                editingArticleId = article.id;
+
+                ui.articlePostForm.articleTitle.value = article.title;
+                ui.articlePostForm.articleAuthors.value = article.authors;
+                ui.articlePostForm.articleAffiliation.value = article.affiliation;
+                ui.articlePostForm.articleEmail.value = article.email;
+                ui.articlePostForm.articleCategory.value = article.category;
+                ui.articlePostForm.articleExcerpt.value = article.excerpt;
+                quill.root.innerHTML = article.content;
+                
+                const preview = document.getElementById('coverImagePreview');
+                preview.src = article.coverImage;
+                preview.style.display = 'block';
+
+                ui.postFormTitle.textContent = 'Chỉnh Sửa Bài Báo';
+                ui.submitPostBtn.textContent = 'Cập Nhật Bài Báo';
+                
+                showPage('postArticlePage');
+            };
+            
+            const resetPostForm = () => {
+                editingArticleId = null;
+                ui.articlePostForm.reset();
+                quill.setContents([{ insert: '\n' }]);
+                const preview = document.getElementById('coverImagePreview');
+                preview.style.display = 'none';
+                preview.src = '#';
+                ui.postFormTitle.textContent = 'Đăng Bài Báo Mới';
+                ui.submitPostBtn.textContent = 'Xuất Bản Bài Báo';
+            };
+
+
+            // --- EVENT LISTENERS ---
+
+            // Scroll & Navigation
             window.onscroll = () => {
-                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                    header.classList.add('scrolled');
-                    scrollToTopBtn.style.display = "block";
-                } else {
-                    header.classList.remove('scrolled');
-                    scrollToTopBtn.style.display = "none";
-                }
+                const isScrolled = document.body.scrollTop > 100 || document.documentElement.scrollTop > 100;
+                ui.header.classList.toggle('scrolled', isScrolled);
+                ui.scrollToTopBtn.style.display = isScrolled ? "block" : "none";
             };
-            scrollToTopBtn.addEventListener('click', () => {
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            });
-
-            // Navigation
-            navLinks.forEach(link => {
+            ui.scrollToTopBtn.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
+            ui.navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    showPage(e.currentTarget.dataset.target);
+                    // Reset edit mode when navigating away from post page
+                    if (editingArticleId) resetPostForm();
+                    
+                    const targetId = e.currentTarget.dataset.target;
+                    showPage(targetId);
+                    if (targetId === 'managementPage') loadManagementList();
                 });
             });
-            goToPostPageBtn.addEventListener('click', () => {
+            ui.goToPostPageBtn.addEventListener('click', () => {
                 if(sessionStorage.getItem('isLoggedIn') === 'true') showPage('postArticlePage');
                 else {
                     alert('Bạn cần đăng nhập để truy cập trang này.');
-                    loginModal.classList.add('active');
+                    ui.loginModal.classList.add('active');
                 }
             });
             document.getElementById('backToHomeBtn').addEventListener('click', () => showPage('homePage'));
+            ui.articlesGrid.addEventListener('click', (e) => {
+                 if (e.target.closest('.article-card')) {
+                    e.preventDefault();
+                    const articleId = e.target.closest('.article-card').dataset.id;
+                    displayArticleDetail(articleId);
+                }
+            });
 
             // Login/Logout
             const validUsername = 'admin';
             const validPasswords = ['hieu2k10', 'khoi2k10', 'hung2k10'];
-            openModalBtn.addEventListener('click', () => loginModal.classList.add('active'));
-            closeModalBtn.addEventListener('click', () => loginModal.classList.remove('active'));
-            loginModal.addEventListener('click', (e) => { if (e.target === loginModal) loginModal.classList.remove('active'); });
-            loginForm.addEventListener('submit', (e) => {
+            ui.openModalBtn.addEventListener('click', () => ui.loginModal.classList.add('active'));
+            ui.closeModalBtn.addEventListener('click', () => ui.loginModal.classList.remove('active'));
+            ui.loginModal.addEventListener('click', (e) => { if (e.target === ui.loginModal) ui.loginModal.classList.remove('active'); });
+            ui.loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const username = e.target.username.value;
-                const password = e.target.password.value;
-                if (username === validUsername && validPasswords.includes(password)) {
+                const { username, password } = e.target;
+                if (username.value === validUsername && validPasswords.includes(password.value)) {
                     alert('Đăng nhập thành công!');
-                    loginModal.classList.remove('active');
-                    showLoggedInState(username);
+                    ui.loginModal.classList.remove('active');
                     sessionStorage.setItem('isLoggedIn', 'true');
-                    sessionStorage.setItem('loggedInUser', username);
+                    sessionStorage.setItem('loggedInUser', username.value);
+                    updateLoginState();
                 } else {
                     document.getElementById('login-error').style.display = 'block';
                 }
             });
-            logoutBtn.addEventListener('click', () => {
+            ui.logoutBtn.addEventListener('click', () => {
                 sessionStorage.clear();
-                showLoggedOutState();
+                updateLoginState();
             });
-            postArticleLink.addEventListener('click', (e) => {
+            ui.postArticleLink.addEventListener('click', (e) => {
                 e.preventDefault();
+                if (editingArticleId) resetPostForm();
                 showPage('postArticlePage');
             });
 
@@ -1115,55 +1225,50 @@
                 });
             }
 
-            // Đăng bài
-            if (articlePostForm) {
-                articlePostForm.addEventListener('submit', function(e) {
+            // Post Form Submission (Create & Update)
+            if (ui.articlePostForm) {
+                ui.articlePostForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     const postMessage = document.getElementById('post-message');
                     const coverImagePreview = document.getElementById('coverImagePreview');
-                    const requiredFields = ['articleTitle', 'articleAuthors', 'articleAffiliation', 'articleEmail', 'articleCategory', 'articleExcerpt'];
-                    let isFormValid = true;
-
-                    requiredFields.forEach(fieldId => {
-                        const field = document.getElementById(fieldId);
-                        if (!field.value) isFormValid = false;
-                    });
-                    if (quill.getLength() <= 1) isFormValid = false; // Check if editor is empty
-                    if (coverImagePreview.src === window.location.href) isFormValid = false; // Check if image is uploaded
-
-                    if (!isFormValid) {
+                    const form = e.target;
+                    
+                    if (!form.articleTitle.value || !form.articleAuthors.value || !form.articleAffiliation.value || !form.articleEmail.value || !form.articleCategory.value || !form.articleExcerpt.value || quill.getLength() <= 1 || coverImagePreview.src === window.location.href) {
                         postMessage.textContent = 'Vui lòng điền đầy đủ các trường và chọn ảnh bìa.';
                         postMessage.classList.remove('success');
                         postMessage.style.display = 'block';
                         return;
                     }
-
-                    const newArticle = {
-                        id: Date.now(),
-                        title: document.getElementById('articleTitle').value,
-                        coverImage: coverImagePreview.src,
-                        authors: document.getElementById('articleAuthors').value,
-                        affiliation: document.getElementById('articleAffiliation').value,
-                        email: document.getElementById('articleEmail').value,
-                        category: document.getElementById('articleCategory').value,
-                        excerpt: document.getElementById('articleExcerpt').value,
-                        content: quill.root.innerHTML,
-                        date: new Date().toLocaleDateString('vi-VN')
-                    };
-
+                    
                     let articles = getAllArticles();
-                    articles.unshift(newArticle);
-                    localStorage.setItem('physiverseArticles', JSON.stringify(articles));
-
-                    postMessage.textContent = 'Bài báo đã được xuất bản thành công!';
+                    if (editingArticleId) { // UPDATE
+                        const articleIndex = articles.findIndex(a => a.id == editingArticleId);
+                        if (articleIndex > -1) {
+                            articles[articleIndex] = { ...articles[articleIndex], 
+                                title: form.articleTitle.value, coverImage: coverImagePreview.src, 
+                                authors: form.articleAuthors.value, affiliation: form.articleAffiliation.value, 
+                                email: form.articleEmail.value, category: form.articleCategory.value,
+                                excerpt: form.articleExcerpt.value, content: quill.root.innerHTML
+                            };
+                        }
+                    } else { // CREATE
+                        const newArticle = {
+                            id: Date.now(), title: form.articleTitle.value, coverImage: coverImagePreview.src,
+                            authors: form.articleAuthors.value, affiliation: form.articleAffiliation.value,
+                            email: form.articleEmail.value, category: form.articleCategory.value,
+                            excerpt: form.articleExcerpt.value, content: quill.root.innerHTML,
+                            date: new Date().toLocaleDateString('vi-VN')
+                        };
+                        articles.unshift(newArticle);
+                    }
+                    
+                    saveArticles(articles);
+                    postMessage.textContent = `Bài báo đã được ${editingArticleId ? 'cập nhật' : 'xuất bản'} thành công!`;
                     postMessage.classList.add('success');
                     postMessage.style.display = 'block';
-
-                    this.reset();
-                    quill.setContents([{ insert: '\n' }]);
-                    coverImagePreview.style.display = 'none';
-                    coverImagePreview.src = '#';
-
+                    
+                    resetPostForm();
+                    
                     setTimeout(() => {
                         postMessage.style.display = 'none';
                         showPage('homePage');
@@ -1175,21 +1280,33 @@
                     const file = e.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function(event) {
-                            coverImagePreview.src = event.target.result;
-                            coverImagePreview.style.display = 'block';
+                        reader.onload = (event) => {
+                            document.getElementById('coverImagePreview').src = event.target.result;
+                            document.getElementById('coverImagePreview').style.display = 'block';
                         }
                         reader.readAsDataURL(file);
                     }
                 });
             }
 
-            // --- KHỞI ĐỘNG ỨNG DỤNG ---
-            if (sessionStorage.getItem('isLoggedIn') === 'true') {
-                showLoggedInState(sessionStorage.getItem('loggedInUser'));
-            } else {
-                showLoggedOutState();
-            }
+            // Management Page Actions
+            ui.managementTableBody.addEventListener('click', (e) => {
+                const target = e.target;
+                const articleId = target.dataset.id;
+                if (target.classList.contains('btn-edit')) {
+                    populateFormForEdit(articleId);
+                } else if (target.classList.contains('btn-delete')) {
+                    if (confirm('Bạn có chắc chắn muốn xóa bài báo này? Hành động này không thể hoàn tác.')) {
+                        let articles = getAllArticles().filter(a => a.id != articleId);
+                        saveArticles(articles);
+                        loadManagementList();
+                        loadArticles();
+                    }
+                }
+            });
+
+            // --- INITIALIZATION ---
+            updateLoginState();
             loadArticles();
         });
     </script>
